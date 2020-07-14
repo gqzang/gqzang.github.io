@@ -1,0 +1,255 @@
+<html> 
+<head> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+
+    <script>
+		var player = null;
+
+		// This code loads the IFrame Player API code asynchronously.
+		function loadYTVideoFrame() {
+			if( player ) {
+				player.loadVideoById(vids[0].id);
+				return;
+			}
+			
+			var tag = document.createElement('script');
+			tag.src = "https://www.youtube.com/iframe_api";
+			var firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);			
+		}
+
+		function onYouTubeIframeAPIReady() {
+			var h = $("#videoSizeSel").val();
+			var w = '' + (parseInt(h, 10) * 4 / 3);
+			player = new YT.Player('video-placeholder', {
+				width: w,
+				height: h,
+				videoId: vids[0].id,
+				playerVars: {
+					'autoplay': 1,
+					'controls': 1,
+					'showinfo': 0,
+					'rel': 0
+				},
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange,
+					'onError': onError
+				}
+			});
+		}
+
+		let loaded = false;			// iFrame is loaded.
+
+		function onPlayerReady(event) {
+			event.target.playVideo();
+			loaded = true;
+		}
+
+		let prev_state = 100;
+		let started = false;			// Player is started.
+		
+		function onPlayerStateChange(event) {
+			var state = event.data;
+			console.log(state);
+			
+			if( state == YT.PlayerState.ENDED ) {
+				playNext();
+			}
+			
+			if( state == YT.PlayerState.PLAYING ) {
+				started = true;
+			}
+
+			// if player can't start and tried to buffer a video before => video is not good.
+			if( started && state == -1 && prev_state == YT.PlayerState.BUFFERING ) {
+				console.log( "Ad" );
+				var allowAd = $('#allowAd').is(":checked");
+				if( ! allowAd ) {				
+					setTimeout( playNext, 1000);
+				}
+			}
+			
+			prev_state = state;
+		}
+
+		function onError(event) {
+			console.log( "Bad Video" );
+			prev_state = YT.PlayerState.ENDED;			// prevent into Ad state.
+			setTimeout( playNext, 2000);
+		}
+		
+		function playCurVid() {
+			player.loadVideoById( vids[curIdx].id );
+			$('#curv').html( pad(curIdx+1, 3) );
+			$('#list').val("" + curIdx)
+		}
+		
+		function playNext() {
+			curIdx = ( curIdx + 1 ) % vids.length;
+			playCurVid();
+		}
+
+		function playPrev() {
+			curIdx = ( curIdx <= 0 ? vids.length : curIdx ) - 1;
+			playCurVid();
+		}
+
+		// prepare video list
+		
+		let vids = [];
+		let curIdx = -1;
+		
+		$(document).ready(function() { 
+			
+			$('#list').hide();
+			$("#prev").prop('disabled',true).css('opacity',0.5);
+			$("#next").prop('disabled',true).css('opacity',0.5);
+			
+			$("#shuffle").click(function() { 
+				vids = []; 
+				getVids();				
+			}); 
+
+			$("#prev").click(function() { 
+				playPrev();
+			}); 
+			
+			$("#next").click(function() { 
+				playNext();
+			}); 
+			
+			$('#list').on('change', function() {
+				curIdx = parseInt( $(this).val(), 10 );
+				playCurVid();
+			});
+			
+			$('#videoSizeSel').on('change', function() {
+				if( loaded ) {
+					var h = $(this).val();
+					var w = '' + (parseInt(h, 10) * 4 / 3);
+					player.setSize(width=w, height=h);
+				}
+			});
+		}); 
+		
+		function getVids(PageToken){
+			pid = $("#playlistSel").val();
+			$.get(
+				"https://www.googleapis.com/youtube/v3/playlistItems",{
+					part: 'snippet', 
+					maxResults: 50,
+					playlistId: pid,
+					pageToken: PageToken,
+					key: 'AIzaSyC0tNUUtRg2YR24fhABmu4xcC6SiTjh5_U'
+				},
+				function(data){
+					myPlan(data);
+				}        
+			);  
+		}	
+
+		function myPlan(data){
+			nextPageToken = data.nextPageToken;
+			pageLen = data.items.length;
+			for( i=0; i < pageLen; i ++ ) {
+				snippet = data.items[i].snippet;
+				title = snippet.title;
+				title = title.length > 64 ? title.substr(0, 63) : title;
+				video = {"id": snippet.resourceId.videoId, "title": title};
+				vids.push(video)
+			}
+		    if( typeof nextPageToken == 'undefined' ) {
+				total = data.pageInfo.totalResults;
+				$('#all').html(vids.length + '/' + total + ' videos');
+
+				shuffleArray(vids);
+				
+				$('#list').empty();
+				select = document.getElementById('list');
+				for( i = 0; i < vids.length; i ++ ) {
+					var opt = document.createElement('option');
+					opt.value = "" + i;
+					opt.innerHTML = pad(i+1, 3) + " ~~ " + vids[i].title;
+					select.appendChild(opt);
+				}
+				curIdx = 0;
+				
+				$('#list').show();
+				document.getElementById('list').size = vids.length > 10 ? 10 : vids.length;
+				
+				// *** Can only load video after all video id are loaded ***
+				loadYTVideoFrame();
+
+				$("#prev").prop('disabled',false).css('opacity', 1);
+				$("#next").prop('disabled',false).css('opacity', 1);
+				$('#curv').html( pad(curIdx+1, 3) );
+				
+				$('#list').val("0");
+				$('#list').css("background-color","Lavender");
+			} else {
+				getVids(nextPageToken);
+			}
+		}
+		
+		function pad(number, length) {
+			var str = '' + number;
+			while( str.length < length ) { str = '0' + str; }
+			return str;
+		}
+		
+		function shuffleArray(array) {
+			for (var i = array.length - 1; i > 0; i--) {
+				var j = Math.floor(Math.random() * (i + 1));
+				var temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+			}
+		}
+	</script> 
+</head> 
+
+<body> 
+	<div id="video-placeholder"></div>
+	<br><br> 	
+	<div> 
+		Video Height:
+		<select id="videoSizeSel"> 
+			<option value="144">144</option> 
+			<option value="240">240</option> 
+			<option value="360" selected>360</option> 
+			<option value="480">480</option> 
+			<option value="720">720</option> 
+			<option value="1080">1080</option> 
+		</select> 
+		
+		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+		Allow Ad <input type="checkbox" id="allowAd">
+		<br><br> 	
+
+		Playlists:
+		<select id="playlistSel"> 
+			<option value="PLd-qt_xzUXS4NC3BhTkO77l3E9Bhu9lYr">Pop Music</option> 
+			<option value="PLd-qt_xzUXS71qDZZWi0iDEc6PRpPStsZ">Two Steps From Hell</option> 
+			<option value="PLd-qt_xzUXS7M-iNcRS4o445bE7vf6Aku">KTV</option> 
+			<option value="PLd-qt_xzUXS49mGGbyND3c4Xn0pgvi-h5">Relaxing Music</option> 			
+			<option value="PLd-qt_xzUXS4i7m9dXKCPpNGZcrXyq6Ee">Live Music</option> 			
+		</select> 
+		&nbsp;&nbsp;
+		<button id="shuffle">Shuffle</button> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<button id="prev">Prev</button> 
+		&nbsp;&nbsp;
+		<button id="next">Next</button> 
+		<br><br> 	
+
+		<span id="all"></span>
+		&nbsp;&nbsp; 
+		<span id="curv"></span>		
+		<br><br>
+		
+		<select name="video list" id="list" size=10>
+		</select>
+	</div> 
+</body> 
+</html> 
