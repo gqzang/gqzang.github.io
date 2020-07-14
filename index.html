@@ -157,7 +157,7 @@
 			for( i=0; i < pageLen; i ++ ) {
 				snippet = data.items[i].snippet;
 				title = snippet.title;
-				title = title.length > 64 ? title.substr(0, 63) : title;
+				title = title.length > 40 ? title.substr(0, 39) : title;
 				video = {"id": snippet.resourceId.videoId, "title": title};
 				vids.push(video)
 			}
