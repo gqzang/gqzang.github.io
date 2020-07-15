@@ -146,13 +146,14 @@
 		
 		function getVids(PageToken){
 			pid = $("#playlistSel").val();
+			apiKey = $("#apiKeySel").val();	
 			$.get(
 				"https://www.googleapis.com/youtube/v3/playlistItems",{
 					part: 'snippet', 
 					maxResults: 50,
 					playlistId: pid,
 					pageToken: PageToken,
-					key: 'AIzaSyBM7eIst2pKksBEXseK3-2wzC-PdlYfcLg'
+					key: apiKey
 				},
 				function(data){
 					myPlan(data);
@@ -240,7 +241,14 @@
 		</select> 
 		
 		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
-		Allow Ad <input type="checkbox" id="allowAd">
+		Ad: <input type="checkbox" id="allowAd">
+		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+		Key: 
+		<select id="apiKeySel"> 
+			<option value="AIzaSyD6x-WlwBbbu1Rcq62g2FQTDWeibSdz7Mk">videozang</option> 
+			<option value="AIzaSyAIrxmuj0U2llo93F5_aZsCIR_mpx0tj4M">garyzang</option> 
+			<option value="AIzaSyBM7eIst2pKksBEXseK3-2wzC-PdlYfcLg">gqzang</option> 
+		</select> 
 		<br><br> 
 
 		Playlists:
