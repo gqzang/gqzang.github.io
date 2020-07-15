@@ -101,7 +101,8 @@
 		
 		let vids = [];
 		let curIdx = -1;
-		
+		let curPid = null;
+				
 		$(document).ready(function() { 
 			
 			$('#list').hide();
@@ -109,8 +110,16 @@
 			$("#next").prop('disabled',true).css('opacity',0.5);
 			
 			$("#shuffle").click(function() { 
+				pid = $("#playlistSel").val();
+				if( pid === curPid ) {
+					console.log("Playlist already loaded, just re-shuffle.");
+					shuffleVids();
+					return;
+				}				
+				curPid = pid;
+				
 				vids = []; 
-				getVids();				
+				getVids(pid);				
 			}); 
 
 			$("#prev").click(function() { 
@@ -135,18 +144,8 @@
 			});
 		}); 
 		
-		let curPid = null;
-		
 		function getVids(PageToken){
 			pid = $("#playlistSel").val();
-			if( pid === curPid ) {
-				console.log("Playlist already loaded, just re-shuffle.");
-				shuffleVids();
-				return;
-			}
-			
-			curPid = pid;
-			
 			$.get(
 				"https://www.googleapis.com/youtube/v3/playlistItems",{
 					part: 'snippet', 
