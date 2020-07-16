@@ -35,8 +35,6 @@
 					'autoplay': 1,
 					'controls': 1,
 					'showinfo': 0,
-					// 'enablejsapi': 1,
-					// 'enablecastapi': 1,
 					'rel': 0
 				},
 				events: {
@@ -108,6 +106,7 @@
 		let vids = [];
 		let curIdx = -1;
 		let curPid = null;
+		let statStr = '';
 				
 		$(document).ready(function() { 
 			
@@ -125,6 +124,7 @@
 				curPid = pid;
 				
 				vids = []; 
+				statStr = '';
 				getVids(pid);				
 			}); 
 
@@ -168,6 +168,9 @@
 		}	
 
 		function myPlan(data){
+			statStr = statStr + '.';
+			$('#status').html(statStr);
+
 			nextPageToken = data.nextPageToken;
 			pageLen = data.items.length;
 			for( i=0; i < pageLen; i ++ ) {
@@ -246,15 +249,17 @@
 			<option value="1080">1080</option> 
 		</select> 
 		
-		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
 		Ad: <input type="checkbox" id="allowAd">
-		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
 		Key: 
 		<select id="apiKeySel"> 
 			<option value="AIzaSyD6x-WlwBbbu1Rcq62g2FQTDWeibSdz7Mk">videozang</option> 
 			<option value="AIzaSyAIrxmuj0U2llo93F5_aZsCIR_mpx0tj4M">garyzang</option> 
 			<option value="AIzaSyBM7eIst2pKksBEXseK3-2wzC-PdlYfcLg">gqzang</option> 
 		</select> 
+
+		<span id="status"></span>		
 		<br><br> 
 
 		Playlists:
