@@ -108,16 +108,15 @@
 		let curPid = null;
 		let statStr = '';
 				
-		$(document).ready(function() { 
-			
+		$(document).ready(function() {
 			$('#list').hide();
 			$("#prev").prop('disabled',true).css('opacity',0.5);
 			$("#next").prop('disabled',true).css('opacity',0.5);
 			
 			$("#shuffle").click(function() { 
 				pid = $("#playlistSel").val();
-				if( pid === curPid ) {
-					console.log("Playlist already loaded, just re-shuffle.");
+				if( pid === curPid && vids.length > 0 ) {
+					console.log("Playlist already loaded, just re-shuffle.");		
 					shuffleVids();
 					return;
 				}				
@@ -164,7 +163,10 @@
 				function(data){
 					myPlan(data);
 				}        
-			);  
+			)
+			.fail(function() {
+				alert("Can't load playlist: wrong key or quota exceeded.")
+			});  
 		}	
 
 		function myPlan(data){
@@ -254,6 +256,7 @@
 		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
 		Key: 
 		<select id="apiKeySel"> 
+			<!-- <option value="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa">test key</option>  -->
 			<option value="AIzaSyD6x-WlwBbbu1Rcq62g2FQTDWeibSdz7Mk">videozang</option> 
 			<option value="AIzaSyAIrxmuj0U2llo93F5_aZsCIR_mpx0tj4M">garyzang</option> 
 			<option value="AIzaSyBM7eIst2pKksBEXseK3-2wzC-PdlYfcLg">gqzang</option> 
@@ -265,10 +268,11 @@
 		Playlists:
 		<select id="playlistSel"> 
 			<option value="PLd-qt_xzUXS4NC3BhTkO77l3E9Bhu9lYr">Pop Music</option> 
+			<option value="PLd-qt_xzUXS5oEVRTm0B5Ev9p-g3nB0LF">Pop Music 2</option> 
 			<option value="PLd-qt_xzUXS71qDZZWi0iDEc6PRpPStsZ">Two Steps From Hell</option> 
 			<option value="PLd-qt_xzUXS7M-iNcRS4o445bE7vf6Aku">KTV</option> 
 			<option value="PLd-qt_xzUXS49mGGbyND3c4Xn0pgvi-h5">Relaxing Music</option> 			
-			<option value="PLd-qt_xzUXS4i7m9dXKCPpNGZcrXyq6Ee">Live Music</option> 			
+			<!-- <option value="PLd-qt_xzUXS4i7m9dXKCPpNGZcrXyq6Ee">Live Music</option> 			 -->
 		</select> 
 		&nbsp;&nbsp;
 		<button id="shuffle">Shuffle</button> 
