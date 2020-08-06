@@ -13,8 +13,7 @@
 			    $.support.cors = true;
     			$.get(
     				"https://ytplr-srv.appspot.com/",{
-    					test: "103993", 
-    					playlistId: "pid",
+    					playlistId: "playlistId",
     					apiKey: "apiKey"
     				},
     				function(data) {
@@ -31,6 +30,6 @@
 </head> 
 
 <body> 
-<button id="call">Call</button> &nbsp; from: &nbsp; <span id="referer"></span>
+<button id="call">Call</button> &nbsp;&nbsp; <span id="referer"></span>
 </body> 
 </html> 
