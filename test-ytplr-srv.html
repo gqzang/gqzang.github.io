@@ -1,0 +1,36 @@
+
+<html> 
+<head> 
+	<title> 
+		Test Youtube Playlist Randomize Service
+	</title>
+	  
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+
+    <script>
+		$(document).ready(function() {
+			$("#call").click( function() { 
+			    $.support.cors = true;
+    			$.get(
+    				"https://ytplr-srv.appspot.com/",{
+    					test: "103993", 
+    					playlistId: "pid",
+    					apiKey: "apiKey"
+    				},
+    				function(data) {
+            			$('#referer').html(data);
+    				}        
+    			)
+    			.fail(function() {
+    				alert("ytplr-srv not available!")
+    			});
+			}); 
+		})
+    
+	</script> 
+</head> 
+
+<body> 
+<button id="call">Call</button> &nbsp; from: &nbsp; <span id="referer"></span>
+</body> 
+</html> 
