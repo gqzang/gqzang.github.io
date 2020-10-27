@@ -1,10 +1,11 @@
 
+
 <html> 
 <head> 
 	<title> 
 		Randomize Youtube Playlist 
 	</title>
-	  
+	<meta name="viewport" content="width=device-width, initial-scale=1">  
 	<link rel = "icon" href = "music-icon.png" type = "image/x-icon"> 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
@@ -151,8 +152,8 @@
 		}); 
 		
 		function getVids(PageToken){
-			pid = $("#playlistSel").val();
-			apiKey = $("#apiKeySel").val();	
+			let pid = $("#playlistSel").val();
+			let apiKey = "AIzaSyBM7eIst2pKksBEXseK3-2wzC-PdlYfcLg";	
 			$.get(
 				"https://www.googleapis.com/youtube/v3/playlistItems",{
 					part: 'snippet', 
@@ -255,11 +256,6 @@
 		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
 		Ad: <input type="checkbox" id="allowAd">
 		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
-		Key: 
-		<select id="apiKeySel"> 
-			<option value="AIzaSyBM7eIst2pKksBEXseK3-2wzC-PdlYfcLg">gqzang</option> 
-			<option value="AIzaSyD6x-WlwBbbu1Rcq62g2FQTDWeibSdz7Mk">videozang</option> 
-		</select> 
 
 		<span id="status"></span>		
 		<br><br> 
