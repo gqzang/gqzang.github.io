@@ -126,7 +126,7 @@
 				
 				vids = []; 
 				statStr = '';
-				getVids(pid);				
+				getVids();				
 			}); 
 
 			$("#prev").click(function() { 
@@ -151,7 +151,7 @@
 			});
 		}); 
 		
-		function getVids(PageToken){
+		function getVids(PageToken=null){
 			let pid = $("#playlistSel").val();
 			let apiKey = "AIzaSyAB-hA_QvBQe5D7hvLOZ71YKfZmmivEgJo";				// VideoZang
 			$.get(
