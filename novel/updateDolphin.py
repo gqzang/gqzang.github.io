@@ -1,8 +1,7 @@
-#! /usr/bin/python3
 import os, re, contextlib as ctx
 
-src = './Misc Links.txt'
-tar_dir = './Dolphin/'
+src = '/storage/emulated/0/Download/Misc Links.txt'
+tar_dir = '/storage/emulated/0/qpython/scripts3/Dolphin/'
 
 with ctx.suppress(Exception), open(src, 'r') as fp:
     lns = fp.readlines()
