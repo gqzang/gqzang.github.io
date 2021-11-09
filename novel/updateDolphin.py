@@ -4,12 +4,12 @@ ciphers = 'TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:' \
           'TLS13-AES-256-GCM-SHA384:ECDHE:!COMPLEMENTOFDEFAULT'
 url = 'https://docs.google.com/document/d/' \
       '1aSKOYuXU1s08DJU0FahGBNXbrAFlgJ_YJ9v3EwN50kU/export?format=txt'
-tar_dir = '/storage/emulated/0/qpython/scripts3/Dolphin/'
+tar_dir = os.path.dirname(os.path.abspath(__file__)) + '/Dolphin/'
 
 with ctx.suppress(Exception):
     requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = ciphers
     lns = requests.get(url).content.decode('utf-8').split('\n')
-    a, b = [i for i, x in enumerate(lns) if '~'*10 in x]
+    a, b = [i for i, x in enumerate(lns) if '~'*10 in x][0:2]
     lns = [x for x in [re.sub('[\r\t ]', '', x) for x in lns[a+1:b]] if x]
     tt = {lns[i]: lns[i+1] for i in range(0, len(lns), 2)}
 
