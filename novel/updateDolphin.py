@@ -22,7 +22,18 @@ with ctx.suppress(Exception), open(tar_dir + bfs[-1], 'r') as fp:
             key = line[a:b].strip(' ')
             if key in tt:
                 line = line[0:a] + key + ' = ' + tt[key] + '</A>\n'
+                del tt[key]
         ulns.append(line)
 
 with ctx.suppress(Exception), open(tar_dir + 'updated.html', 'w') as fp:
     fp.writelines(ulns)
+
+txt = '<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><html>\n'
+sp = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+if tt:
+    for k, v in tt.items():
+        txt += k + ' = ' + v + sp + 'Missing\n'
+url = 'https://gz-gae.appspot.com/upload-gcb'
+fn = 'novel/odd.html'
+x = requests.post(url, data={'filename':fn, 'text':txt})
+pass
