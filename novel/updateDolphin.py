@@ -1,10 +1,6 @@
 import os, re, contextlib as ctx, requests
 
 
-def comparable(rr):
-    return eval(rr.lower().replace('end', '33-0').replace('-', '*3000+'))
-
-
 ciphers = 'TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:' \
           'TLS13-AES-256-GCM-SHA384:ECDHE:!COMPLEMENTOFDEFAULT'
 url = 'https://docs.google.com/document/d/' \
@@ -16,10 +12,9 @@ with ctx.suppress(Exception):
     lns = requests.get(url).content.decode('utf-8').split('\n')
     a, b = [i for i, x in enumerate(lns) if '~'*10 in x][0:2]
     lns = [x for x in [re.sub('[\r\t ]', '', x) for x in lns[a+1:b]] if x]
-    tt = {lns[i]: lns[i+1] for i in range(0, len(lns), 2)}
 
+nu, tt = 0,  {lns[i]: lns[i+1] for i in range(0, len(lns), 2)}
 bfs = sorted([f for f in os.listdir(tar_dir) if f.startswith('Book')])
-nu = 0
 with ctx.suppress(Exception), open(tar_dir + bfs[-1], 'r') as fp:
     ulns = []
     for line in fp.readlines():
@@ -27,20 +22,18 @@ with ctx.suppress(Exception), open(tar_dir + bfs[-1], 'r') as fp:
             a, b, c = line.rfind('">') + 2, line.rfind('='), line.rfind('<')
             key, val = line[a:b].strip(' '), line[b+1:c].strip(' ')
             if key in tt:
-                r = comparable(tt[key]) - comparable(val)
-                if r >= 0:
+                u, v = [eval(x.lower().replace('end', '999999')
+                             .replace('-', '*3000+')) for x in [tt[key], val]]
+                if u >= v:
                     line = line[0:a] + key + ' = ' + tt[key] + '</A>\n'
-                    nu += 1 if r > 0 else 0
+                    nu += 1 if u > v else 0
                 else:
                     print(key + ' = ' + tt[key] + ' < ' + val + '    old')
                 del tt[key]
         ulns.append(line)
+for k, v in tt.items():
+    print(k + ' = ' + v + '       Missing')
+print('\n' + str(nu) + ' records are updated.')
 
 with ctx.suppress(Exception), open(tar_dir + 'updated.html', 'w') as fp:
     fp.writelines(ulns)
-
-if tt:
-    for k, v in tt.items():
-        print(k + ' = ' + v + '       Missing')
-
-print('\n' + str(nu) + ' records are updated.')
