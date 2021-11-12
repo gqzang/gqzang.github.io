@@ -1,17 +1,8 @@
 import os, re, contextlib as ctx, requests
 
 
-def digit_v(rec):
-    if '-' not in rec:
-        return int(rec)
-    chp, sec = rec.split('-')
-    return int(chp) * 3000 + int(sec)
-
-
-def comp_rec(v1, v2):
-    if v1.lower() == 'end':
-        return 1
-    return digit_v(v1) - digit_v(v2)
+def comparable(rr):
+    return eval(rr.lower().replace('end', '33-0').replace('-', '*3000+'))
 
 
 ciphers = 'TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:' \
@@ -36,7 +27,7 @@ with ctx.suppress(Exception), open(tar_dir + bfs[-1], 'r') as fp:
             a, b, c = line.rfind('">') + 2, line.rfind('='), line.rfind('<')
             key, val = line[a:b].strip(' '), line[b+1:c].strip(' ')
             if key in tt:
-                r = comp_rec(tt[key], val)
+                r = comparable(tt[key]) - comparable(val)
                 if r >= 0:
                     line = line[0:a] + key + ' = ' + tt[key] + '</A>\n'
                     nu += 1 if r > 0 else 0
