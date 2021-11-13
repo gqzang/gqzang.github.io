@@ -23,7 +23,7 @@ with ctx.suppress(Exception), open(tar_dir + bfs[-1], 'r') as fp:
             if key in tt:
                 u, v = xtr(tt[key]), xtr(val)
                 if u >= v:
-                    line = line[0:a] + key + ' = ' + tt[key] + '</A>\n'
+                    line = line[0:a+2] + key + ' = ' + tt[key] + '</A>\n'
                     nu += 1 if u > v else 0
                 else:
                     print(key + ' = ' + tt[key] + ' < ' + val + '    old')
