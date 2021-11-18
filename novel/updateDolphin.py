@@ -1,13 +1,13 @@
-import os, re, contextlib as ctx, requests
+import os, re, contextlib, requests
 
 ciphers = 'TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:' \
           'TLS13-AES-256-GCM-SHA384:ECDHE:!COMPLEMENTOFDEFAULT'
-url = 'https://docs.google.com/document/d/' \
-      '1aSKOYuXU1s08DJU0FahGBNXbrAFlgJ_YJ9v3EwN50kU/export?format=txt'
+docid = '1aSKOYuXU1s08DJU0FahGBNXbrAFlgJ_YJ9v3EwN50kU'
+url = f'https://docs.google.com/document/d/{docid}/export?format=txt'
 bdir = os.path.dirname(os.path.abspath(__file__)) + '/Dolphin/'
 xtr = lambda x: eval(x.lower().replace('end', '9'*6).replace('-', '*3000+'))
 
-with ctx.suppress(Exception):
+with contextlib.suppress(Exception):
     requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = ciphers
     lns = requests.get(url).content.decode('utf-8').split('\n')
     a, b = [i for i, x in enumerate(lns) if '~'*10 in x][0:2]
@@ -21,14 +21,14 @@ with ctx.suppress(Exception):
                 if key in tt:
                     u, v = xtr(tt[key]), xtr(val)
                     if u >= v:
-                        line = line[0:a+2] + key + ' = ' + tt[key] + '</A>\n'
+                        line = f'{line[0:a+2]}{key} = {tt[key]} </A>\n'
                         nu += 1 if u > v else 0
                     else:
-                        print(key + ' = ' + tt[key] + ' < ' + val + '   old')
+                        print(f'{key} = {tt[key]} < {val}     old')
                     del tt[key]
             ulns.append(line)
     with open(bdir + 'Adjusted.html', 'w') as fp:
         fp.writelines(ulns)
     for k, v in tt.items():
-        print(k + ' = ' + v + '       Missing')
-    print('\n' + str(nu) + ' records are updated.')
+        print(f'{k} = {v}      Missing')
+    print(f'\n{nu} records are updated.')
