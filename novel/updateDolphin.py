@@ -14,21 +14,19 @@ with contextlib.suppress(Exception):
     lns = [x for x in [re.sub('[\r\t ]', '', x) for x in lns[a+1:b]] if x]
     ulns, nu, tt = [], 0, {lns[i]: lns[i+1] for i in range(0, len(lns), 2)}
     with open(bdir + max([f for f in os.listdir(bdir)]), 'r') as fp:
-        for line in fp.readlines():
-            if line.startswith('<DT><A HREF="') and line.endswith('</A>\n'):
-                a, b, c = line.rfind('">'), line.rfind('='), line.rfind('</')
-                key, val = line[a+2:b].strip(' '), line[b+1:c].strip(' ')
-                if key in tt:
-                    u, v = xtr(tt[key]), xtr(val)
-                    if u >= v:
-                        line = f'{line[0:a+2]}{key} = {tt[key]} </A>\n'
-                        nu += 1 if u > v else 0
-                    else:
-                        print(f'{key} = {tt[key]} < {val}     old')
-                    del tt[key]
-            ulns.append(line)
+        for ln in fp.readlines():
+            if ln.startswith('<DT><A HREF="') and ln.endswith('</A>\n'):
+                a, b, c = ln.rfind('">'), ln.rfind('='), ln.rfind('</')
+                k, val = ln[a+2:b].strip(' '), ln[b+1:c].strip(' ')
+                if k in tt:
+                    u, v = xtr(tt[k]), xtr(val)
+                    ln = ln if u < v else f'{ln[0:a+2]}{k} = {tt[k]}</A>\n'
+                    nu += 1 if u > v else 0
+                    if u < v:
+                        print(f'{k} = {tt[k]} < {val}     old')
+                    del tt[k]
+            ulns.append(ln)
     with open(bdir + 'Adjusted.html', 'w') as fp:
         fp.writelines(ulns)
-    for k, v in tt.items():
-        print(f'{k} = {v}      Missing')
+    print('\n'.join([f'{k} = {v}     Missing' for k, v in tt.items()]))
     print(f'\n{nu} records are updated.')
