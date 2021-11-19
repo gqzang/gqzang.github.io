@@ -16,11 +16,11 @@ with contextlib.suppress(Exception):
     with open(bdir + max([f for f in os.listdir(bdir)]), 'r') as fp:
         for ln in fp.readlines():
             if ln.startswith('<DT><A HREF="') and ln.endswith('</A>\n'):
-                a, b, c = ln.rfind('">'), ln.rfind('='), ln.rfind('</')
-                k, val = ln[a+2:b].strip(' '), ln[b+1:c].strip(' ')
+                a, b, c = ln.rfind('">') + 2, ln.rfind('='), ln.rfind('</')
+                k, val = ln[a:b].strip(' '), ln[b+1:c].strip(' ')
                 if k in tt:
                     u, v = xtr(tt[k]), xtr(val)
-                    ln = ln if u < v else f'{ln[0:a+2]}{k} = {tt[k]}</A>\n'
+                    ln = ln if u < v else f'{ln[0:a]}{k} = {tt[k]}</A>\n'
                     nu += 1 if u > v else 0
                     if u < v:
                         print(f'{k} = {tt[k]} < {val}     old')
