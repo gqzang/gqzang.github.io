@@ -1,0 +1,10 @@
+#!/bin/bash
+
+pxp hc-free
+export host=rstudio
+
+array=(updateDolphinSftp.py updateDolphinSrv.sh updateDolphin.service)
+for i in "${array[@]}"
+do
+	gcloud compute scp $i --zone us-east1-b gqzang@$host:~/UpdateDolphin
+done
