@@ -2,8 +2,8 @@ import os, re, time, datetime, pytz, contextlib as ctx, requests as req
 
 docid = '1aSKOYuXU1s08DJU0FahGBNXbrAFlgJ_YJ9v3EwN50kU'
 url = f'https://docs.google.com/document/d/{docid}/export?format=txt'
-# bdir = '/var/sftp/uploads/Dolphin/'
-bdir = './Dolphin/'
+bdir = '/var/sftp/uploads/Dolphin/'
+# bdir = './Dolphin/'
 xtr = lambda x: eval(x.lower().replace('end', '9'*6).replace('-', '*3000+'))
 
 while True:
@@ -26,6 +26,8 @@ while True:
                         nu += 0 if u <= v else 1
                         if u < v:
                             msg += f'    {k} = {tt[k]} < {val}     Old\n'
+                        if u > v:
+                            msg += f'    {k} = {tt[k]} > {val}\n'
                         del tt[k]
                 ulns.append(ln)
         updated = True
