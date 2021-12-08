@@ -31,8 +31,8 @@ while not time.sleep(60):
         if changed:
             with open(fn, 'w') as fp:
                 fp.writelines(ulns)
-            msg += ''.join([f'    {k} = {v}    Missing\n' for k, v in tt.items()])
-            msg += f'  {nu} records are updated.\n\n'
+            mr = [f'    {k} = {v}    Missing\n' for k, v in tt.items()]
+            msg += ''.join(mr) + f'  {nu} records are updated.\n\n'
             with open(bdir + 'Alogs.txt', 'a') as fp:
                 tz, fmt = pytz.timezone('US/Eastern'), '%Y-%m-%d %H:%M:%S'
-                fp.write(f'{datetime.datetime.now(tz=tz).strftime(fmt)}:\n{msg}')
+                fp.write(f'{datetime.datetime.now(tz).strftime(fmt)}:\n{msg}')
