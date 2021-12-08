@@ -19,19 +19,17 @@ while not time.sleep(60):
                     if k in tt:
                         u, v = xtr(tt[k]), xtr(val)
                         if u > v:
-                            ln = f'{ln[0:a]}{k} = {tt[k]}</A>\n'
-                            nu += 1
+                            ln, nu = f'{ln[0:a]}{k} = {tt[k]}</A>\n', nu + 1
                             msg += f'    {k} = {tt[k]} > {val}\n'
                         if u < v:
                             msg += f'    {k} = {tt[k]} < {val}    Old\n'
                         del tt[k]
                 ulns.append(ln)
-        updated = True
-        if os.path.exists(bdir + 'Adjusted.html'):
-            with open(bdir + 'Adjusted.html', 'r') as fp:
-                updated = not (fp.readlines() == ulns)
-        if updated:
-            with open(bdir + 'Adjusted.html', 'w') as fp:
+        changed, fn = True, bdir + 'Adjusted.html'
+        with ctx.suppress(Exception), open(fn, 'r') as fp:
+            changed = (fp.readlines() != ulns)
+        if changed:
+            with open(fn, 'w') as fp:
                 fp.writelines(ulns)
             msg += ''.join([f'    {k} = {v}    Missing\n' for k, v in tt.items()])
             msg += f'  {nu} records are updated.\n\n'
