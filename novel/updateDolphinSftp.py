@@ -33,6 +33,6 @@ while not time.sleep(60):
                 fp.writelines(ulns)
             mr = [f'    {k} = {v}    Missing\n' for k, v in tt.items()]
             msg += ''.join(mr) + f'  {nu} records are updated.\n\n'
-            with open(bdir + 'Alogs.txt', 'a') as fp:
+            with open(bdir + 'AA/logs.txt', 'a') as fp:
                 tz, fmt = pytz.timezone('US/Eastern'), '%Y-%m-%d %H:%M:%S'
                 fp.write(f'{datetime.datetime.now(tz).strftime(fmt)}:\n{msg}')
