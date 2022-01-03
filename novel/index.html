@@ -17,12 +17,12 @@
     <table>
         <tr>
             <th>
-                <p>Click button to <button onclick="Open(1)">Open</button> webpages below</p> 
+                <p>Click to <button onclick="Open(1)">Open</button> pages below:</p> 
                 <div id="list1"></div>
             </th>
 
             <th>
-                <p>Click button to <button onclick="Open(2)">Open</button> webpages below</p> 
+                <p>Click to <button onclick="Open(2)">Open</button> pages below:</p> 
                 <div id="list2"></div>
             </th>
         </tr>
@@ -30,28 +30,30 @@
  
     <script> 
         var websites1 = [
-            {url: "https://www.uukanshu.com/b/121477/", name: "小阁老"},
-            {url: "https://www.uukanshu.com/b/123801/", name: "数风流人物"},
-            {url: "https://www.uukanshu.com/b/125296/", name: "宋北云"},
-            {url: "https://www.uukanshu.com/b/35944/", name: "北雄"},
-            {url: "https://www.uukanshu.com/b/127232/", name: "唐时明月宋时关"},
-            {url: "https://www.uukanshu.com/b/29932/", name: "寒门崛起"},
-            {url: "https://www.uukanshu.com/b/114697/", name: "奋斗在沙俄"},
-            {url: "https://www.uukanshu.com/b/160074/", name: "大明小学生"},
-            {url: "https://www.uukanshu.com/b/159434/", name: "我不是野人"},
-            {url: "https://www.uukanshu.com/b/141831/", name: "新顺1730"},
-            {url: "https://www.uukanshu.com/b/147165/", name: "新书"},
             {url: "https://www.uukanshu.com/b/164757/", name: "朕"},
             {url: "https://www.uukanshu.com/b/169594/", name: "封侯"},
             {url: "https://www.uukanshu.com/b/164658/", name: "汉道天下"},
             {url: "https://www.uukanshu.com/b/163650/", name: "晚唐浮生"},
-            {url: "https://www.uukanshu.com/b/149040/", name: "大魏春"},
+            {url: "https://www.uukanshu.com/b/160074/", name: "大明小学生"},
             {url: "https://www.uukanshu.com/b/153082/", name: "五代河山风月"},
+            {url: "https://www.uukanshu.com/b/35944/", name: "北雄"},
+            {url: "https://www.uukanshu.com/b/147165/", name: "新书"},
+            {url: "https://www.uukanshu.com/b/121477/", name: "小阁老"},
+            {url: "https://www.uukanshu.com/b/149040/", name: "大魏春"},
+            {url: "https://www.uukanshu.com/b/29932/", name: "寒门崛起"},
+            {url: "https://www.uukanshu.com/b/141831/", name: "新顺1730"},
+            {url: "https://www.uukanshu.com/b/123801/", name: "数风流人物"},
+            {url: "https://www.uukanshu.com/b/114697/", name: "奋斗在沙俄"},
             // {url: "", name: ""},
             ];
 
         var websites2 = [
+            {url: "https://www.uukanshu.com/b/564/", name: "赘婿"},
             {url: "https://www.uukanshu.com/b/9581/", name: "摄政大明"},
+            {url: "https://www.uukanshu.com/b/127232/", name: "唐时明月宋时关"},
+            {url: "https://www.uukanshu.com/b/125296/", name: "宋北云"},
+            {url: "https://www.uukanshu.com/b/159434/", name: "我不是野人"},
+            {url: "https://www.uukanshu.com/b/91014/", name: "北齐帝业"},
             {url: "https://www.uukanshu.com/b/132157/", name: "莽明"},
             {url: "https://www.uukanshu.com/b/131463/", name: "汉旗不落"},
             {url: "https://www.uukanshu.com/b/45903/", name: "续南明"},
@@ -60,8 +62,6 @@
             {url: "https://www.uukanshu.com/b/98165/", name: "红楼之开国篇"},
             {url: "https://www.uukanshu.com/b/129063/", name: "大燕公子"},
             {url: "https://www.uukanshu.com/b/135140/", name: "红楼翰墨"},
-            {url: "https://www.uukanshu.com/b/91014/", name: "北齐帝业"},
-            {url: "https://www.uukanshu.com/b/564/", name: "赘婿"},
         ]
 
         var websitesList = [null, websites1, websites2];
