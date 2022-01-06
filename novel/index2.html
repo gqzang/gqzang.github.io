@@ -17,19 +17,22 @@
     <table>
         <tr>
             <th>
-                <p>Click to <button onclick="Open(1)">Open</button> pages:</p> 
+                <p>Click to <button onclick="Open(0)">Open</button> webpages:</p> 
+                <div id="list0"></div>
+            </th>
+            <th>
+                <p>Click to <button onclick="Open(1)">Open</button> webpages:</p> 
                 <div id="list1"></div>
             </th>
-
             <th>
-                <p>Click to <button onclick="Open(2)">Open</button> pages:</p> 
+                <p>Click to <button onclick="Open(2)">Open</button> webpages:</p> 
                 <div id="list2"></div>
             </th>
         </tr>
     </table>
  
     <script> 
-        var websites1 = [
+        var websites0 = [
             {url: "https://www.uukanshu.com/b/564/", name: "赘婿"},
             {url: "https://www.uukanshu.com/b/164757/", name: "朕"},
             {url: "https://www.uukanshu.com/b/169594/", name: "封侯"},
@@ -39,19 +42,22 @@
             {url: "https://www.uukanshu.com/b/141831/", name: "新顺1730"},
             {url: "https://www.uukanshu.com/b/160074/", name: "大明小学生"},
             {url: "https://www.uukanshu.com/b/153082/", name: "五代河山风月"},
+            // {url: "", name: ""},
+            ]
+
+        var websites1 = [
             {url: "https://www.uukanshu.com/b/35944/", name: "北雄"},
             {url: "https://www.uukanshu.com/b/147165/", name: "新书"},
             {url: "https://www.uukanshu.com/b/173887/", name: "终宋"},
             {url: "https://www.uukanshu.com/b/149040/", name: "大魏春"},
             {url: "https://www.uukanshu.com/b/29932/", name: "寒门崛起"},
-            // {url: "", name: ""},
-            ];
-
-        var websites2 = [
             {url: "https://www.uukanshu.com/b/9581/", name: "摄政大明"},
             {url: "https://www.uukanshu.com/b/123801/", name: "数风流人物"},
             {url: "https://www.uukanshu.com/b/114697/", name: "奋斗在沙俄"},
             {url: "https://www.uukanshu.com/b/127232/", name: "唐时明月宋时关"},
+        ]
+
+        var websites2 = [
             {url: "https://www.uukanshu.com/b/91014/", name: "北齐帝业"},
             {url: "https://www.uukanshu.com/b/132157/", name: "莽明"},
             {url: "https://www.uukanshu.com/b/131463/", name: "汉旗不落"},
@@ -63,9 +69,9 @@
             {url: "https://www.uukanshu.com/b/135140/", name: "红楼翰墨"},
         ]
 
-        var websitesList = [null, websites1, websites2];
+        var websitesList = [websites0, websites1, websites2]
         
-        for( var i = 1; i <= 2; i ++ ) {
+        for( var i = 0; i < websitesList.length; i ++ ) {
             ol = document.createElement('ol');
             document.getElementById('list' + i).appendChild(ol);
             websitesList[i].forEach(function (web) {
