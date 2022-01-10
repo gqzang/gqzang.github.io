@@ -4,26 +4,28 @@
 
         <script>
             $(document).ready( () => {
-                $("#call").click( () => { 
+                $("#call").click( () => {
+                    let LM; $.get( "https://gz-gae.appspot.com/link-map", {}, data => LM = data )
+
                     $.support.cors = true
                     let t = 0, ls = setInterval( () => $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
                     $('#list').html("")
-                    $.get( "https://gz-gae.appspot.com/update", {},
-                        data => {
-                            clearInterval(ls) 
-                            const rec = data.split('\n').filter(_=>_)
-                            $('#info').html( rec.shift() )
- 
-                            const ol = document.createElement('ol')
-                            document.getElementById('list').appendChild(ol)
-                            rec.forEach( u => {
-                                const li = document.createElement('li');
-                                ol.appendChild(li);
-                                li.innerHTML = u
-                            })
-                            
-                       }
-                    ).fail( () => clearInterval(ls) || $('#info').html("Server error!") )
+                    $.get( "https://gz-gae.appspot.com/update", {}, data => {
+                        clearInterval(ls) 
+                        const rec = data.split('\n').filter(_=>_)
+                        $('#info').html( rec.shift() )
+
+                        const ol = document.createElement('ol')
+                        document.getElementById('list').appendChild(ol)
+                        rec.forEach( u => { 
+                            let [name, info] = u.split('---'); name = name.trim()
+                            const link = "<a href='" + LM[name] + "' target='" + name + "'>" + name + "</a>"
+                            const li = document.createElement('li')
+                            ol.appendChild(li);
+                            li.innerHTML = link + ' ---' + info
+                        })
+                    })
+                    .fail( () => clearInterval(ls) || $('#info').html("Server error!") )
                 })
             })
         
