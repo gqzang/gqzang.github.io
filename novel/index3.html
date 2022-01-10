@@ -8,7 +8,20 @@
                     $.support.cors = true
                     let t = 0, ls = setInterval( () => $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
                     $.get( "https://gz-gae.appspot.com/update", {},
-                        data => clearInterval(ls) || $('#info').html(data)
+                        data => {
+                            clearInterval(ls) 
+                            const rec = data.split('\n').filter(_=>_)
+                            
+                            const ol = document.createElement('ol');
+                            document.getElementById('list').appendChild(ol);
+                            rec.forEach( u => {
+                                const li = document.createElement('li');
+                                ol.appendChild(li);
+                                li.innerHTML = u
+                            })
+                            
+                            $('#info').html(rec.length)
+                        }
                     ).fail( () => clearInterval(ls) || $('#info').html("Server error!") )
                 })
             })
@@ -18,5 +31,6 @@
 
     <body background="cloud.png"> 
         <button id="call">Updates:</button> &nbsp;&nbsp; <span id="info"></span>
+        <div id="list"></div>
     </body> 
 </html> 
