@@ -1,0 +1,22 @@
+<html> 
+    <head> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+
+        <script>
+            $(document).ready( () => {
+                $("#call").click( () => { 
+                    $.support.cors = true
+                    let t = 0, ls = setInterval( () => $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
+                    $.get( "https://gz-gae.appspot.com/update", {},
+                        data => clearInterval(ls) || $('#info').html(data)
+                    ).fail( () => clearInterval(ls) || $('#info').html("Server error!") )
+                })
+            })
+        
+        </script> 
+    </head> 
+
+    <body> 
+        <button id="call">Updates:</button> &nbsp;&nbsp; <span id="info"></span>
+    </body> 
+</html> 
