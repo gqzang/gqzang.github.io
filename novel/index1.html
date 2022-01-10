@@ -12,7 +12,8 @@
                         data => {
                             clearInterval(ls) 
                             const rec = data.split('\n').filter(_=>_)
-                            
+                            $('#info').html( rec.shift() )
+ 
                             const ol = document.createElement('ol')
                             document.getElementById('list').appendChild(ol)
                             rec.forEach( u => {
@@ -21,8 +22,7 @@
                                 li.innerHTML = u
                             })
                             
-                            $('#info').html(rec.length)
-                        }
+                       }
                     ).fail( () => clearInterval(ls) || $('#info').html("Server error!") )
                 })
             })
