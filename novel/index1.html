@@ -5,22 +5,20 @@
     <script>
         $(document).ready(_=> $("#U").click(_=> { let LM, gae = 'https://gz-gae.appspot.com/'
             $.get( `${gae}link-map`, {}, d => LM = d ).fail(_=> $('#info').html("LM error!"))
-            $.support.cors = true; $('#list').html(""); $('#info').html("")
+            $.support.cors = true; $('#info').html(""); $('#list').empty()
             let t = 0, ls = setInterval( _=> $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
             $.get( `${gae}update`, {}, d => { const r = d.split('\n').filter(_=>_)
                 clearInterval(ls) || $('#info').html( `<b>${r.shift()}</b>` )
-                const ol = document.createElement('ol')
-                document.getElementById('list').appendChild(ol)
                 r.forEach( u => { const [name, info] = u.split(' ---')
-                    const li = document.createElement('li'), url = LM[name]
-                    li.innerHTML = `<a href='${url}' target='NvIdx'>${name}</a> ---${info}`
-                    ol.appendChild(li);
+                    let url = LM[name]
+                    let html = `<li><a href='${url}' target='NvIdx'>${name}</a> ---${info}</li>`
+                    $('#list').append(html);
                 })
             }).fail( _=> clearInterval(ls) || $('#info').html("Server error!") )
         }))
     </script> 
 </head>
 <body background="cloud.png"> 
-    <button id="U"><b>Updates:</b></button> <span id="info"></span> <div id="list"></div>
+    <button id="U"><b>Updates:</b></button> <span id="info"></span> <ol id="list"></ol>
 </body>
 </html>
