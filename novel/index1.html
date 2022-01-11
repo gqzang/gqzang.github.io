@@ -8,11 +8,10 @@
             $.support.cors = true; $('#info').html(""); $('#list').empty()
             let t = 0, ls = setInterval( _=> $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
             $.get( `${gae}update`, {}, d => { const r = d.split('\n').filter(_=>_)
-                clearInterval(ls) || $('#info').html( `<b>${r.shift()}</b>` )
-                r.forEach( u => { const [name, info] = u.split(' ---')
-                    let url = LM[name]
-                    let html = `<li><a href='${url}' target='NvIdx'>${name}</a> ---${info}</li>`
-                    $('#list').append(html);
+                clearInterval(ls); $('#info').html( `<b>${r.shift()}</b>` )
+                r.forEach( u => { const [name, info] = u.split(' ---'), url = LM[name],
+                    html = `<a href='${url}' target='NvIdx'>${name}</a> ---${info}`
+                    $('#list').append( `<li>${html}</li>`);
                 })
             }).fail( _=> clearInterval(ls) || $('#info').html("Server error!") )
         }))
