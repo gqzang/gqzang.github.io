@@ -2,14 +2,13 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
-
     <script>
-        $(document).ready( () => $("#updates").click( () => {
-            let LM; $.get( "https://gz-gae.appspot.com/link-map", {}, data => LM = data )
-                    .fail( () => $('#info').html("Can't load link map!") )
+        $(document).ready( _=> $("#updates").click( _=> { let LM
+            $.get( "https://gz-gae.appspot.com/link-map", {}, data => LM = data )
+                .fail( _=> $('#info').html("Can't load link map!") )
             $.support.cors = true
             $('#list').html(""); $('#info').html("")
-            let t = 0, ls = setInterval( () => $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
+            let t = 0, ls = setInterval( _=> $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
             $.get( "https://gz-gae.appspot.com/update", {}, data => { clearInterval(ls) 
                 const rec = data.split('\n').filter(_=>_)
                 $('#info').html( rec.shift() )
@@ -21,9 +20,8 @@
                     li.innerHTML = `<a href='${LM[name]}' target='${name}'>${name}</a> ---${info}`
                     ol.appendChild(li);
                 })
-            }).fail( () => clearInterval(ls) || $('#info').html("Server error!") )
+            }).fail( _=> clearInterval(ls) || $('#info').html("Server error!") )
         }))
-    
     </script> 
 </head> 
 
