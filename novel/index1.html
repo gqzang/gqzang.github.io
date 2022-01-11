@@ -15,18 +15,18 @@
 
                 const ol = document.createElement('ol')
                 document.getElementById('list').appendChild(ol)
-                rec.forEach( u => { const [name, info] = u.split(' ---')
+                rec.forEach( u => { const [name, info] = u.split(' ---'), url = LM[name]
                     const li = document.createElement('li')
-                    li.innerHTML = `<a href='${LM[name]}' target='${name}'>${name}</a> ---${info}`
+                    li.innerHTML = `<a href='${url}' target='${name}'>${name}</a> ---${info}`
                     ol.appendChild(li);
                 })
             }).fail( _=> clearInterval(ls) || $('#info').html("Server error!") )
         }))
     </script> 
-</head> 
+</head>
 
 <body background="cloud.png"> 
-    <button id="updates">Updates:</button> &nbsp;&nbsp; <span id="info"></span>
+    <button id="updates">Updates:</button> <span id="info"></span>
     <div id="list"></div>
-</body> 
-</html> 
+</body>
+</html>
