@@ -1,32 +1,26 @@
 <html> 
-<head>
+<head> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
     <script>
-        $(document).ready( _=> $("#updates").click( _=> { let LM
-            $.get( "https://gz-gae.appspot.com/link-map", {}, data => LM = data )
-                .fail( _=> $('#info').html("Can't load link map!") )
-            $.support.cors = true
-            $('#list').html(""); $('#info').html("")
+        $(document).ready(_=> $("#U").click(_=> { let LM, gae = 'https://gz-gae.appspot.com/'
+            $.get( `${gae}link-map`, {}, d => LM = d ).fail(_=> $('#info').html("LM error!"))
+            $.support.cors = true; $('#list').html(""); $('#info').html("")
             let t = 0, ls = setInterval( _=> $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
-            $.get( "https://gz-gae.appspot.com/update", {}, data => { clearInterval(ls) 
-                const rec = data.split('\n').filter(_=>_)
-                $('#info').html( rec.shift() )
-
+            $.get( `${gae}update`, {}, d => { const r = d.split('\n').filter(_=>_)
+                clearInterval(ls) || $('#info').html( r.shift() )
                 const ol = document.createElement('ol')
                 document.getElementById('list').appendChild(ol)
-                rec.forEach( u => { const [name, info] = u.split(' ---'), url = LM[name]
-                    const li = document.createElement('li')
-                    li.innerHTML = `<a href='${url}' target='${name}'>${name}</a> ---${info}`
+                r.forEach( u => { const [name, info] = u.split(' ---')
+                    const li = document.createElement('li'), url = LM[name]
+                    li.innerHTML = `<a href='${url}' target='NvIdx'>${name}</a> ---${info}`
                     ol.appendChild(li);
                 })
             }).fail( _=> clearInterval(ls) || $('#info').html("Server error!") )
         }))
     </script> 
 </head>
-
 <body background="cloud.png"> 
-    <button id="updates">Updates:</button> <span id="info"></span>
-    <div id="list"></div>
+    <button id="U">Updates:</button> <span id="info"></span> <div id="list"></div>
 </body>
 </html>
