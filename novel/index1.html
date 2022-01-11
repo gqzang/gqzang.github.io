@@ -8,7 +8,7 @@
             $.support.cors = true; $('#list').html(""); $('#info').html("")
             let t = 0, ls = setInterval( _=> $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
             $.get( `${gae}update`, {}, d => { const r = d.split('\n').filter(_=>_)
-                clearInterval(ls) || $('#info').html( r.shift() )
+                clearInterval(ls) || $('#info').html( `<b>${r.shift()}</b>` )
                 const ol = document.createElement('ol')
                 document.getElementById('list').appendChild(ol)
                 r.forEach( u => { const [name, info] = u.split(' ---')
@@ -21,6 +21,6 @@
     </script> 
 </head>
 <body background="cloud.png"> 
-    <button id="U">Updates:</button> <span id="info"></span> <div id="list"></div>
+    <button id="U"><b>Updates:</b></button> <span id="info"></span> <div id="list"></div>
 </body>
 </html>
