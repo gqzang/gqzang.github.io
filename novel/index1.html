@@ -9,10 +9,8 @@
             let t = 0, ls = setInterval( _=> $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
             $.get( `${gae}update`, {}, d => { const r = d.split('\n').filter(_=>_)
                 clearInterval(ls); $('#info').html( `<b>${r.shift()}</b>` )
-                r.forEach( u => { const [name, info] = u.split(' ---'), url = LM[name],
-                    html = `<a href='${url}' target='NvIdx'>${name}</a> ---${info}`
-                    $('#list').append( `<li>${html}</li>`);
-                })
+                r.forEach( u => { const [name, info] = u.split(' ---'); $('#list').append(
+                    `<li><a href='${LM[name]}' target='NvIdx'>${name}</a> ---${info}</li>`)})
             }).fail( _=> clearInterval(ls) || $('#info').html("Server error!") )
         }))
     </script> 
