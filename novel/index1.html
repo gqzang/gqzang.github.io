@@ -1,21 +1,20 @@
 <html> 
 <head> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-        $(document).ready(_=> $("#U").click(_=> { let LM, gae = 'https://gz-gae.appspot.com/'
-            $.get( `${gae}link-map`, {}, d => LM = d ).fail(_=> $('#info').html("LM error!"))
+        $(document).ready(_=> $("#updt").click(_=> { let gae = 'https://gz-gae.appspot.com/'
             $.support.cors = true; $('#info').html(""); $('#list').empty()
             let t = 0, ls = setInterval( _=> $('#info').html( "-\\|/"[ (t ++) % 4 ] ), 250 )
             $.get( `${gae}update`, {}, d => { const r = d.split('\n').filter(_=>_)
                 clearInterval(ls); $('#info').html( `<b>${r.shift()}</b>` )
-                r.forEach( u => { const [name, info] = u.split(' ---'); $('#list').append(
-                    `<li><a href='${LM[name]}' target='NvIdx'>${name}</a> ---${info}</li>`)})
-            }).fail( _=> clearInterval(ls) || $('#info').html("Server error!") )
-        }))
+                r.forEach( l => { const [nm, msg, url] = l.split(' -- '); $('#list').append(
+                    `<li><a href='${url}' target='NvIdx'>${nm}</a> -- ${msg}</li>` ) } )
+            } ).fail( _=> clearInterval(ls) || $('#info').html( "Server error!" ) )
+        } ) )
     </script> 
 </head>
 <body background="cloud.png"> 
-    <button id="U"><b>Updates:</b></button> <span id="info"></span> <ol id="list"></ol>
+    <button id="updt"><b>Updates:</b></button> <span id="info"></span> <ol id="list"></ol>
 </body>
 </html>
