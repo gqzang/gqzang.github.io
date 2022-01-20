@@ -1,0 +1,25 @@
+<html> 
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        const Gid = '1aSKOYuXU1s08DJU0FahGBNXbrAFlgJ_YJ9v3EwN50kU/export'
+        const GDL = `https://docs.google.com/document/d/${Gid}`, UL= 'https://www.uukanshu.com'
+
+        const xH = s => s.replace( /&#\d+;/gm, t => String.fromCharCode( t.match(/\d+/gm)[0] ) )
+
+        const getGD = _=> $.get(GDL).then( t => t.match(/~{9}.*?~{9}/)[0].split(UL).slice(1)
+            .map( s => ( s= xH(s).match(/^\/b\/\d+\/|>.+<\/a>|>\d+(-\d+)?</g) ) 
+                && [ UL+s[0], s[1].slice(1,-4), s[2].slice(1,-1) ] ) ).catch(_=>0)
+
+        $(document).ready(_=> $("#updt").click( async _=> { 
+            $.support.cors = true; $('#info').html(""); $('#list').empty()
+            const d = await getGD(); if (!d) return $('#info').html("GDoc error!")
+            console.log(d)
+        } ) )
+    </script> 
+</head>
+<body background="cloud.png"> 
+    <button id="updt"><b>Updates:</b></button> <span id="info"></span> <ol id="list"></ol>
+</body>
+</html>
