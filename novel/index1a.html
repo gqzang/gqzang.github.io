@@ -2,16 +2,17 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./jquery.xdomainajax.js"></script>
     <script>
         const Gid = '1aSKOYuXU1s08DJU0FahGBNXbrAFlgJ_YJ9v3EwN50kU/export'
-        const GDL = `https://docs.google.com/document/d/${Gid}`, GL = 'https://www.google.com/'
+        const GDL = `https://docs.google.com/document/d/${Gid}`
         const UL= 'https://www.uukanshu.com'
 
         const xH = s => s.replace( /&#\d+;/gm, t => String.fromCharCode( t.match(/\d+/gm)[0] ) )
 
-        const getGD = _=> $.get(GDL).then( t => t.match(/~{9}.*?~{9}/)[0].split(GL).slice(1)
-            .map( s => { ( s= xH(s).match(/^url.*?"|>.+<\/a>|>\d+(-\d+)?</g) ) ;
-                return [ GL+s[0], s[1].slice(1,-4), s[2].slice(1,-1) ] } ) ).catch(_=>0)
+        const getGD = _=> $.get(GDL).then( t => t.match(/~{9}.*?~{9}/)[0].split(UL).slice(1)
+            .map( s => { ( s= xH(s).match(/^\/b\/\d+\/|>.+<\/a>|>\d+(-\d+)?</g) ) ;
+                return [ UL+s[0], s[1].slice(1,-4), s[2].slice(1,-1) ] } ) ).catch(_=>0)
         
         const getMsg = (z, [l, n, c]) => $.get(l).then( t => {
             console.log(t)
