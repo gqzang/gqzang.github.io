@@ -11,11 +11,16 @@
         const getGD = _=> $.get(GDL).then( t => t.match(/~{9}.*?~{9}/)[0].split(UL).slice(1)
             .map( s => ( s= xH(s).match(/^\/b\/\d+\/|>.+<\/a>|>\d+(-\d+)?</g) ) 
                 && [ UL+s[0], s[1].slice(1,-4), s[2].slice(1,-1) ] ) ).catch(_=>0)
+        
+        const getMsg = (z, [l, n, c]) => $.get(l).then( t => {
+            console.log(t)
+        })
 
-        $(document).ready(_=> $("#updt").click( async _=> { 
+        $(document).ready( _=> $("#updt").click( async _=> { 
             $.support.cors = true; $('#info').html(""); $('#list').empty()
-            const d = await getGD(); if (!d) return $('#info').html("GDoc error!")
-            console.log(d)
+            const z = [], d = await getGD(); if (!d) return $('#info').html("GDoc error!")
+            await getMsg(z, d[0])
+            
         } ) )
     </script> 
 </head>
