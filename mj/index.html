@@ -7,12 +7,12 @@
   grid-template-columns: auto auto auto;
   background-color: white;
   border: 0px solid white;
-  padding: 10px;
+  padding: 5px;
 }
 .container > div {
   background-color: #f1f1f1;
   border: 1px solid black;
-  padding: 10px;
+  padding: 5px;
   font-size: 30px;
   text-align: center;
 }
@@ -21,18 +21,18 @@
   display: grid;
   grid-template-columns: auto auto auto auto;
   background-color: dodgerblue;
-  padding: 10px;
+  padding: 5px;
 }
 .player > div {
   background-color: #f1f1f1;
   border: 1px solid black;
-  padding: 10px;
+  padding: 5px;
   font-size: 30px;
   text-align: center;
 }
 
 input[type="text"]{ 
-  padding: 5px 5px; 
+  padding: 1px 1px; 
   font-size: 30px;
 }
 
@@ -47,46 +47,70 @@ input[type="text"]{
 <div class="container">
   <div></div>
   <div>
-    <div class="player">
-      <div>P
+    <div class="player" id="X2">
+      <div>Point<br>
         <input type="text" id="P2" value="800" readonly size="4">
       </div>
-      <div>C
+      <div>Cloth<br>
         <input type="text" id="C2" value="5" readonly size="1">
       </div>
-      <div>D
+      <div>Debt<br>
         <input type="text" id="D2" value="0" readonly size="4">
       </div>  
-      <div>G
+      <div>Gain<br>
         <input type="text" id="G2" value="0" readonly size="4">
       </div>  
     </div>
   </div>
   <div></div>  
   <div>
-    <div class="player">
-      <div>Point</div>
-      <div>Cloth</div>
-      <div>Debt</div>  
-      <div>Gain</div>  
+    <div class="player" id="X3">
+      <div>Point<br>
+        <input type="text" id="P3" value="600" readonly size="4">
+      </div>
+      <div>Cloth<br>
+        <input type="text" id="C3" value="5" readonly size="1">
+      </div>
+      <div>Debt<br>
+        <input type="text" id="D3" value="0" readonly size="4">
+      </div>  
+      <div>Gain<br>
+        <input type="text" id="G3" value="0" readonly size="4">
+      </div>  
     </div>
   </div>
   <div></div>
   <div>
-    <div class="player">
-      <div>Point</div>
-      <div>Cloth</div>
-      <div>Debt</div>  
-      <div>Gain</div>  
+    <div class="player" id="X1">
+      <div>Point<br>
+        <input type="text" id="P1" value="600" readonly size="4">
+      </div>
+      <div>Cloth<br>
+        <input type="text" id="C1" value="5" readonly size="1">
+      </div>
+      <div>Debt<br>
+        <input type="text" id="D1" value="0" readonly size="4">
+      </div>  
+      <div>Gain<br>
+        <input type="text" id="G1" value="0" readonly size="4">
+      </div>  
     </div>
   </div>
   <div></div>
   <div>
-    <div class="player">
-      <div>Point</div>
-      <div>Cloth1</div>
-      <div>Cloth2</div>
-      <div>Cloth3</div>
+    <div class="player" id="X0">
+      <div>Point<br>
+        <input type="text" id="P0" value="1000" readonly size="4">
+      </div>
+      <div>Cloth1<br>
+        <input type="text" id="C01" value="0" readonly size="1">
+      </div>
+      <div>Cloth2<br>
+        <input type="text" id="C02" value="0" readonly size="1">
+      </div>  
+      <div>Cloth3<br>
+        <input type="text" id="C03" value="0" readonly size="1">
+      </div>  
     </div>
   </div>
   <div></div>  
