@@ -138,7 +138,9 @@ textarea {
 </div>
 </div>
 
-<textarea id="game" rows="20" cols="64">aaa</textarea>
+Game: <input type="text" id="gcnt" value="0" readonly size="4"><br>
+<textarea id="game" rows="20" cols="64"></textarea>
+
 
 <script>
   
@@ -163,12 +165,17 @@ textarea {
   document.getElementById("prob").style.backgroundColor = "purple"
   setWinProb()
   
-  const gameLog = document.getElementById('game')
-  gameLog.value = 'Hello, world!\n'
+  function logGame(txt) {
+    gcnt = parseInt(document.getElementById("gcnt").value) + 1
+    document.getElementById("gcnt").value = gcnt
+    const gameLog = document.getElementById('game')
+    gameLog.value += gcnt.toString().padStart(3, '0') + '> ' + txt + '\n'
+    gameLog.scrollTop = gameLog.scrollHeight
+  }
+
   for (let i = 0; i < 100; i++) {
-    gameLog.value += 'a\n';
+    logGame(i)
   } 
-  gameLog.scrollTop = gameLog.scrollHeight
 
 </script>
 
