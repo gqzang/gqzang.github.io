@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <style>
 .container {
   display: grid;
   grid-template-columns: auto auto auto;
   background-color: white;
   border: 0px solid white;
-  padding: 5px;
+  padding: 4px;
 }
 .container > div {
   background-color: #f1f1f1;
   border: 1px solid black;
-  padding: 5px;
-  font-size: 30px;
+  padding: 4px;
+  font-size: 24px;
   text-align: center;
 }
 
@@ -21,22 +22,27 @@
   display: grid;
   grid-template-columns: auto auto auto auto;
   background-color: dodgerblue;
-  padding: 5px;
+  padding: 4px;
 }
 .player > div {
   background-color: #f1f1f1;
   border: 1px solid black;
-  padding: 5px;
-  font-size: 30px;
+  padding: 4px;
+  font-size: 24px;
   text-align: center;
 }
 
 input[type="text"]{ 
   padding: 1px 1px; 
-  font-size: 30px;
+  font-size: 24px;
 }
-</style>
 
+textarea { 
+  font-size: 24px; 
+  resize: none;
+}
+
+</style>
 </head>
 <body>
 <!-- refert to https://www.w3schools.com/css/tryit.asp?filename=trycss_grid  -->
@@ -130,6 +136,9 @@ input[type="text"]{
       </div>  
   </div>  
 </div>
+</div>
+
+<textarea id="game" rows="20" cols="64">aaa</textarea>
 
 <script>
   
@@ -154,6 +163,12 @@ input[type="text"]{
   document.getElementById("prob").style.backgroundColor = "purple"
   setWinProb()
   
+  const gameLog = document.getElementById('game')
+  gameLog.value = 'Hello, world!\n'
+  for (let i = 0; i < 100; i++) {
+    gameLog.value += 'a\n';
+  } 
+  gameLog.scrollTop = gameLog.scrollHeight
 
 </script>
 
