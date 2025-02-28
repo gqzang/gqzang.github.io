@@ -16,26 +16,65 @@
   font-size: 30px;
   text-align: center;
 }
+
+.player {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  background-color: dodgerblue;
+  padding: 10px;
+}
+.player > div {
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+}
 </style>
 </head>
 <body>
 <!-- refert to https://www.w3schools.com/css/tryit.asp?filename=trycss_grid  -->
 
-<h1>Grid Layout</h1>
-
-<p>A Grid Layout must have a parent element with the <em>display</em> property set to <em>grid</em> or <em>inline-grid</em>.</p>
-
-<p>Direct child element(s) of the grid container automatically becomes grid items.</p>
+<h1>Mahjong</h1>
+<p></p>
 
 <div class="container">
   <div></div>
-  <div>2</div>
+  <div>
+    <div class="player">
+      <div>Point</div>
+      <div>Cloth</div>
+      <div>Debt</div>  
+      <div>Gain</div>  
+    </div>
+  </div>
   <div></div>  
-  <div>3</div>
+  <div>
+    <div class="player">
+      <div>Point</div>
+      <div>Cloth</div>
+      <div>Debt</div>  
+      <div>Gain</div>  
+    </div>
+  </div>
   <div></div>
-  <div>1</div>  
+  <div>
+    <div class="player">
+      <div>Point</div>
+      <div>Cloth</div>
+      <div>Debt</div>  
+      <div>Gain</div>  
+    </div>
+  </div>
   <div></div>
-  <div>0</div>
+  <div>
+    <div class="player">
+      <div>Point</div>
+      <div>Cloth1</div>
+      <div>Cloth2</div>
+      <div>Cloth3</div>
+    </div>
+  </div>
   <div></div>  
 </div>
 
