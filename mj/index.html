@@ -133,6 +133,12 @@ input[type="text"]{
 
 <script>
   
+  function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
   var wps;
   function setWinProb() {
     wp1 = document.getElementById("wp1").value
@@ -144,8 +150,10 @@ input[type="text"]{
     console.log(wps)
   }
 
-  document.getElementById("X2").style.backgroundColor = "red"
+  // document.getElementById("X2").style.backgroundColor = "red"
   document.getElementById("prob").style.backgroundColor = "purple"
+  setWinProb()
+  
 
 </script>
 
