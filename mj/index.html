@@ -181,8 +181,11 @@ textarea {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
+  dealer = parseInt(getRandomIntInclusive(0, 3))
   function playOneGame() {
-
+    for(let d = 0; d < 4; d ++)
+      document.getElementById("X" + d).style.backgroundColor = d == dealer ? "red" : "dodgerblue"
+    dealer = (dealer + 1) % 4
   }
 
   async function playMJ() {
