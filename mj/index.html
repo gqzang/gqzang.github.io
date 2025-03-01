@@ -166,8 +166,18 @@ textarea {
   const get = id => document.getElementById(id).value
   const set = (id, v) => {document.getElementById(id).value = v}
   
-  function setWinProb() { set("wp0", 100 - get("wp1") - get("wp2") - get("wp3")) }
+  var winnerMap;
+  function setWinProb() { 
+    set("wp0", 100 - get("wp1") - get("wp2") - get("wp3")) 
+    winnerMap = new Map()
+    v = 0
+    for(let i = 0; i < 4; i ++)
+      for(let j = 0; j < get("wp" + i); j ++, v ++)
+      winnerMap.set(v, i)
+  }
   setWinProb()
+
+  const randSel = pMap => pMap.get(getRandomIntInclusive(0, pMap.size - 1))
   
   function logGame(txt) {
     gcnt = parseInt(get("gcnt")) + 1
@@ -181,18 +191,34 @@ textarea {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
+  const scoreProb = {
+    100: 1, 90: 2, 80: 3, 70: 4, 60: 5, 50: 6, 40: 7, 30: 8, 20: 9, 10: 10,
+    9: 20, 8: 30, 7: 40, 6: 50, 5: 60, 4: 70, 3: 80, 2: 90, 1: 99 }
+  var scoreMap = new Map()
+  v = 0
+  for(const key in scoreProb) {
+    for(let i = 0; i < scoreProb[key]; i ++, v++)
+      scoreMap.set(v, key)
+  }
+
   dealer = parseInt(getRandomIntInclusive(0, 3))
   function playOneGame() {
     for(let d = 0; d < 4; d ++)
       document.getElementById("X" + d).style.backgroundColor = d == dealer ? "red" : "dodgerblue"
-    dealer = (dealer + 1) % 4
+
+    score = randSel(scoreMap)
+    winner = randSel(winnerMap)
+    gunner = getRandomIntInclusive(0, 3)
+    info = "d:" + dealer + "  w:" + winner + "  g:" + gunner + "  s:" + score.padStart(2, '0')
+    if( winner != dealer ) dealer = (dealer + 1) % 4
+    return info
   }
 
   async function playMJ() {
     while(true) {
         for (let i = 0; i < get("batch"); i++) {
         res = playOneGame()
-        logGame(i)
+        logGame(res)
         await delay(get("gtime"))
       }     
       if( ! confirm("Do you want to continue?") ) {
