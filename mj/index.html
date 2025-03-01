@@ -142,10 +142,10 @@ textarea {
         <input type="text" id="gcnt" value="0" readonly size="2">
       </div>
       <div>Time<br>
-        <input type="text" id="gtime" value="500" size="2">
+        <input type="text" id="gtime" value="100" size="2">
       </div>
       <div>Batch<br>
-        <input type="text" id="batch" value="10" size="2">
+        <input type="text" id="batch" value="100" size="2">
       </div>
     </div>
   </div>  
@@ -203,6 +203,7 @@ textarea {
   }
 
   dealer = parseInt(getRandomIntInclusive(0, 3))
+
   function playOneGame() {
     for(let d = 0; d < 4; d ++)
       document.getElementById("X" + d).style.backgroundColor = d == dealer ? "red" : "dodgerblue"
@@ -227,6 +228,12 @@ textarea {
       sum += rs
     }
     update[winner] = sum
+
+    // for Gains
+    if(winner != 0) {
+      update[winner] += update[0]
+      changeBy("G" + winner, -update[0])
+    }
 
     for(let i = 0; i < update.length; i ++) {
       info += "  " + i + ":" + update[i]
