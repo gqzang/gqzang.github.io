@@ -163,21 +163,15 @@ textarea {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  var wps;
-  function setWinProb() {
-    wp1 = document.getElementById("wp1").value
-    wp2 = document.getElementById("wp2").value
-    wp3 = document.getElementById("wp3").value
-    wp0 = 100 - wp1 - wp2 - wp3
-    document.getElementById("wp0").value = wp0
-    wps = [wp0, wp1, wp2, wp3]
-    console.log(wps)
-  }
+  const get = id => document.getElementById(id).value
+  const set = (id, v) => {document.getElementById(id).value = v}
+  
+  function setWinProb() { set("wp0", 100 - get("wp1") - get("wp2") - get("wp3")) }
   setWinProb()
   
   function logGame(txt) {
-    gcnt = parseInt(document.getElementById("gcnt").value) + 1
-    document.getElementById("gcnt").value = gcnt
+    gcnt = parseInt(get("gcnt")) + 1
+    set("gcnt", gcnt)
     const gameLog = document.getElementById('game')
     gameLog.value += gcnt.toString().padStart(3, '0') + '> ' + txt + '\n'
     gameLog.scrollTop = gameLog.scrollHeight
@@ -193,10 +187,10 @@ textarea {
 
   async function playMJ() {
     while(true) {
-        for (let i = 0; i < document.getElementById("batch").value; i++) {
+        for (let i = 0; i < get("batch"); i++) {
         res = playOneGame()
         logGame(i)
-        await delay(document.getElementById("gtime").value)
+        await delay(get("gtime"))
       }     
       if( ! confirm("Do you want to continue?") ) {
         break
