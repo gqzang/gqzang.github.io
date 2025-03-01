@@ -165,6 +165,7 @@ textarea {
 
   const get = id => document.getElementById(id).value
   const set = (id, v) => {document.getElementById(id).value = v}
+  const changeBy = (id, v) => set(id, parseInt(get(id)) + v)
   
   var winnerMap;
   function setWinProb() { 
@@ -209,9 +210,31 @@ textarea {
     score = randSel(scoreMap)
     winner = randSel(winnerMap)
     gunner = getRandomIntInclusive(0, 3)
-    info = "d:" + dealer + "  w:" + winner + "  g:" + gunner + "  s:" + score.padStart(2, '0')
+    info = "d:" + dealer + "  w:" + winner + "  g:" + gunner + "  s:" + score.padStart(2, '0') + '  ~~~'
+
+    update = [0, 0, 0, 0]
+    ss = winner == dealer ? score * 2 : score               // zhuang jia ying
+    extra = "    " + winner + (winner == dealer ? "Lz" : "")
+    ss = winner == gunner ? ss * 2 : ss                     // zi mo
+    extra += winner == gunner ? "Zm" : (" " + gunner + (gunner == dealer ? "Zj" : "") + "Dp")
+    sum = 0
+    for(let i = 0; i < update.length; i ++) {
+      if(i == winner) continue
+      rs = parseInt(ss)
+      if(i == dealer) rs *= 2
+      if(i == gunner) rs *= 2
+      update[i] = -rs
+      sum += rs
+    }
+    update[winner] = sum
+
+    for(let i = 0; i < update.length; i ++) {
+      info += "  " + i + ":" + update[i]
+      changeBy("P"+i, update[i])
+    }
+
     if( winner != dealer ) dealer = (dealer + 1) % 4
-    return info
+    return info + extra
   }
 
   async function playMJ() {
