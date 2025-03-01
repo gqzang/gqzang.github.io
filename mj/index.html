@@ -145,7 +145,7 @@ textarea {
         <input type="text" id="gtime" value="100" size="2">
       </div>
       <div>Batch<br>
-        <input type="text" id="batch" value="100" size="2">
+        <input type="text" id="batch" value="1000" size="3">
       </div>
     </div>
   </div>  
@@ -163,7 +163,7 @@ textarea {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  const get = id => document.getElementById(id).value
+  const get = id => parseInt(document.getElementById(id).value)
   const set = (id, v) => {document.getElementById(id).value = v}
   const changeBy = (id, v) => set(id, parseInt(get(id)) + v)
   
@@ -266,18 +266,33 @@ textarea {
     }
   }
 
+  function checkEnd() {
+    if(get("P0") < 0) return -1
+
+    var lost = 0
+    for(let i = 1; i < 4; i ++) 
+      if((get("C"+i) == 0) && (get("G"+i) + get("P"+i) < get("D"+i))) lost += 1
+    return lost == 3 ? 1 : 0 
+  }
+
   async function playMJ() {
+    var end
     while(true) {
       for (let i = 0; i < get("batch"); i++) {
         res = playOneGame()
         logGame(res)
         for(let j = 1; j < 4; j ++) ClothAndDebt(j)
+        end = checkEnd()
+        if(end != 0) break
         await delay(get("gtime"))
-      }     
+      }
+      if(end != 0) break      
       if( ! confirm("Do you want to continue?") ) {
         break
       }
     }
+
+    alert(end > 0 ? "You win!" : "You lose!")
   }
 
   playMJ();
