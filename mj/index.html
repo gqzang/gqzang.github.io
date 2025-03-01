@@ -139,11 +139,9 @@ textarea {
 </div>
 
 Game: <input type="text" id="gcnt" value="0" readonly size="4"><br>
-<textarea id="game" rows="20" cols="64"></textarea>
-
+<textarea id="game" rows="27" cols="81"></textarea>
 
 <script>
-  
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -173,10 +171,19 @@ Game: <input type="text" id="gcnt" value="0" readonly size="4"><br>
     gameLog.scrollTop = gameLog.scrollHeight
   }
 
-  for (let i = 0; i < 100; i++) {
-    logGame(i)
-  } 
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
 
+  async function playMJ() {
+    for (let i = 0; i < 6; i++) {
+      await delay(1000)
+      confirm("wait")
+      logGame(i)
+    }     
+  }
+
+  playMJ();
 </script>
 
 </body>
