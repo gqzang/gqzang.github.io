@@ -123,16 +123,16 @@ textarea {
   <div>
     <div class="player" id="prob">
       <div>WP 0<br>
-        <input type="text" id="wp0" value="40" readonly size="2">
+        <input type="text" id="wp0" value="50" readonly size="2">
       </div>
       <div>WP 1<br>
-        <input type="text" id="wp1" value="18" size="2" onchange="setWinProb()">
+        <input type="text" id="wp1" value="15" size="2" onchange="setWinProb()">
       </div>
       <div>WP 2<br>
-        <input type="text" id="wp2" value="24" size="2" onchange="setWinProb()">
+        <input type="text" id="wp2" value="20" size="2" onchange="setWinProb()">
       </div>  
       <div>WP 3<br>
-        <input type="text" id="wp3" value="18" size="2" onchange="setWinProb()">
+        <input type="text" id="wp3" value="15" size="2" onchange="setWinProb()">
       </div>  
     </div> 
   </div>
@@ -229,26 +229,42 @@ textarea {
     }
     update[winner] = sum
 
+    for(let i = 0; i < update.length; i ++) {
+      info += "  " + i + ":" + update[i]
+      changeBy("P"+i, update[i])
+    }
+
     // for Gains
     if(winner != 0) {
       update[winner] += update[0]
       changeBy("G" + winner, -update[0])
     }
 
-    for(let i = 0; i < update.length; i ++) {
-      info += "  " + i + ":" + update[i]
-      changeBy("P"+i, update[i])
-    }
-
     if( winner != dealer ) dealer = (dealer + 1) % 4
     return info + extra
   }
 
+  function ClothAndDebt(i) {
+    if(get("P"+i) < 0 && get("C"+i) > 0) {
+      n = Math.min(Math.ceil(-get("P"+i) / 100), get("C"+i))
+      changeBy("C"+i, -n)
+      changeBy("P"+i, n*100)
+      changeBy("C0"+i, n)
+      changeBy("P0", -n*100)
+    }
+    if(get("P"+i) < 0 && get("C"+i) <= 0) {
+      debt = parseInt(get("P"+i))
+      changeBy("D"+i, -debt)
+      changeBy("P0", debt)
+      set("P"+i, 0)
+    }
+  }
   async function playMJ() {
     while(true) {
-        for (let i = 0; i < get("batch"); i++) {
+      for (let i = 0; i < get("batch"); i++) {
         res = playOneGame()
         logGame(res)
+        for(let j = 1; j < 4; j ++) ClothAndDebt(j)
         await delay(get("gtime"))
       }     
       if( ! confirm("Do you want to continue?") ) {
