@@ -134,14 +134,29 @@ textarea {
       <div>WP 3<br>
         <input type="text" id="wp3" value="18" size="2" onchange="setWinProb()">
       </div>  
+    </div> 
+  </div>
+  <div>
+    <div class="container" id="info">
+      <div>Game<br>
+        <input type="text" id="gcnt" value="0" readonly size="2">
+      </div>
+      <div>Time<br>
+        <input type="text" id="gtime" value="500" size="2">
+      </div>
+      <div>Batch<br>
+        <input type="text" id="batch" value="10" size="2">
+      </div>
+    </div>
   </div>  
 </div>
-</div>
 
-Game: <input type="text" id="gcnt" value="0" readonly size="4"><br>
 <textarea id="game" rows="27" cols="81"></textarea>
-
 <script>
+  // document.getElementById("X2").style.backgroundColor = "red"
+  document.getElementById("prob").style.backgroundColor = "purple"
+  document.getElementById("info").style.backgroundColor = "green"
+
   function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -158,9 +173,6 @@ Game: <input type="text" id="gcnt" value="0" readonly size="4"><br>
     wps = [wp0, wp1, wp2, wp3]
     console.log(wps)
   }
-
-  // document.getElementById("X2").style.backgroundColor = "red"
-  document.getElementById("prob").style.backgroundColor = "purple"
   setWinProb()
   
   function logGame(txt) {
@@ -175,12 +187,21 @@ Game: <input type="text" id="gcnt" value="0" readonly size="4"><br>
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
+  function playOneGame() {
+
+  }
+
   async function playMJ() {
-    for (let i = 0; i < 6; i++) {
-      await delay(1000)
-      confirm("wait")
-      logGame(i)
-    }     
+    while(true) {
+        for (let i = 0; i < document.getElementById("batch").value; i++) {
+        res = playOneGame()
+        logGame(i)
+        await delay(document.getElementById("gtime").value)
+      }     
+      if( ! confirm("Do you want to continue?") ) {
+        break
+      }
+    }
   }
 
   playMJ();
