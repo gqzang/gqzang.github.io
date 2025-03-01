@@ -42,6 +42,15 @@ textarea {
   resize: none;
 }
 
+button {
+  font-size: 48px; 
+  color: darkolivegreen;
+  background-color: lightgoldenrodyellow;
+  padding: 9px;
+  border: 3px solid darkturquoise;
+  border-radius: 9px;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -148,10 +157,14 @@ textarea {
         <input type="text" id="batch" value="1000" size="3">
       </div>
     </div>
-  </div>  
+  </div>
+  <div>
+    <button onclick="playMJ()">Start Game</button> 
+  </div>
 </div>
 
 <textarea id="game" rows="27" cols="81"></textarea>
+
 <script>
   // document.getElementById("X2").style.backgroundColor = "red"
   document.getElementById("prob").style.backgroundColor = "purple"
@@ -294,9 +307,6 @@ textarea {
 
     alert(end > 0 ? "You win!" : "You lose!")
   }
-
-  playMJ();
 </script>
-
 </body>
 </html>
