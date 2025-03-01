@@ -292,7 +292,7 @@ img {
 
     var lost = 0
     for(let i = 1; i < 4; i ++) 
-      if((get("C"+i) == 0) && (get("G"+i) + get("P"+i) < get("D"+i))) lost += 1
+      if((get("C"+i) == 0) && (get("P"+i) < 100)) lost += 1
     return lost == 3 ? 1 : 0 
   }
 
