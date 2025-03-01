@@ -253,12 +253,19 @@ textarea {
       changeBy("P0", -n*100)
     }
     if(get("P"+i) < 0 && get("C"+i) <= 0) {
-      debt = parseInt(get("P"+i))
-      changeBy("D"+i, -debt)
-      changeBy("P0", debt)
-      set("P"+i, 0)
+      debt = -parseInt(get("P"+i))
+      nwp = Math.ceil(debt/100)           // number of winning prob to be reduced 
+      debt = nwp * 100
+      changeBy("D"+i, debt)
+      changeBy("P"+i, debt)
+      changeBy("P0", -debt)
+
+      nwp = Math.min(nwp, get("wp"+i))    // can't reduce wp below 0
+      changeBy("wp"+i, -nwp)              // reduce winning prob of i
+      setWinProb()                        // re-calc the winnerMap
     }
   }
+
   async function playMJ() {
     while(true) {
       for (let i = 0; i < get("batch"); i++) {
