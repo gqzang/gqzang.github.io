@@ -13,7 +13,22 @@
     text-align: center;
   }
   
-  .player {
+.container_1 {
+    display: grid;
+    grid-template-columns: 10% 80% 10%;
+    background-color: white;
+    border: 0px solid white;
+    padding: 4px;
+  }
+  .container_1 > div {
+    background-color: #f1f1f1;
+    border: 1px solid black;
+    padding: 4px;
+    font-size: 24px;
+    text-align: center;
+  }
+  
+.player {
     display: grid;
     grid-template-columns: auto auto auto auto;
     background-color: dodgerblue;
@@ -27,30 +42,43 @@
     text-align: center;
   }
   
-  input[type="text"]{ 
-    padding: 1px 1px; 
+.player_v {
+   display: grid;
+    grid-template-rows: auto auto auto auto;
+    background-color: dodgerblue;
+    padding: 4px;
+  }
+  .player_v > div {
+    background-color: #f1f1f1;
+    border: 1px solid black;
+    padding: 21px;
     font-size: 24px;
+    text-align: left;
   }
-  
-  textarea { 
-    font-size: 24px; 
-    resize: none;
-  }
-  
-  button {
-    font-size: 48px; 
-    color: darkolivegreen;
-    background-color: lightgoldenrodyellow;
-    padding: 9px;
-    border: 3px solid darkturquoise;
-    border-radius: 9px;
-    cursor: pointer;
-  }
-  
-  img {
-      max-width:600px;
-      max-height:75px;
-      width:auto;
-      height:auto;
-  }
-  
+
+input[type="text"]{ 
+  padding: 1px 1px; 
+  font-size: 24px;
+}
+
+textarea { 
+  font-size: 24px; 
+  resize: none;
+}
+
+button {
+  font-size: 36px; 
+  color: darkolivegreen;
+  background-color: lightgoldenrodyellow;
+  padding: 3px;
+  border: 2px solid darkturquoise;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+img {
+    max-width:600px;
+    max-height:75px;
+    width:auto;
+    height:auto;
+}
