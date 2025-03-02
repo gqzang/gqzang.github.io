@@ -159,13 +159,13 @@ img {
         <input type="text" id="gcnt" value="0" readonly size="2">
       </div>
       <div>Time<br>
-        <input type="text" id="gtime" value="100" size="2">
+        <input type="text" id="gtime" value="30" size="2">
       </div>
       <div>Batch<br>
         <input type="text" id="batch" value="1000" size="3">
       </div>
       <div>Scale<br>
-        <input type="text" id="scale" value="1" size="1">
+        <input type="text" id="scale" value="3" size="1">
       </div>
     </div>
   </div>
@@ -204,12 +204,16 @@ img {
 
   const randSel = pMap => pMap.get(getRandomIntInclusive(0, pMap.size - 1))
   
+  function show(txt) {
+    const gameLog = document.getElementById('game')
+    gameLog.value += txt
+    gameLog.scrollTop = gameLog.scrollHeight
+  }
+
   function logGame(txt) {
     gcnt = parseInt(get("gcnt")) + 1
     set("gcnt", gcnt)
-    const gameLog = document.getElementById('game')
-    gameLog.value += gcnt.toString().padStart(3, '0') + '> ' + txt + '\n'
-    gameLog.scrollTop = gameLog.scrollHeight
+    show(gcnt.toString().padStart(3, '0') + '> ' + txt + '\n')
   }
 
   function delay(ms) {
@@ -270,12 +274,15 @@ img {
   }
 
   function ClothAndDebt(i) {
+    let info = ""
+    let leading = "\n          "
     if(get("P"+i) < 0 && get("C"+i) > 0) {
       n = Math.min(Math.ceil(-get("P"+i) / 100), get("C"+i))
       changeBy("C"+i, -n)
       changeBy("P"+i, n*100)
       changeBy("C0"+i, n)
       changeBy("P0", -n*100)
+      info += leading + i + " sell " + n + " clothes for " + n*100 + " points."
     }
     if(get("P"+i) < 0 && get("C"+i) <= 0) {
       debt = -parseInt(get("P"+i))
@@ -288,7 +295,9 @@ img {
       nwp = Math.min(nwp, get("wp"+i))    // can't reduce wp below 0
       changeBy("wp"+i, -nwp)              // reduce winning prob of i
       setWinProb()                        // re-calc the winnerMap
+      info += leading + i + " borrow " + debt + " points => losing " + nwp + "% of winning prob."
     }
+    return info
   }
 
   function checkEnd() {
@@ -305,8 +314,8 @@ img {
     while(true) {
       for (let i = 0; i < get("batch"); i++) {
         res = playOneGame()
+        for(let j = 1; j < 4; j ++) res += ClothAndDebt(j)
         logGame(res)
-        for(let j = 1; j < 4; j ++) ClothAndDebt(j)
         end = checkEnd()
         if(end != 0) break
         await delay(get("gtime"))
@@ -316,8 +325,7 @@ img {
         break
       }
     }
-
-    alert(end > 0 ? "You win!" : "You lose!")
+    show(end > 0 ? "\nYou win!\n" : "\nYou lose!\n")
   }
 </script>
 </body>
