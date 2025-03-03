@@ -11,6 +11,17 @@ const get = id => parseInt(document.getElementById(id).value)
 const set = (id, v) => {document.getElementById(id).value = v}
 const changeBy = (id, v) => set(id, parseInt(get(id)) + v)
 
+async function setLevel() {
+  let level = localStorage.getItem('level')
+  if(!level) level = 0
+  localStorage.setItem("level", level)
+  set("level", level)
+
+  P0s = [1/2, 3/4, 7/6, 13/10, 23/16, 39/26, 65/42, 107/68, 175/110, 285/178]
+  set("P0", Math.floor(P0s[level]*2000))
+}
+setLevel()
+
 var winnerMap;
 function setWinProb() { 
   set("wp0", 100 - get("wp1") - get("wp2") - get("wp3")) 
@@ -129,6 +140,16 @@ function checkEnd() {
   return lost == 3 ? 1 : 0 
 }
 
+cont = false
+async function changeLevel(end) {
+  if(cont) return
+  cont = true
+
+  let level = (end > 0 ? get("level") + 1 : 0) % 10
+  set("level", level)
+  localStorage.setItem("level", level)
+}
+
 async function playMJ() {
   var end
   while(true) {
@@ -146,4 +167,5 @@ async function playMJ() {
     }
   }
   show(end > 0 ? "\nYou win!\n" : "\nYou lose!\n")
+  changeLevel(end)
 }
