@@ -16,14 +16,17 @@ winPropArr = [
   [40, 18, 24, 18],
   [36, 19, 26, 19]
 ]
+var level, pDist, truphy
 
 async function setLevel() {
   let states = localStorage.getItem('states')
   if(states == null) {
     states = [0, 0, 0]
-    localStorage.setItem("states", states)
-  }
-  [level, pDist, truphy] = states
+    localStorage.setItem("states", JSON.stringify(states))
+  } else 
+    states = JSON.parse(states)
+
+  level = states[0], pDist = states[1], truphy = states[2]
   set("level", level)
 
   P0s = [1/2, 3/4, 7/6, 13/10, 23/16, 39/26, 65/42, 107/68, 175/110, 285/178]
@@ -40,7 +43,17 @@ function setWinProb() {
     for(let j = 0; j < get("wp" + i); j ++, v ++)
     winnerMap.set(v, i)
 }
-setWinProb()
+
+function change_pDist(d=1) {
+  pDist = (pDist + d) % 3
+  set("pDist", pDist)
+  document.getElementById('pDist').innerText = "pDist " + pDist
+  for(let i = 0; i < 4; i ++)
+    set("wp"+i, winPropArr[pDist][i])
+  setWinProb()
+  localStorage.setItem("states", JSON.stringify([level, pDist, truphy]))
+}
+change_pDist(0)
 
 const randSel = pMap => pMap.get(getRandomIntInclusive(0, pMap.size - 1))
 
@@ -154,9 +167,9 @@ async function changeLevel(end) {
   if(cont) return
   cont = true
 
-  let level = (end > 0 ? get("level") + 1 : 0) % 10
+  level = (end > 0 ? get("level") + 1 : 0) % 10
   set("level", level)
-  localStorage.setItem("states", [level, 0, 0])
+  localStorage.setItem("states", JSON.stringify([level, pDist, truphy]))
 }
 
 async function playMJ() {
