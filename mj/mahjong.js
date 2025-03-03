@@ -11,10 +11,19 @@ const get = id => parseInt(document.getElementById(id).value)
 const set = (id, v) => {document.getElementById(id).value = v}
 const changeBy = (id, v) => set(id, parseInt(get(id)) + v)
 
+winPropArr = [
+  [50, 15, 20, 15],
+  [40, 18, 24, 18],
+  [36, 19, 26, 19]
+]
+
 async function setLevel() {
-  let level = localStorage.getItem('level')
-  if(!level) level = 0
-  localStorage.setItem("level", level)
+  let states = localStorage.getItem('states')
+  if(states == null) {
+    states = [0, 0, 0]
+    localStorage.setItem("states", states)
+  }
+  [level, pDist, truphy] = states
   set("level", level)
 
   P0s = [1/2, 3/4, 7/6, 13/10, 23/16, 39/26, 65/42, 107/68, 175/110, 285/178]
@@ -147,7 +156,7 @@ async function changeLevel(end) {
 
   let level = (end > 0 ? get("level") + 1 : 0) % 10
   set("level", level)
-  localStorage.setItem("level", level)
+  localStorage.setItem("states", [level, 0, 0])
 }
 
 async function playMJ() {
