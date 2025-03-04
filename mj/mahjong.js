@@ -11,34 +11,33 @@ const get = id => parseInt(document.getElementById(id).value)
 const set = (id, v) => {document.getElementById(id).value = v}
 const changeBy = (id, v) => set(id, parseInt(get(id)) + v)
 
+var states = {}
+const st_keys = ["level", "pDist", "truphy"]
+const load_states = () => st_keys.forEach(k => {states[k] = parseInt(localStorage.getItem(k)) | 0})
+const save_states = () => st_keys.forEach(k => localStorage.setItem(k, states[k]))
+const clear_states = () => st_keys.forEach(k => localStorage.removeItem(k))
+
 winPropArr = [
   [50, 15, 20, 15],
   [40, 18, 24, 18],
-  [36, 19, 26, 19]
+  [36, 19, 26, 19],
+  [60, 12, 16, 12]
 ]
-var level, pDist, truphy
 
 function clearGame() {
   if( ! confirm("This will clear the game, are you sure?") )
     return
-  localStorage.removeItem("states")
+  clear_states()
   location.reload()
 }
 
 async function setLevel() {
-  let states = localStorage.getItem('states')
-  if(states == null) {
-    states = [0, 0, 0]
-    localStorage.setItem("states", JSON.stringify(states))
-  } else 
-    states = JSON.parse(states)
-
-  level = states[0], pDist = states[1], truphy = states[2]
-  set("level", level)
-  set("truphy", truphy)
+  load_states()
+  set("level", states["level"])
+  set("truphy", states["truphy"])
 
   P0s = [1/2, 3/4, 7/6, 13/10, 23/16, 39/26, 65/42, 107/68, 175/110, 285/178]
-  set("P0", Math.floor(P0s[level]*2000))
+  set("P0", Math.floor(P0s[states["level"]]*2000))
 }
 setLevel()
 
@@ -53,13 +52,14 @@ function setWinProb() {
 }
 
 function change_pDist(d=1) {
-  pDist = (pDist + d) % 3
+  pDist = states["pDist"]
+  pDist = (pDist + d) % 4
   set("pDist", pDist)
   document.getElementById('pDist').innerText = "pDist " + pDist
   for(let i = 0; i < 4; i ++)
     set("wp"+i, winPropArr[pDist][i])
   setWinProb()
-  localStorage.setItem("states", JSON.stringify([level, pDist, truphy]))
+  states["pDist"] = pDist; save_states()
 }
 change_pDist(0)
 
@@ -175,6 +175,7 @@ async function changeLevel(end) {
   if(cont) return
   cont = true
 
+  level = states["level"]; truphy = states["truphy"]
   level = (end > 0 ? get("level") + 1 : 0)
   if(level >= 10) {
     level -= 10
@@ -183,7 +184,7 @@ async function changeLevel(end) {
     show("You got a Truphy!!!")
   }
   set("level", level)
-  localStorage.setItem("states", JSON.stringify([level, pDist, truphy]))
+  states["level"] = level; states["truphy"] = truphy; save_states()
 }
 
 async function playMJ() {
