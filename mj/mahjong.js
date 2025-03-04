@@ -28,6 +28,7 @@ async function setLevel() {
 
   level = states[0], pDist = states[1], truphy = states[2]
   set("level", level)
+  set("truphy", truphy)
 
   P0s = [1/2, 3/4, 7/6, 13/10, 23/16, 39/26, 65/42, 107/68, 175/110, 285/178]
   set("P0", Math.floor(P0s[level]*2000))
@@ -167,7 +168,13 @@ async function changeLevel(end) {
   if(cont) return
   cont = true
 
-  level = (end > 0 ? get("level") + 1 : 0) % 10
+  level = (end > 0 ? get("level") + 1 : 0)
+  if(level >= 10) {
+    level -= 10
+    truphy += 1
+    set("truphy", truphy)
+    show("You got a Truphy!!!")
+  }
   set("level", level)
   localStorage.setItem("states", JSON.stringify([level, pDist, truphy]))
 }
