@@ -77,19 +77,16 @@ function logGame(txt) {
   show(gcnt.toString().padStart(3, '0') + '> ' + txt + '\n')
 }
 
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const scoreProb = {
   100: 1, 90: 2, 80: 3, 70: 4, 60: 5, 50: 6, 40: 7, 30: 8, 20: 9, 10: 10,
   9: 20, 8: 30, 7: 40, 6: 50, 5: 60, 4: 70, 3: 80, 2: 90, 1: 99 }
-var scoreMap = new Map()
-v = 0
-for(const key in scoreProb) {
+
+var scoreMap = new Map(), v = 0
+for(const key in scoreProb)
   for(let i = 0; i < scoreProb[key]; i ++, v++)
     scoreMap.set(v, key)
-}
 
 dealer = parseInt(getRandomIntInclusive(0, 3))
 
@@ -170,7 +167,7 @@ function checkEnd() {
   return lost == 3 ? 1 : 0 
 }
 
-cont = false
+var cont = false
 async function changeLevel(end) {
   if(cont) return
   cont = true
