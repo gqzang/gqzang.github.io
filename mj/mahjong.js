@@ -18,6 +18,13 @@ winPropArr = [
 ]
 var level, pDist, truphy
 
+function clearGame() {
+  if( ! confirm("This will clear the game, are you sure?") )
+    return
+  localStorage.removeItem("states")
+  location.reload()
+}
+
 async function setLevel() {
   let states = localStorage.getItem('states')
   if(states == null) {
