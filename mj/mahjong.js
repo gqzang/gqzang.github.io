@@ -102,7 +102,7 @@ function playOneGame() {
   update = [0, 0, 0, 0]
   score *= get("scale")
   ss = winner == dealer ? score * 2 : score               // zhuang jia ying
-  extra = "    " + winner + (winner == dealer ? "Lz" : "")
+  extra = "    " + winner + (winner == dealer ? "Zj" : "")
   ss = winner == gunner ? ss * 2 : ss                     // zi mo
   extra += winner == gunner ? "Zm" : (" " + gunner + (gunner == dealer ? "Zj" : "") + "Dp")
   sum = 0
@@ -184,8 +184,13 @@ async function changeLevel(end) {
   states["level"] = level; states["truphy"] = truphy; save_states()
 }
 
-async function playMJ() {
-  var end
+var end = 0
+async function playMJ(conti) {
+  if(! conti && end != 0){
+    location.reload()
+    return
+  }
+
   while(true) {
     for (let i = 0; i < get("batch"); i++) {
       res = playOneGame()
