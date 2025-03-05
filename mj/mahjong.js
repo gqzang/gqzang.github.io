@@ -185,8 +185,10 @@ async function changeLevel(end) {
 }
 
 var end = 0
+document.getElementById("conti").style.background = "black"
 async function playMJ(conti) {
   if(! conti && end != 0){
+    // document.getElementById("start").innerText = "Start"
     location.reload()
     return
   }
@@ -207,4 +209,7 @@ async function playMJ(conti) {
   }
   show(end > 0 ? "\nYou win!\n" : "\nYou lose!\n")
   changeLevel(end)
+  document.getElementById("conti").disabled = end == 0
+  document.getElementById("conti").style.background = end == 0 ? "black" : "white"
+  document.getElementById("start").innerText = end == 0 ? "Start" : "Next"
 }
