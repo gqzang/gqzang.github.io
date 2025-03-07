@@ -90,8 +90,7 @@ for(const key in scoreProb)
 
 dealer = parseInt(getRandomIntInclusive(0, 3))
 
-const getPoints = () => [0,1,2,3].map(i=>get("P"+i))
-hist = [[0].concat(getPoints())]
+var xL = [0], hist = [[0], ...[0,1,2,3].map(i=>[get("P"+i)])]
 
 function playOneGame() {
   for(let d = 0; d < 4; d ++)
@@ -131,7 +130,9 @@ function playOneGame() {
   }
 
   if( winner != dealer ) dealer = (dealer + 1) % 4
-  hist.push([update[0]].concat(getPoints()))
+
+  xL.push(xL.length);    hist[0].push(update[0])
+  for(let i = 0; i < 4; i ++) hist[i+1].push(get("P"+i))
   return info + extra
 }
 
@@ -237,20 +238,13 @@ function plot() {
   const canvas = document.getElementById('canvas')
   canvas.style.height = "70%"
 
-  var x = [], ys = [[], [], [], [], []] 
-  hist.forEach((e, i) => {
-    x.push(i)
-    for(let j = 0; j < 5; j ++)
-      ys[j].push(e[j])
-  })
-
   const clrs = ["black", "yellow", "red", "green", "blue"]
   new Chart("chart", {
     type: "line",
     data: {
-      labels: x,
+      labels: xL,
       datasets: 
-        ys.map((e, i) => ({ data: e, borderColor: clrs[i], fill: false }))
+        hist.map((e, i) => ({ data: e, borderColor: clrs[i], fill: false }))
     },
     options: {
       legend: {display: false},
