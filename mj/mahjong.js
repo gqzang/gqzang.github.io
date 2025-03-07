@@ -90,6 +90,9 @@ for(const key in scoreProb)
 
 dealer = parseInt(getRandomIntInclusive(0, 3))
 
+const getPoints = () => [0,1,2,3].map(i=>get("P"+i))
+hist = [[0].concat(getPoints())]
+
 function playOneGame() {
   for(let d = 0; d < 4; d ++)
     document.getElementById("X" + d).style.backgroundColor = d == dealer ? "red" : "dodgerblue"
@@ -128,6 +131,7 @@ function playOneGame() {
   }
 
   if( winner != dealer ) dealer = (dealer + 1) % 4
+  hist.push([update[0]].concat(getPoints()))
   return info + extra
 }
 
