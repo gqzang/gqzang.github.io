@@ -232,9 +232,9 @@ function plot() {
   gameLog.rows = 6
   gameLog.scrollTop = gameLog.scrollHeight
 
-  const chart = document.getElementById('chart')
-  // chart.canvas.parentNode.style.height = '200px'
-  
+  const canvas = document.getElementById('canvas')
+  canvas.style.height = "70%"
+
   const xyValues = [
     {x:50, y:7},
     {x:60, y:8},
