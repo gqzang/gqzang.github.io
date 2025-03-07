@@ -190,11 +190,10 @@ async function changeLevel(end) {
 }
 
 function showBigGame() {
-  chgs = hist.map((x, i) => [i, x[0]])
+  chgs = hist[0].map((x, i) => [i, x])
   chgs.sort((a, b) => b[1] - a[1])
-  if(chgs.length > 8) {
+  if(chgs.length > 6)
     chgs = chgs.slice(0, 3).concat(chgs.slice(-3))
-  }
   show("Big Games:" + chgs.map(x => " " + x[0] + ":" + x[1]) + "\n") 
 }
 
@@ -224,19 +223,23 @@ async function playMJ() {
   showBigGame()
   changeLevel(end)
   document.getElementById("plot").disabled = end == 0
-  document.getElementById("plot").style.background = end == 0 ? "black" : "white"
+  document.getElementById("plot").style.background = end == 0 ? "black" : "lightgoldenrodyellow"
   document.getElementById("start").innerText = end == 0 ? "Start" : "Next"
 }
 
+var sp = false
 function plot() {
   // refer to https://www.w3schools.com/ai/ai_chartjs.asp
 
+  sp = ! sp              // switch
+
   const gameLog = document.getElementById('game')
-  gameLog.rows = 6
+  gameLog.rows = sp ? 6 : 23
   gameLog.scrollTop = gameLog.scrollHeight
 
+  document.getElementById("plot").style.background = sp ? "white" : "lightgoldenrodyellow"
   const canvas = document.getElementById('canvas')
-  canvas.style.height = "70%"
+  canvas.style.height = sp ? "70%" : "0px"
 
   const clrs = ["black", "yellow", "red", "green", "blue"]
   new Chart("chart", {
