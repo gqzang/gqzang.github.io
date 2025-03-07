@@ -198,10 +198,9 @@ function showBigGame() {
 }
 
 var end = 0
-document.getElementById("conti").style.background = "black"
-async function playMJ(conti) {
-  if(! conti && end != 0){
-    // document.getElementById("start").innerText = "Start"
+document.getElementById("plot").style.background = "black"
+async function playMJ() {
+  if(end != 0){
     location.reload()
     return
   }
@@ -223,7 +222,11 @@ async function playMJ(conti) {
   show(end > 0 ? "\nYou win!\n" : "\nYou lose!\n")
   showBigGame()
   changeLevel(end)
-  document.getElementById("conti").disabled = end == 0
-  document.getElementById("conti").style.background = end == 0 ? "black" : "white"
+  document.getElementById("plot").disabled = end == 0
+  document.getElementById("plot").style.background = end == 0 ? "black" : "white"
   document.getElementById("start").innerText = end == 0 ? "Start" : "Next"
+}
+
+function plot() {
+  alert("plot")
 }
