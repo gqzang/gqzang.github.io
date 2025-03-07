@@ -188,6 +188,15 @@ async function changeLevel(end) {
   states["level"] = level; states["truphy"] = truphy; save_states()
 }
 
+function showBigGame() {
+  chgs = hist.map((x, i) => [i, x[0]])
+  chgs.sort((a, b) => b[1] - a[1])
+  if(chgs.length > 8) {
+    chgs = chgs.slice(0, 3).concat(chgs.slice(-3))
+  }
+  show("Big Games:" + chgs.map(x => " " + x[0] + ":" + x[1]) + "\n") 
+}
+
 var end = 0
 document.getElementById("conti").style.background = "black"
 async function playMJ(conti) {
@@ -212,6 +221,7 @@ async function playMJ(conti) {
     }
   }
   show(end > 0 ? "\nYou win!\n" : "\nYou lose!\n")
+  showBigGame()
   changeLevel(end)
   document.getElementById("conti").disabled = end == 0
   document.getElementById("conti").style.background = end == 0 ? "black" : "white"
