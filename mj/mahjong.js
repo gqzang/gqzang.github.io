@@ -228,6 +228,8 @@ async function playMJ() {
 }
 
 function plot() {
+  // refer to https://www.w3schools.com/ai/ai_chartjs.asp
+
   const gameLog = document.getElementById('game')
   gameLog.rows = 6
   gameLog.scrollTop = gameLog.scrollHeight
@@ -242,37 +244,13 @@ function plot() {
       ys[j].push(e[j])
   })
 
+  const clrs = ["black", "yellow", "red", "green", "blue"]
   new Chart("chart", {
     type: "line",
     data: {
       labels: x,
-      datasets: [
-        {
-          data: ys[0],
-          borderColor: "black",
-          fill: false
-        },
-        {
-          data: ys[1],
-          borderColor: "yellow",
-          fill: false
-        },
-        {
-          data: ys[2],
-          borderColor: "red",
-          fill: false
-        },
-        {
-          data: ys[3],
-          borderColor: "green",
-          fill: false
-        },
-        {
-          data: ys[4],
-          borderColor: "blue",
-          fill: false
-        }
-      ]
+      datasets: 
+        ys.map((e, i) => ({ data: e, borderColor: clrs[i], fill: false }))
     },
     options: {
       legend: {display: false},
