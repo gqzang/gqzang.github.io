@@ -234,14 +234,14 @@ function plot() {
   sp = ! sp              // switch
 
   const gameLog = document.getElementById('game')
-  gameLog.rows = sp ? 6 : 23
+  gameLog.rows = sp ? 7 : 23
   gameLog.scrollTop = gameLog.scrollHeight
 
   document.getElementById("plot").style.background = sp ? "white" : "lightgoldenrodyellow"
   const canvas = document.getElementById('canvas')
-  canvas.style.height = sp ? "70%" : "0px"
+  canvas.style.height = sp ? "68%" : "0px"
 
-  const clrs = ["black", "yellow", "red", "green", "blue"]
+  const clrs = ["black", "purple", "red", "green", "blue"]
   new Chart("chart", {
     type: "line",
     data: {
