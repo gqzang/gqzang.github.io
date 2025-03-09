@@ -227,6 +227,18 @@ async function playMJ() {
   document.getElementById("start").innerText = end == 0 ? "Start" : "Next"
 }
 
+const backgroundColorPlugin = {
+  id: 'custom_canvas_background_color',
+  beforeDraw: (chart, args, options) => {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = options.color || '#fff'; // Default white if no color is provided
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+}
+
 var sp = false
 function plot() {
   // refer to https://www.w3schools.com/ai/ai_chartjs.asp
@@ -251,7 +263,13 @@ function plot() {
     },
     options: {
       legend: {display: false},
-      maintainAspectRatio: false
-    }
-  });
+      maintainAspectRatio: false,
+      plugins: {
+        custom_canvas_background_color: {
+          color: 'lightgray'
+        }
+      }
+    },
+    plugins: [backgroundColorPlugin]
+  })
 }
