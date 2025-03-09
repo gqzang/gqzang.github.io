@@ -204,7 +204,8 @@ async function playMJ() {
     location.reload()
     return
   }
-
+  document.getElementById('game').rows = 23
+  
   while(true) {
     for (let i = 0; i < get("batch"); i++) {
       res = playOneGame()
