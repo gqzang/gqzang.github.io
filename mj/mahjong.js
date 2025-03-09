@@ -204,7 +204,7 @@ async function playMJ() {
     location.reload()
     return
   }
-  document.getElementById('game').rows = 23
+  document.getElementById('game').hidden = false
   
   while(true) {
     for (let i = 0; i < get("batch"); i++) {
