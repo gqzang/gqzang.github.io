@@ -1,9 +1,16 @@
 "use strict";
 
-// async function get_url()
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 function set_image_url() {
-  var id = bonus["0001"]
+  var bValues = Object.values(bonus)
+  var bNum = bValues.length
+  var id = bValues[getRandomIntInclusive(0, bNum-1)]
+  // var id = bonus["0001"]
 
   gapi.client.drive.files.get({
     fileId: id,
@@ -18,12 +25,13 @@ function set_image_url() {
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     console.log(imageURL)
   })
+  .catch(err => alert(err))
 }
 
 function load_bonus() {
   gapi.load('client', () => {
     gapi.client.init({
-      'apiKey': 'AIzaSyC9yLlWoUMsbxKM2EpVA48p6Vuv3Q8b0XE',
+      'apiKey': 'AIzaSyAnN04MsPLu_hrSuQP6SftXtVvpSrY1uh0',
       'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
     })
     .then(() => set_image_url())    
