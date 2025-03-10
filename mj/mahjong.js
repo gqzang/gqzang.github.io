@@ -192,15 +192,13 @@ function showBigGame() {
 }
 
 var end = 0
-// document.getElementById("plot").style.background = "black"
-// document.getElementById("bonus").disabled = true
-
 async function playMJ() {
   if(end != 0){
     location.reload()
     return
   }
   document.getElementById('game').hidden = false
+  setProp("start", true, "black")
   
   while(true) {
     for (let i = 0; i < get("batch"); i++) {
@@ -222,6 +220,8 @@ async function playMJ() {
 
   setProp("bonus", end <= 0, end <= 0 ? "black" : "lightgoldenrodyellow")
   setProp("plot", end == 0, end == 0 ? "black" : "lightgoldenrodyellow")
+  setProp("start", false, "lightgoldenrodyellow")
+  document.getElementById('start').innerText = "Reset"
 }
 
 const backgroundColorPlugin = {

@@ -6,13 +6,11 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-var bonusUrl = ""
-var bonusKey = ""
+var bonusUrl = "", bonusKey = ""
 function set_image_url() {
   var keys = Object.keys(bonus)
   bonusKey = keys[getRandomIntInclusive(0, keys.length-1)]
   var id = bonus[bonusKey]
-  document.getElementById("bonus").innerText = bonusKey
 
   gapi.client.drive.files.get({
     fileId: id,
@@ -26,6 +24,7 @@ function set_image_url() {
     bonusUrl = imageURL
     // document.getElementById("bonusImage").src = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
+    document.getElementById("bonus").innerText = bonusKey
     setProp("show", false, "gold")
     console.log(imageURL)
   })
