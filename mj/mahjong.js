@@ -192,7 +192,9 @@ function showBigGame() {
 }
 
 var end = 0
-document.getElementById("plot").style.background = "black"
+// document.getElementById("plot").style.background = "black"
+// document.getElementById("bonus").disabled = true
+
 async function playMJ() {
   if(end != 0){
     location.reload()
@@ -217,6 +219,9 @@ async function playMJ() {
   show(end > 0 ? "\nYou win!\n" : "\nYou lose!\n")
   showBigGame()
   changeLevel(end)
+
+  document.getElementById("bonus").disabled = end <= 0
+  document.getElementById("bonus").style.background = end == 0 ? "black" : "lightgoldenrodyellow"
   document.getElementById("plot").disabled = end == 0
   document.getElementById("plot").style.background = end == 0 ? "black" : "lightgoldenrodyellow"
   document.getElementById("start").innerText = end == 0 ? "Start" : "Next"

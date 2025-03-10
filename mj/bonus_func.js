@@ -29,9 +29,16 @@ function set_image_url() {
 }
 
 function load_bonus() {
+  document.getElementById('game').hidden = true
+  document.getElementById("canvas").hidden = true
+  document.getElementById("bonus").disabled = true
+  document.getElementById("bonus").style.background = "black"
+  document.getElementById("plot").disabled = true
+  document.getElementById("plot").style.background = "black"
+
   gapi.load('client', () => {
     gapi.client.init({
-      'apiKey': 'AIzaSyAnN04MsPLu_hrSuQP6SftXtVvpSrY1uh0',
+      'apiKey': 'AIzaSyCvrQgpniZzqDM_VQGiUnLHYQCNAJlu3OY',
       'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
     })
     .then(() => set_image_url())    
