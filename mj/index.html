@@ -16,7 +16,7 @@
  
 <div class="container_1">
   <div>
-    <button id="bonus" disabled="true" style="background-color: black;" onclick="load_bonus()">Bonus</button> 
+    <button onclick="clearGame()">Clear</button>    
   </div>
   <div>
     <div class="player" id="X2">
@@ -74,7 +74,8 @@
     </div>
   </div>
   <div>
-    <button onclick="clearGame()">Clear</button>    
+    Level <input type="text" id="level" value="0" size="1" readonly
+    style="color: lime; font-size: 36px;">
   </div>
   <div>
     <div class="player" id="X0">
@@ -93,35 +94,12 @@
     </div>
   </div>
   <div>
-    <button id="plot" disabled style="background-color: black;" onclick="plot()">Plot</button> 
+    <button id="bonus" disabled="true" style="background-color: black;" onclick="load_bonus()">Bonus</button> 
   </div>  
-  <div>
-    Level <input type="text" id="level" value="0" size="1" readonly
-    style="color: lime; font-size: 36px;">
-  </div>  
-  <div>
-    <div class="player" id="prob">
-      <div>WP 0
-        <input type="text" id="wp0" value="50" readonly size="2" style="color: darkmagenta">
-      </div>
-      <div>WP 1
-        <input type="text" id="wp1" value="15" size="2" onchange="setWinProb()" style="color: darkgoldenrod">
-      </div>
-      <div>WP 2
-        <input type="text" id="wp2" value="20" size="2" onchange="setWinProb()" style="color: darkgoldenrod">
-      </div>  
-      <div>WP 3
-        <input type="text" id="wp3" value="15" size="2" onchange="setWinProb()" style="color: darkgoldenrod">
-      </div>  
-    </div> 
-  </div>
-  <div>
-    <button id="pDist" onclick="change_pDist()">pDist 0</button>
-  </div>
   <div>
     Truphy <input type="text" id="truphy" value="0" size="1" readonly
     style="color: gold; font-size: 36px;">
-  </div>
+  </div>  
   <div>
     <div class="player" id="info">
       <div>Game
@@ -137,6 +115,28 @@
         <input type="text" id="scale" value="3" size="1">
       </div>
     </div>
+  </div>
+  <div>
+    <button id="plot" disabled style="background-color: black;" onclick="plot()">Plot</button> 
+  </div>
+  <div>
+    <button id="pDist" onclick="change_pDist()">pDist 0</button>
+  </div>
+  <div>
+    <div class="player" id="prob">
+      <div>WP 0
+        <input type="text" id="wp0" value="50" readonly size="2" style="color: darkmagenta">
+      </div>
+      <div>WP 1
+        <input type="text" id="wp1" value="15" size="2" onchange="setWinProb()" style="color: darkgoldenrod">
+      </div>
+      <div>WP 2
+        <input type="text" id="wp2" value="20" size="2" onchange="setWinProb()" style="color: darkgoldenrod">
+      </div>  
+      <div>WP 3
+        <input type="text" id="wp3" value="15" size="2" onchange="setWinProb()" style="color: darkgoldenrod">
+      </div>  
+    </div> 
   </div>
   <div>
     <button id="start" onclick="playMJ()">Start</button> 
