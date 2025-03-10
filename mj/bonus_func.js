@@ -3,7 +3,7 @@
 // async function get_url()
 
 function set_image_url() {
-  var id = bonus["0000"]
+  var id = bonus["0001"]
 
   gapi.client.drive.files.get({
     fileId: id,
