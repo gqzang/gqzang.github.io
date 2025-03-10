@@ -6,6 +6,7 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+var bonusUrl = ""
 function set_image_url() {
   var keys = Object.keys(bonus)
   var bKey = keys[getRandomIntInclusive(0, keys.length-1)]
@@ -20,7 +21,8 @@ function set_image_url() {
   .then(blob => new JSZip().loadAsync(blob))
   .then(zip => zip.file('bonus.jpg').async("blob"))
   .then(blob => {
-    const imageURL = URL.createObjectURL(blob);
+    const imageURL = URL.createObjectURL(blob)
+    bonusUrl = imageURL
     // document.getElementById("bonusImage").src = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     console.log(imageURL)
