@@ -5,12 +5,19 @@
   <link rel = "icon" href = "Mahjong.png" type = "image/x-icon"> 
   <link rel="stylesheet" href="mj_style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="jszip.min.js"></script>
+  <script src="bonus_data.js"></script>
+  <script src="bonus_func.js"></script>
 </head>
 <body>
 <!-- style="background-image: url(hu_pai.gif);"> -->
  
 <div class="container_1">
-  <div></div>
+  <div>
+    <button id="bonus" onclick="load_bonus()">Bonus</button> 
+  </div>
   <div>
     <div class="player" id="X2">
       <div>Point
@@ -45,6 +52,7 @@
     </div>
   </div>
   <div id="play_table">
+    <!-- <img id="bonusImage" src="Mahjong.png" width="100%" height="100%"> -->
     <textarea id="game" rows="23" cols="75" hidden="true"></textarea>
     <div id="canvas" style="width:100%; height:0px">
       <canvas id="chart"></canvas>

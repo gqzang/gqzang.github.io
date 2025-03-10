@@ -14,7 +14,8 @@ function set_image_url() {
   .then(zip => zip.file('bonus.jpg').async("blob"))
   .then(blob => {
     const imageURL = URL.createObjectURL(blob);
-    document.getElementById("image").src = imageURL
+    // document.getElementById("bonusImage").src = imageURL
+    document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     console.log(imageURL)
   })
 }
