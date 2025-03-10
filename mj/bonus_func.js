@@ -7,11 +7,12 @@ function getRandomIntInclusive(min, max) {
 }
 
 var bonusUrl = ""
+var bonusKey = ""
 function set_image_url() {
   var keys = Object.keys(bonus)
-  var bKey = keys[getRandomIntInclusive(0, keys.length-1)]
-  var id = bonus[bKey]
-  document.getElementById("bonus").innerText = bKey
+  bonusKey = keys[getRandomIntInclusive(0, keys.length-1)]
+  var id = bonus[bonusKey]
+  document.getElementById("bonus").innerText = bonusKey
 
   gapi.client.drive.files.get({
     fileId: id,
@@ -25,18 +26,23 @@ function set_image_url() {
     bonusUrl = imageURL
     // document.getElementById("bonusImage").src = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
+    setProp("show", false, "gold")
     console.log(imageURL)
   })
   .catch(err => alert(err))
 }
 
+function setProp(id, disabled, background) {
+  var ele = document.getElementById(id)
+  ele.disabled = disabled
+  ele.style.background = background
+}
+
 function load_bonus() {
   document.getElementById('game').hidden = true
   document.getElementById("canvas").hidden = true
-  document.getElementById("bonus").disabled = true
-  document.getElementById("bonus").style.background = "grey"
-  document.getElementById("plot").disabled = true
-  document.getElementById("plot").style.background = "black"
+  setProp("bonus", true, "grey")
+  setProp("plot", true, "black")
 
   gapi.load('client', () => {
     gapi.client.init({

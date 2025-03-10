@@ -220,11 +220,8 @@ async function playMJ() {
   showBigGame()
   changeLevel(end)
 
-  document.getElementById("bonus").disabled = end <= 0
-  document.getElementById("bonus").style.background = end <= 0 ? "black" : "lightgoldenrodyellow"
-  document.getElementById("plot").disabled = end == 0
-  document.getElementById("plot").style.background = end == 0 ? "black" : "lightgoldenrodyellow"
-  document.getElementById("start").innerText = end == 0 ? "Start" : "Next"
+  setProp("bonus", end <= 0, end <= 0 ? "black" : "lightgoldenrodyellow")
+  setProp("plot", end == 0, end == 0 ? "black" : "lightgoldenrodyellow")
 }
 
 const backgroundColorPlugin = {
@@ -277,8 +274,10 @@ function plot() {
 function showOff() {
   win = window.open("", "", 'popup=yes,fullscreen=yes,width=1600,height=960')
   win.document.open()
+  title = '<head><title>' + bonusKey + '</title></head>'
   bUrl = bonusUrl || 'hu_pai.gif'
   other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat;'
-  win.document.write('<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
-  win.document.close()  
+  win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
+  win.document.close() 
+  setProp("show", true, "black")
 }
