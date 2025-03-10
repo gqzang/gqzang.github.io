@@ -221,7 +221,7 @@ async function playMJ() {
   changeLevel(end)
 
   document.getElementById("bonus").disabled = end <= 0
-  document.getElementById("bonus").style.background = end == 0 ? "black" : "lightgoldenrodyellow"
+  document.getElementById("bonus").style.background = end <= 0 ? "black" : "lightgoldenrodyellow"
   document.getElementById("plot").disabled = end == 0
   document.getElementById("plot").style.background = end == 0 ? "black" : "lightgoldenrodyellow"
   document.getElementById("start").innerText = end == 0 ? "Start" : "Next"

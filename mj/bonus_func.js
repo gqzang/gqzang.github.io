@@ -7,10 +7,10 @@ function getRandomIntInclusive(min, max) {
 }
 
 function set_image_url() {
-  var bValues = Object.values(bonus)
-  var bNum = bValues.length
-  var id = bValues[getRandomIntInclusive(0, bNum-1)]
-  // var id = bonus["0001"]
+  var keys = Object.keys(bonus)
+  var bKey = keys[getRandomIntInclusive(0, keys.length-1)]
+  var id = bonus[bKey]
+  document.getElementById("bonus").innerText = bKey
 
   gapi.client.drive.files.get({
     fileId: id,
@@ -32,7 +32,7 @@ function load_bonus() {
   document.getElementById('game').hidden = true
   document.getElementById("canvas").hidden = true
   document.getElementById("bonus").disabled = true
-  document.getElementById("bonus").style.background = "black"
+  document.getElementById("bonus").style.background = "grey"
   document.getElementById("plot").disabled = true
   document.getElementById("plot").style.background = "black"
 
