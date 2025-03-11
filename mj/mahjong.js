@@ -270,14 +270,3 @@ function plot() {
     plugins: [backgroundColorPlugin]
   })
 }
-
-function showOff() {
-  win = window.open("", "_blank", 'popup=yes,fullscreen=yes,width=1600,height=960')
-  win.document.open()
-  title = '<head><title>' + bonusKey + '</title></head>'
-  bUrl = bonusUrl || 'hu_pai.gif'
-  other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat;'
-  win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
-  win.document.close() 
-  location.reload()
-}
