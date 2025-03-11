@@ -272,7 +272,7 @@ function plot() {
 }
 
 function showOff() {
-  win = window.open("", "", 'popup=yes,fullscreen=yes,width=1600,height=960')
+  win = window.open("", "_blank", 'popup=yes,fullscreen=yes,width=1600,height=960')
   win.document.open()
   title = '<head><title>' + bonusKey + '</title></head>'
   bUrl = bonusUrl || 'hu_pai.gif'
@@ -280,4 +280,5 @@ function showOff() {
   win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
   win.document.close() 
   setProp("show", true, "black")
+  location.reload()
 }
