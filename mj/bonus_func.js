@@ -29,7 +29,7 @@ function set_image_url() {
     bonusLoaded = true
     console.log(imageURL)
   })
-  .catch(err => alert(err))
+  .catch(err => alert("Error! See console log for detail.") || location.reload())
 }
 
 function setProp(id, disabled, background) {
