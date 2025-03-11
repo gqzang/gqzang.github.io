@@ -221,6 +221,7 @@ async function playMJ() {
   setProp("plot", end == 0, end == 0 ? "black" : "lightgoldenrodyellow")
   setProp("start", false, "lightgoldenrodyellow")
   document.getElementById('start').innerText = "Reset"
+  setBonusBtn()
 }
 
 const backgroundColorPlugin = {
@@ -235,15 +236,18 @@ const backgroundColorPlugin = {
   }
 }
 
+function setBonusBtn() {
+  // bonus only available when wining and showing plot and timer is 0
+  bDA = !(end > 0 && sp && get("timer") == 0)
+  setProp("bonus", bDA, bDA ? (end > 0 ? "grey" : "black") : "lightgoldenrodyellow")
+}
+
 var sp = false
 function plot() {
   // refer to https://www.w3schools.com/ai/ai_chartjs.asp
 
   sp = ! sp              // switch
-
-  // bonus only available when wining and showing plot
-  bDA = !(end > 0 && sp)
-  setProp("bonus", bDA, bDA ? "black" : "lightgoldenrodyellow")
+  setBonusBtn()
 
   const gameLog = document.getElementById('game')
   gameLog.rows = sp ? 7 : 23

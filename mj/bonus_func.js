@@ -6,6 +6,19 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+const getEpoch = () => Math.round((new Date()).getTime() / 1000)
+setInterval(() => {
+  var lastGD = parseInt(localStorage.getItem("LastGDaccess")), sec = getEpoch()
+  if( !lastGD ) {         // first time where storage not exists
+    lastGD = sec
+    localStorage.setItem("LastGDaccess", sec)
+  }
+  const count = Math.max(0, 36 - sec + lastGD)
+  document.getElementById("timer").value = count
+  document.getElementById("timer").innerText = count
+  document.getElementById("timer").style.color = count > 0 ? "red" : "green"
+}, 1000)
+
 var bonusUrl = "", bonusKey = ""
 function set_image_url() {
   var keys = Object.keys(bonus)
@@ -27,6 +40,7 @@ function set_image_url() {
     document.getElementById("bonus").innerText = bonusKey
     setProp("bonus", false, "gold")
     bonusLoaded = true
+    localStorage.setItem("LastGDaccess", getEpoch())
     console.log(imageURL)
   })
   .catch(err => alert("Error! See console log for detail.") || location.reload())
