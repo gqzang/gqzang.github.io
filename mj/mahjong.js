@@ -218,7 +218,6 @@ async function playMJ() {
   showBigGame()
   changeLevel(end)
 
-  setProp("bonus", end <= 0, end <= 0 ? "black" : "lightgoldenrodyellow")
   setProp("plot", end == 0, end == 0 ? "black" : "lightgoldenrodyellow")
   setProp("start", false, "lightgoldenrodyellow")
   document.getElementById('start').innerText = "Reset"
@@ -241,6 +240,10 @@ function plot() {
   // refer to https://www.w3schools.com/ai/ai_chartjs.asp
 
   sp = ! sp              // switch
+
+  // bonus only available when wining and showing plot
+  bDA = !(end > 0 && sp)
+  setProp("bonus", bDA, bDA ? "black" : "lightgoldenrodyellow")
 
   const gameLog = document.getElementById('game')
   gameLog.rows = sp ? 7 : 23
