@@ -279,6 +279,5 @@ function showOff() {
   other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat;'
   win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
   win.document.close() 
-  setProp("show", true, "black")
   location.reload()
 }

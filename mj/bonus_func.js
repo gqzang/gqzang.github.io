@@ -25,7 +25,8 @@ function set_image_url() {
     // document.getElementById("bonusImage").src = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     document.getElementById("bonus").innerText = bonusKey
-    setProp("show", false, "gold")
+    setProp("bonus", false, "gold")
+    bonusLoaded = true
     console.log(imageURL)
   })
   .catch(err => alert(err))
@@ -37,7 +38,13 @@ function setProp(id, disabled, background) {
   ele.style.background = background
 }
 
+var bonusLoaded = false
 function load_bonus() {
+  if(bonusLoaded) {
+    showOff()
+    return
+  }
+  
   document.getElementById('game').hidden = true
   document.getElementById("canvas").hidden = true
   setProp("bonus", true, "grey")
@@ -45,7 +52,7 @@ function load_bonus() {
 
   gapi.load('client', () => {
     gapi.client.init({
-      'apiKey': 'AIzaSyCvrQgpniZzqDM_VQGiUnLHYQCNAJlu3OY',
+      'apiKey': 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY',
       'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
     })
     .then(() => set_image_url())    
