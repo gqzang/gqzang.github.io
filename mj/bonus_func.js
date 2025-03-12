@@ -13,7 +13,7 @@ setInterval(() => {
     lastGD = sec
     localStorage.setItem("LastGDaccess", sec)
   }
-  const count = Math.max(0, 36 - sec + lastGD)
+  const count = Math.max(0, 30 - sec + lastGD)
   document.getElementById("timer").value = count
   document.getElementById("timer").innerText = count
   document.getElementById("timer").style.color = count > 0 ? "red" : "green"
@@ -72,7 +72,7 @@ const gapiLoaded = () => gapi.load('client', () =>
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
 function showOff() {
-  var win = window.open("", "_blank", 'popup=yes,fullscreen=yes,width=1600,height=960')
+  var win = window.open("", "ShowOff", 'width=1600,height=960')
   win.document.open()
   var title = '<head><title>' + bonusKey + '</title></head>'
   var bUrl = bonusUrl || 'hu_pai.gif'
