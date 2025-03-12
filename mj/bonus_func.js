@@ -44,7 +44,11 @@ function set_image_url() {
     localStorage.setItem("LastGDaccess", getEpoch())
     console.log(imageURL)
   })
-  .catch(err => alert("Error! See console log for detail.") || restart())
+  .catch(err => {
+    alert("Error! See console log for detail.")
+    localStorage.setItem("LastGDaccess", getEpoch() + 570)      // wait 10 min for API key to restore.
+    restart()
+  })
 }
 
 function setProp(id, disabled, background) {
