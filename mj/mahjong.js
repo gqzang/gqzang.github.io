@@ -221,7 +221,9 @@ async function playMJ() {
   setProp("plot", end == 0, end == 0 ? "black" : "lightgoldenrodyellow")
   setProp("start", false, "lightgoldenrodyellow")
   document.getElementById('start').innerText = "Reset"
-  setBonusBtn()
+
+  // bonus only available when wining and timer is 0
+  setProp("bonus", !(end > 0 && get("timer") == 0), end > 0 ? "grey" : "black")
 }
 
 const backgroundColorPlugin = {
@@ -236,19 +238,11 @@ const backgroundColorPlugin = {
   }
 }
 
-function setBonusBtn() {
-  // bonus only available when wining and showing plot and timer is 0
-  bDA = !(end > 0 && sp && get("timer") == 0)
-  setProp("bonus", bDA, bDA ? (end > 0 ? "grey" : "black") : "lightgoldenrodyellow")
-}
-
 var sp = false
 function plot() {
   // refer to https://www.w3schools.com/ai/ai_chartjs.asp
 
   sp = ! sp              // switch
-  setBonusBtn()
-
   const gameLog = document.getElementById('game')
   gameLog.rows = sp ? 7 : 23
   gameLog.scrollTop = gameLog.scrollHeight
@@ -256,7 +250,6 @@ function plot() {
   document.getElementById("plot").style.background = sp ? "white" : "lightgoldenrodyellow"
   const canvas = document.getElementById('canvas')
   canvas.hidden = sp ? false : true
-  // canvas.style.height = sp ? "68%" : "0px"
 
   const clrs = ["black", "purple", "red", "green", "blue"]
   new Chart("chart", {

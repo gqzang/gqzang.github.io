@@ -17,6 +17,7 @@ setInterval(() => {
   document.getElementById("timer").value = count
   document.getElementById("timer").innerText = count
   document.getElementById("timer").style.color = count > 0 ? "red" : "green"
+  if(count == 0 && end > 0) setProp("bonus", false, "lightgoldenrodyellow")
 }, 1000)
 
 var bonusUrl = "", bonusKey = ""
