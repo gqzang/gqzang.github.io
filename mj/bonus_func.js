@@ -95,16 +95,21 @@ function showOff2(name, bonusKey_, bonusUrl_) {
 }
 
 function nextSlide() {
-  var imgInfo = localStorage.getItem("imgInfo")
+  const imgInfo = localStorage.getItem("imgInfo")
   if( !imgInfo ) return
   
-  var imgs = imgInfo.split("|").slice(1)
-  var n = imgs.length / 2
+  const imgs = imgInfo.split("|").slice(1)
+  const n = imgs.length / 2
   if( n == 0 ) return
 
-  var i = getRandomIntInclusive(0, n-1)
-  console.log(i, n)
-  var bKey = imgs[2*i], bUrl = imgs[2*i+1]
+  const imgMap = {}
+  for(let i = 0; i < n; i ++) imgMap[imgs[2*i]] = imgs[2*i+1]
+  const keys = Object.keys(imgMap)
+  const m = keys.length
+
+  const i = getRandomIntInclusive(0, m-1)
+  console.log(i, m, n)
+  const bKey = keys[i], bUrl = imgMap[bKey]
   showOff2("ShowOff", bKey, bUrl)
 }
 
