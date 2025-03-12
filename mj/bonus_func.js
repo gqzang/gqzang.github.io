@@ -17,7 +17,7 @@ setInterval(() => {
   document.getElementById("timer").value = count
   document.getElementById("timer").innerText = count
   document.getElementById("timer").style.color = count > 0 ? "red" : "green"
-  if(count == 0 && end > 0) setProp("bonus", false, "lightgoldenrodyellow")
+  if(count == 0 && end > 0 && !settingImageUrl) setProp("bonus", false, "lightgoldenrodyellow")
 }, 1000)
 
 var bonusUrl = "", bonusKey = ""
@@ -40,7 +40,7 @@ function set_image_url() {
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     document.getElementById("bonus").innerText = bonusKey
     setProp("bonus", false, "gold")
-    bonusLoaded = true
+    bonusLoaded = true; settingImageUrl = false;
     localStorage.setItem("LastGDaccess", getEpoch())
     console.log(imageURL)
   })
@@ -53,7 +53,7 @@ function setProp(id, disabled, background) {
   ele.style.background = background
 }
 
-var bonusLoaded = false
+var bonusLoaded = false, settingImageUrl = false
 function load_bonus() {
   if(bonusLoaded) {
     showOff()
@@ -64,7 +64,8 @@ function load_bonus() {
   document.getElementById("canvas").hidden = true
   setProp("bonus", true, "grey")
   setProp("plot", true, "black")
-  set_image_url()
+
+  settingImageUrl = true; set_image_url()
 }
 
 const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'
