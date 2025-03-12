@@ -72,12 +72,37 @@ const gapiLoaded = () => gapi.load('client', () =>
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
 function showOff() {
-  var win = window.open("", "ShowOff", 'width=1600,height=960')
+  var imgInfo = (localStorage.getItem("imgInfo") || "" ) + "|" + bonusKey + "|" + bonusUrl
+  localStorage.setItem("imgInfo", imgInfo)
+  showOff2("ShowOff", bonusKey, bonusUrl)
+  location.reload()
+}
+
+function showOff2(name, bonusKey_, bonusUrl_) {
+  var win = window.open("", name, 'width=1600,height=960')
+  if( ! win )
+    return console.log("Bonus is cleared.") || localStorage.removeItem("imgInfo")
+
   win.document.open()
-  var title = '<head><title>' + bonusKey + '</title></head>'
-  var bUrl = bonusUrl || 'hu_pai.gif'
+  var title = '<head><title>' + bonusKey_ + '</title></head>'
+  var bUrl = bonusUrl_ || 'hu_pai.gif'
   var other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat;'
   win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
   win.document.close() 
-  location.reload()
 }
+
+function nextSlide() {
+  var imgInfo = localStorage.getItem("imgInfo")
+  if( !imgInfo ) return
+  
+  var imgs = imgInfo.split("|").slice(1)
+  var n = imgs.length / 2
+  if( n == 0 ) return
+
+  var i = getRandomIntInclusive(0, n-1)
+  console.log(i, n)
+  var bKey = imgs[2*i], bUrl = imgs[2*i+1]
+  showOff2("ShowOff", bKey, bUrl)
+}
+
+setInterval(nextSlide, 6000)
