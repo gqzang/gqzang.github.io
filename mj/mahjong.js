@@ -11,7 +11,7 @@ const load_states = () => st_keys.forEach(k => {states[k] = parseInt(localStorag
 const save_states = () => st_keys.forEach(k => localStorage.setItem(k, states[k]))
 const clear_states = () => st_keys.forEach(k => localStorage.removeItem(k))
 
-winPropArr = [
+const winPropArr = [
   [50, 15, 20, 15],
   [40, 18, 24, 18],
   [36, 19, 26, 19],
@@ -22,7 +22,7 @@ function clearGame() {
   if( ! confirm("This will clear the game, are you sure?") )
     return
   clear_states()
-  location.reload()
+  restart()
 }
 
 async function setLevel() {
@@ -194,7 +194,7 @@ function showBigGame() {
 var end = 0
 async function playMJ() {
   if(end != 0){
-    location.reload()
+    restart()
     return
   }
   document.getElementById('game').hidden = false
@@ -255,7 +255,8 @@ function plot() {
 
   document.getElementById("plot").style.background = sp ? "white" : "lightgoldenrodyellow"
   const canvas = document.getElementById('canvas')
-  canvas.style.height = sp ? "68%" : "0px"
+  canvas.hidden = sp ? false : true
+  // canvas.style.height = sp ? "68%" : "0px"
 
   const clrs = ["black", "purple", "red", "green", "blue"]
   new Chart("chart", {

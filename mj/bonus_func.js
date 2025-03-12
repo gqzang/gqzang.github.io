@@ -43,7 +43,7 @@ function set_image_url() {
     localStorage.setItem("LastGDaccess", getEpoch())
     console.log(imageURL)
   })
-  .catch(err => alert("Error! See console log for detail.") || location.reload())
+  .catch(err => alert("Error! See console log for detail.") || restart())
 }
 
 function setProp(id, disabled, background) {
@@ -75,11 +75,11 @@ function showOff() {
   var imgInfo = (localStorage.getItem("imgInfo") || "" ) + "|" + bonusKey + "|" + bonusUrl
   localStorage.setItem("imgInfo", imgInfo)
   showOff2("ShowOff", bonusKey, bonusUrl)
-  location.reload()
+  restart()
 }
 
 function showOff2(name, bonusKey_, bonusUrl_) {
-  var win = window.open("", name, 'width=1600,height=960')
+  var win = window.open("", name, 'width=1200,height=720')
   if( ! win )
     return console.log("Bonus is cleared.") || localStorage.removeItem("imgInfo")
 
