@@ -6,30 +6,22 @@ function setInitValues() {
     "P0": "1000", "C01": "0", "C02": "0", "C03": "0",
     "gcnt": "0", "gtime": "50", "batch": "1000", "scale": "3"
   }
-  for(const k in vMap)
-    set(k, vMap[k])
+  for(const k in vMap)set(k, vMap[k])
 }
 
-const setTxt = (id, v) => {document.getElementById(id).innerText = v}
-
 function setInitLook() {
-  setTxt("start", "Start")
-  
+  document.getElementById("start").innerText = "Start"
   document.getElementById("play_table").style.backgroundImage = "url(hu_pai.gif)"
-  const game = document.getElementById("game")
-  game.value = ""
-  game.rows = 23
-  game.hidden = true
   document.getElementById("canvas").hidden = true
+
+  const game = document.getElementById("game")
+  game.value = "";  game.rows = 23;  game.hidden = true
   
   const bonus = document.getElementById("bonus")
-  bonus.disabled = true;
-  bonus.style.backgroundColor = "black"
-  bonus.innerText = "Bonus"
+  bonus.disabled = true;  bonus.innerText = "Bonus";  bonus.style.backgroundColor = "black"
   
   const plot = document.getElementById("plot")
-  plot.disabled = true;
-  plot.style.backgroundColor = "black"
+  plot.disabled = true;  plot.style.backgroundColor = "black"
 }
   
 function restart() {
@@ -40,15 +32,10 @@ function restart() {
   change_pDist(0)
     
   dealer = parseInt(getRandomIntInclusive(0, 3))
-  xL = [0]
-  hist = [[0], ...[0,1,2,3].map(i=>[get("P"+i)])]
+  xL = [0];     hist = [[0], ...[0,1,2,3].map(i=>[get("P"+i)])]
   
-  cont = false
-  end = 0
-  sp = false
+  cont = false;  end = 0;   sp = false
   
-  bonusUrl = ""
-  bonusKey = ""
-  bonusLoaded = false
+  bonusUrl = "";  bonusKey = "";  bonusLoaded = false
 }
   
