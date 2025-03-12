@@ -76,6 +76,7 @@ function showOff() {
   var imgInfo = (localStorage.getItem("imgInfo") || "" ) + "|" + bonusKey + "|" + bonusUrl
   localStorage.setItem("imgInfo", imgInfo)
   showOff2("ShowOff", bonusKey, bonusUrl)
+  clearInterval(slideTimer);  slideTimer = setInterval(nextSlide, 6000)     // restart timer
   restart()
 }
 
@@ -106,4 +107,4 @@ function nextSlide() {
   showOff2("ShowOff", bKey, bUrl)
 }
 
-setInterval(nextSlide, 6000)
+var slideTimer = setInterval(nextSlide, 6000)
