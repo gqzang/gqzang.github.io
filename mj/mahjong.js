@@ -1,3 +1,5 @@
+"use strict"
+
 document.getElementById("prob").style.backgroundColor = "purple"
 document.getElementById("info").style.backgroundColor = "green"
 
@@ -30,7 +32,7 @@ async function setLevel() {
   set("level", states["level"])
   set("truphy", states["truphy"])
 
-  P0s = [1/2, 3/4, 7/6, 13/10, 23/16, 39/26, 65/42, 107/68, 175/110, 285/178]
+  const P0s = [1/2, 3/4, 7/6, 13/10, 23/16, 39/26, 65/42, 107/68, 175/110, 285/178]
   set("P0", Math.floor(P0s[states["level"]]*2000))
 }
 setLevel()
@@ -46,7 +48,7 @@ function setWinProb() {
 }
 
 function change_pDist(d=1) {
-  pDist = states["pDist"]
+  let pDist = states["pDist"]
   pDist = (pDist + d) % 4
   set("pDist", pDist)
   document.getElementById('pDist').innerText = "pDist " + pDist
@@ -66,7 +68,7 @@ function show(txt) {
 }
 
 function logGame(txt) {
-  gcnt = parseInt(get("gcnt")) + 1
+  let gcnt = parseInt(get("gcnt")) + 1
   set("gcnt", gcnt)
   show(gcnt.toString().padStart(3, '0') + '> ' + txt + '\n')
 }
@@ -82,7 +84,7 @@ for(const key in scoreProb)
   for(let i = 0; i < scoreProb[key]; i ++, v++)
     scoreMap.set(v, key)
 
-dealer = parseInt(getRandomIntInclusive(0, 3))
+var dealer = parseInt(getRandomIntInclusive(0, 3))
 
 var xL = [0], hist = [[0], ...[0,1,2,3].map(i=>[get("P"+i)])]
 
@@ -90,21 +92,21 @@ function playOneGame() {
   for(let d = 0; d < 4; d ++)
     document.getElementById("X" + d).style.backgroundColor = d == dealer ? "red" : "dodgerblue"
 
-  score = randSel(scoreMap)
-  winner = randSel(winnerMap)
-  gunner = getRandomIntInclusive(0, 3)
-  info = "d:" + dealer + "  w:" + winner + "  g:" + gunner + "  s:" + score.padStart(2, '0') + '  ~~~'
+  let score = randSel(scoreMap)
+  let winner = randSel(winnerMap)
+  let gunner = getRandomIntInclusive(0, 3)
+  let info = "d:" + dealer + "  w:" + winner + "  g:" + gunner + "  s:" + score.padStart(2, '0') + '  ~~~'
 
-  update = [0, 0, 0, 0]
+  let update = [0, 0, 0, 0]
   score *= get("scale")
-  ss = winner == dealer ? score * 2 : score               // zhuang jia ying
-  extra = "    " + winner + (winner == dealer ? "Zj" : "")
+  let ss = winner == dealer ? score * 2 : score               // zhuang jia ying
+  let extra = "    " + winner + (winner == dealer ? "Zj" : "")
   ss = winner == gunner ? ss * 2 : ss                     // zi mo
   extra += winner == gunner ? "Zm" : (" " + gunner + (gunner == dealer ? "Zj" : "") + "Dp")
-  sum = 0
+  let sum = 0
   for(let i = 0; i < update.length; i ++) {
     if(i == winner) continue
-    rs = parseInt(ss)
+    let rs = parseInt(ss)
     if(i == dealer) rs *= 2
     if(i == gunner) rs *= 2
     update[i] = -rs
@@ -134,7 +136,7 @@ function ClothAndDebt(i) {
   let info = ""
   let leading = "\n          "
   if(get("P"+i) < 0 && get("C"+i) > 0) {
-    n = Math.min(Math.ceil(-get("P"+i) / 100), get("C"+i))
+    let n = Math.min(Math.ceil(-get("P"+i) / 100), get("C"+i))
     changeBy("C"+i, -n)
     changeBy("P"+i, n*100)
     changeBy("C0"+i, n)
@@ -142,8 +144,8 @@ function ClothAndDebt(i) {
     info += leading + i + " sell " + n + " clothes for " + n*100 + " points."
   }
   if(get("P"+i) < 0 && get("C"+i) <= 0) {
-    debt = -parseInt(get("P"+i))
-    nwp = Math.ceil(debt/100)           // number of winning prob to be reduced 
+    let debt = -parseInt(get("P"+i))
+    let nwp = Math.ceil(debt/100)           // number of winning prob to be reduced 
     debt = nwp * 100
     changeBy("D"+i, debt)
     changeBy("P"+i, debt)
@@ -171,7 +173,7 @@ async function changeLevel(end) {
   if(cont) return
   cont = true
 
-  level = states["level"]; truphy = states["truphy"]
+  let level = states["level"], truphy = states["truphy"]
   level = (end > 0 ? get("level") + 1 : 0)
   if(level >= 10) {
     level -= 10
@@ -184,7 +186,7 @@ async function changeLevel(end) {
 }
 
 function showBigGame() {
-  chgs = hist[0].map((x, i) => [i, x])
+  let chgs = hist[0].map((x, i) => [i, x])
   chgs.sort((a, b) => b[1] - a[1])
   if(chgs.length > 6)
     chgs = chgs.slice(0, 3).concat(chgs.slice(-3))
@@ -202,7 +204,7 @@ async function playMJ() {
   
   while(true) {
     for (let i = 0; i < get("batch"); i++) {
-      res = playOneGame()
+      let res = playOneGame()
       for(let j = 1; j < 4; j ++) res += ClothAndDebt(j)
       logGame(res)
       end = checkEnd()

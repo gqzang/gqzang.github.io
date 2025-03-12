@@ -1,3 +1,5 @@
+"use strict"
+
 function setInitValues() {
   const vMap = {
     "P2": "800", "C2": "5", "D2": "0", "G2": "0",

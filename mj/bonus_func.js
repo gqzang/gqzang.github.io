@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
