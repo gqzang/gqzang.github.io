@@ -13,7 +13,7 @@ setInterval(() => {
     lastGD = sec
     localStorage.setItem("LastGDaccess", sec)
   }
-  const count = Math.max(0, 30 - sec + lastGD)
+  const count = Math.max(0, 25 - sec + lastGD)
   document.getElementById("timer").value = count
   document.getElementById("timer").innerText = count
   document.getElementById("timer").style.color = count > 0 ? "red" : "green"
@@ -25,9 +25,15 @@ setInterval(() => {
   }
 }, 1000)
 
-var bonusUrl = "", bonusKey = "", bonusG = {}
+var bonusUrl = "", bonusKey = "", bonusG = {};
 var bonus = bonus_i                      // may switch data in the future
+
+var settingImageUrl = false;
 function set_image_url(handleAlert=true) {
+  if(settingImageUrl) return                  // don't allow to re-entry until done
+  settingImageUrl = true
+  localStorage.setItem("LastGDaccess", getEpoch() + getRandomIntInclusive(0, 10))
+
   var keys = Object.keys(bonus)
   bonusKey = keys[getRandomIntInclusive(0, keys.length-1)]
   var id = bonus[bonusKey]
@@ -44,16 +50,16 @@ function set_image_url(handleAlert=true) {
     bonusUrl = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     document.getElementById("bonus").innerText = bonusKey
-    setProp("bonus", false, "gold")
-    bonusLoaded = true; settingImageUrl = false;
-    localStorage.setItem("LastGDaccess", getEpoch())
+    setProp("bonus", false, "gold"); bonusLoaded = true;
     console.log(imageURL)
+    settingImageUrl = false
   })
   .catch(err => {
     localStorage.setItem("LastGDaccess", getEpoch() + 570)      // wait 10 min for API key to restore.
     if(!handleAlert) return
     alert("Error! See console log for detail.")
     restart()
+    settingImageUrl = false
   })
 }
 
@@ -63,7 +69,7 @@ function setProp(id, disabled, background) {
   ele.style.background = background
 }
 
-var bonusLoaded = false, settingImageUrl = false
+var bonusLoaded = false
 function load_bonus() {
   if(bonusLoaded) {
     showOff()
@@ -75,22 +81,27 @@ function load_bonus() {
   setProp("bonus", true, "grey")
   setProp("plot", true, "black")
 
-  settingImageUrl = true; set_image_url()
+  set_image_url()
 }
 
-// const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_pi
-const API_KEY = "AIzaSyB_wRZBEbUfwdSzqauFEt6ZSgCcPki9NZk"         // zip_pj
+const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_pi
+// const API_KEY = "AIzaSyB_wRZBEbUfwdSzqauFEt6ZSgCcPki9NZk"         // zip_pj
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
 const gapiLoaded = () => gapi.load('client', () => 
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
-function showOff(res=true) {
+function addBonus() {
   const newBonusKey = Object.keys(bonusG).length.toString().padStart(4, '0') + '-' + bonusKey
   bonusG[newBonusKey] = bonusUrl           // add to bonus gained
   delete bonus[bonusKey]                // remove from availabe bonus not to repeat
-  showOff2("ShowOff", bonusKey, bonusUrl)
+  return newBonusKey
+}
+
+function showOff() {
+  const newBonusKey = addBonus()
+  showOff2("ShowOff", newBonusKey, bonusUrl)
   clearInterval(slideTimer);  slideTimer = setInterval(nextSlide, 6000)     // restart timer
-  if(res) restart()
+  restart()
 }
 
 function showOff2(name, bonusKey_, bonusUrl_) {

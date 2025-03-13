@@ -14,11 +14,11 @@
 <body>
   <div class="player_v">
     <div style="text-align: center;">
-      <button id="timer" onclick="nextSlide()"></button>
+      <button id="timer" onclick="clearTimer()"></button>
     </div>
     <div style="text-align: center;">
         <button id="bonusSrc" onclick="changeBonusSrc()">X</button> &nbsp;&nbsp;
-        <button id="bonusCount">0</button>
+        <button id="bonusCount" onclick="nextSlide()">0</button>
     </div>
     <div id="play_table">
         <textarea id="game" rows="0" cols="0" hidden></textarea>
@@ -35,6 +35,7 @@
 
 "use strict"
 
+const clearTimer = () => localStorage.setItem("LastGDaccess", getEpoch() - 20)
 const get = id => parseInt(document.getElementById(id).value)
 
 var end = 1
@@ -43,13 +44,14 @@ var autoSlideTimer = null
 function slide_func() {
   if( get("timer") == 0 ) {               // ready to load a new image
     setProp("bonus", true, "grey")
-    settingImageUrl = true; set_image_url(false)
+    set_image_url(false)
+    return
   }
 
   if(bonusLoaded) {
-    showOff(false)     // do not restart
+    addBonus()
+    new Audio("./sound_bonus.wav").play();
     document.getElementById("bonusCount").innerText = Object.keys(bonusG).length
-    localStorage.setItem("LastGDaccess", getEpoch() + getRandomIntInclusive(10, 30))     // add up t0 30 sec to waiting time
     bonusLoaded = false     // next bonus is not loaded yet
   }
 }
