@@ -135,7 +135,8 @@ var slideTimer = setInterval(nextSlide, 6000)
 function changeBonusSrc() {
   const BonusMap = {
     "X": bonus_i,
-    "Y": bonus_j
+    "Y": bonus_j,
+    "Z": bonus_k
   }
   const BKeys = Object.keys(BonusMap), n = BKeys.length
 
