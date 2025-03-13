@@ -17,7 +17,14 @@ setInterval(() => {
   document.getElementById("timer").value = count
   document.getElementById("timer").innerText = count
   document.getElementById("timer").style.color = count > 0 ? "red" : "green"
-  if(count == 0 && end > 0 && !settingImageUrl) setProp("bonus", false, "lightgoldenrodyellow")
+  if(count == 0 && end > 0 && !settingImageUrl) {
+    if(document.getElementById("bonus").disabled == true) {
+      // for sound file, see: https://mixkit.co/free-sound-effects/notification/
+      const notificationSound = new Audio("./mixkit-magic-notification-ring-2344.wav")
+      notificationSound.play();  
+    }
+    setProp("bonus", false, "lightgoldenrodyellow")
+  }
 }, 1000)
 
 var bonusUrl = "", bonusKey = "", bonusG = {}
