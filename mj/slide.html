@@ -21,7 +21,7 @@
       <button id="timer" onclick="clearTimer()"></button>
     </div>
     <div style="text-align: center;">
-        <button id="bonusSrc" onclick="changeBonusSrc()">X</button> &nbsp;&nbsp;
+        <button id="bonusSrc" onclick="changeBonusSrc()">A</button> &nbsp;&nbsp;
         <button id="bonusCount" onclick="nextSlide()">0</button>
     </div>
     <div id="play_table">
@@ -68,6 +68,14 @@ function start_slide() {
     clearInterval(autoSlideTimer)
     autoSlideTimer = null
   }
+}
+
+const API_KEY = "AIzaSyDrPrGkVYhPj7_t3y-mDKoNoiQoIl5VL08"         // zip_p from GZ
+var bonus = bonus_a
+
+function restart() {
+  document.getElementById("bonusSrc").textContent = 'A';  
+  bonus = bonus_a
 }
 
 </script>
