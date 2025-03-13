@@ -27,7 +27,7 @@ setInterval(() => {
 
 var bonusUrl = "", bonusKey = "", bonusG = {}
 var bonus = bonus_i                      // may switch data in the future
-function set_image_url() {
+function set_image_url(handleAlert=true) {
   var keys = Object.keys(bonus)
   bonusKey = keys[getRandomIntInclusive(0, keys.length-1)]
   var id = bonus[bonusKey]
@@ -50,8 +50,9 @@ function set_image_url() {
     console.log(imageURL)
   })
   .catch(err => {
-    alert("Error! See console log for detail.")
     localStorage.setItem("LastGDaccess", getEpoch() + 570)      // wait 10 min for API key to restore.
+    if(!handleAlert) return
+    alert("Error! See console log for detail.")
     restart()
   })
 }
@@ -77,17 +78,19 @@ function load_bonus() {
   settingImageUrl = true; set_image_url()
 }
 
-const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'
+// const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_pi
+const API_KEY = "AIzaSyB_wRZBEbUfwdSzqauFEt6ZSgCcPki9NZk"         // zip_pj
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
 const gapiLoaded = () => gapi.load('client', () => 
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
-function showOff() {
-  bonusG[bonusKey] = bonusUrl           // add to bonus gained
+function showOff(res=true) {
+  const newBonusKey = Object.keys(bonusG).length.toString().padStart(4, '0') + '-' + bonusKey
+  bonusG[newBonusKey] = bonusUrl           // add to bonus gained
   delete bonus[bonusKey]                // remove from availabe bonus not to repeat
   showOff2("ShowOff", bonusKey, bonusUrl)
   clearInterval(slideTimer);  slideTimer = setInterval(nextSlide, 6000)     // restart timer
-  restart()
+  if(res) restart()
 }
 
 function showOff2(name, bonusKey_, bonusUrl_) {

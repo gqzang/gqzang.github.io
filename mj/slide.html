@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slide</title>
+  <link rel="stylesheet" href="mj_style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="jszip.min.js"></script>
+  <script src="bonus_data.js"></script>
+  <script src="bonus_data_2.js"></script>
+  <script src="bonus_func.js"></script>
+</head>
+<body>
+  <div class="player_v">
+    <div style="text-align: center;">
+      <button id="timer" onclick="nextSlide()"></button>
+    </div>
+    <div style="text-align: center;">
+        <button id="bonusSrc" onclick="changeBonusSrc()">X</button> &nbsp;&nbsp;
+        <button id="bonusCount">0</button>
+    </div>
+    <div id="play_table">
+        <textarea id="game" rows="0" cols="0" hidden></textarea>
+        <div id="canvas" style="width:0%; height:0%" hidden></div>
+    </div>
+    <div style="text-align: center;">
+        <button id="plot" disabled hidden>Plot</button> 
+        <button id="bonus" disabled="true" style="background-color: black;" onclick="start_slide()">Slide</button> 
+    </div>
+  </div>
+
+<script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script>
+
+"use strict"
+
+const get = id => parseInt(document.getElementById(id).value)
+
+var end = 1
+var autoSlideTimer = null
+
+function slide_func() {
+  if( get("timer") == 0 ) {               // ready to load a new image
+    setProp("bonus", true, "grey")
+    settingImageUrl = true; set_image_url(false)
+  }
+
+  if(bonusLoaded) {
+    showOff(false)     // do not restart
+    document.getElementById("bonusCount").innerText = Object.keys(bonusG).length
+    localStorage.setItem("LastGDaccess", getEpoch() + getRandomIntInclusive(10, 30))     // add up t0 30 sec to waiting time
+    bonusLoaded = false     // next bonus is not loaded yet
+  }
+}
+
+function start_slide() {
+  if(autoSlideTimer == null) 
+    autoSlideTimer = setInterval(slide_func, 1000)
+  else {
+    document.getElementById("bonus").innerText = "Slide"
+    clearInterval(autoSlideTimer)
+    autoSlideTimer = null
+  }
+}
+
+</script>
+</body>
+</html>
