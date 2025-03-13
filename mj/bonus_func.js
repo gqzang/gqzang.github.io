@@ -86,7 +86,7 @@ function showOff() {
 }
 
 function showOff2(name, bonusKey_, bonusUrl_) {
-  var win = window.open("", name, 'width=1200,height=720')
+  var win = window.open("", name, 'width=1200,height=720,menubar=no,toolbar=no,location=no,status=no')
   if( ! win ) {
     bonusG = {}
     return console.log("Bonus is cleared.")
@@ -112,3 +112,19 @@ function nextSlide() {
 }
 
 var slideTimer = setInterval(nextSlide, 6000)
+
+function changeBonusSrc() {
+  const BonusMap = {
+    "X": bonus_i,
+    "Y": bonus_j
+  }
+  const BKeys = Object.keys(BonusMap), n = BKeys.length
+
+  const ele = document.getElementById("bonusSrc")
+  for(let i = 0; i < n; i ++)
+    if(BKeys[i] == ele.textContent) {
+      ele.textContent = BKeys[(i+1)%n]
+      bonus = BonusMap[ele.textContent]
+      return
+    }
+}
