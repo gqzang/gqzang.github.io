@@ -219,6 +219,7 @@ async function playMJ() {
   show(end > 0 ? "\nYou win!\n" : "\nYou lose!\n")
   showBigGame()
   changeLevel(end)
+  new Audio(end > 0 ? "./sound_win.wav": "./sound_lose.wav").play();  
 
   setProp("plot", end == 0, end == 0 ? "black" : "lightgoldenrodyellow")
   setProp("start", false, "lightgoldenrodyellow")
