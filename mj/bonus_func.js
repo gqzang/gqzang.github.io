@@ -56,6 +56,7 @@ function set_image_url(handleAlert=true) {
   })
   .catch(err => {
     localStorage.setItem("LastGDaccess", getEpoch() + 570)      // wait 10 min for API key to restore.
+    new Audio("./sound_error.wav").play();
     if(!handleAlert) return
     alert("Error! See console log for detail.")
     restart()
