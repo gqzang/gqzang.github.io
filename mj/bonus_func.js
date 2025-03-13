@@ -20,7 +20,8 @@ setInterval(() => {
   if(count == 0 && end > 0 && !settingImageUrl) setProp("bonus", false, "lightgoldenrodyellow")
 }, 1000)
 
-var bonusUrl = "", bonusKey = ""
+var bonusUrl = "", bonusKey = "", bonusG = {}
+var bonus = bonus_i                      // may switch data in the future
 function set_image_url() {
   var keys = Object.keys(bonus)
   bonusKey = keys[getRandomIntInclusive(0, keys.length-1)]
@@ -36,7 +37,6 @@ function set_image_url() {
   .then(blob => {
     const imageURL = URL.createObjectURL(blob)
     bonusUrl = imageURL
-    // document.getElementById("bonusImage").src = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     document.getElementById("bonus").innerText = bonusKey
     setProp("bonus", false, "gold")
@@ -78,8 +78,8 @@ const gapiLoaded = () => gapi.load('client', () =>
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
 function showOff() {
-  var imgInfo = (localStorage.getItem("imgInfo") || "" ) + "|" + bonusKey + "|" + bonusUrl
-  localStorage.setItem("imgInfo", imgInfo)
+  bonusG[bonusKey] = bonusUrl           // add to bonus gained
+  delete bonus[bonusKey]                // remove from availabe bonus not to repeat
   showOff2("ShowOff", bonusKey, bonusUrl)
   clearInterval(slideTimer);  slideTimer = setInterval(nextSlide, 6000)     // restart timer
   restart()
@@ -87,8 +87,10 @@ function showOff() {
 
 function showOff2(name, bonusKey_, bonusUrl_) {
   var win = window.open("", name, 'width=1200,height=720')
-  if( ! win )
-    return console.log("Bonus is cleared.") || localStorage.removeItem("imgInfo")
+  if( ! win ) {
+    bonusG = {}
+    return console.log("Bonus is cleared.")
+  }
 
   win.document.open()
   var title = '<head><title>' + bonusKey_ + '</title></head>'
@@ -99,21 +101,13 @@ function showOff2(name, bonusKey_, bonusUrl_) {
 }
 
 function nextSlide() {
-  const imgInfo = localStorage.getItem("imgInfo")
-  if( !imgInfo ) return
-  
-  const imgs = imgInfo.split("|").slice(1)
-  const n = imgs.length / 2
+  const keys = Object.keys(bonusG)
+  const n = keys.length
   if( n == 0 ) return
 
-  const imgMap = {}
-  for(let i = 0; i < n; i ++) imgMap[imgs[2*i]] = imgs[2*i+1]
-  const keys = Object.keys(imgMap)
-  const m = keys.length
-
-  const i = getRandomIntInclusive(0, m-1)
-  console.log(i, m, n)
-  const bKey = keys[i], bUrl = imgMap[bKey]
+  const i = getRandomIntInclusive(0, n-1)
+  console.log(i, n)
+  const bKey = keys[i], bUrl = bonusG[bKey]
   showOff2("ShowOff", bKey, bUrl)
 }
 
