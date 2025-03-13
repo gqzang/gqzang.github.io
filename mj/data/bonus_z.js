@@ -1,6 +1,6 @@
 "use strict"
 
-const bonus_k = {
+const bonus_z = {
     '2018': '1SmtgjCuEtkvqV8h4m3AvntavTAaee4gQ',
     '2007': '1H3XW5M6Wr1T5woSCmou-5RZtnVttD5Bo',
     '2013': '19m8c6_ExAJKe6p01jXtv2AEb8nwbdESQ',
@@ -2026,6 +2026,5 @@ const bonus_k = {
     '0011': '1v-d3gC6PMvQ6aBy8Dcf5mGEonA2Tb_6H',
     '0002': '1TMMQSLR2QcPViA0SKvk8XZ-2wxs3U_Ac',
     '0001': '1GR7k7N9vuvmAq87HIf4WTLy5YNKewtF-',
-    '0000': '1toSKSFYQkM7a4ybw6WIE0o41ISrwk0_j',
-    'bonus': '1cEG8Jm97lH8IBoMxHGhspFkyEz5ZvNe4'
+    '0000': '1toSKSFYQkM7a4ybw6WIE0o41ISrwk0_j'
 }

@@ -1,6 +1,6 @@
 "use strict"
 
-const bonus_j = {
+const bonus_y = {
     '8847': '1rmH4YIZGme7gPrfA9e3Z_LBLI1nAACHL',
     '8853': '1TKjJ-rlp4ZVENxAaAKHvxm1suRgDb7_C',
     '8848': '1IXDmqFapu0qctWIVVF_AvVgTdkhwGDe0',
@@ -8868,6 +8868,5 @@ const bonus_j = {
     '0000': '1zOQiyZYoWTWnLvrkBdr22M8oIvlY98Ql',
     '0004': '1YMxKulFeEEEOQ-XeSuDZHPUsdD0Vnix0',
     '0001': '1nL0EI7Cs3881UjQd89lbyAvGSJkmwjz1',
-    '0002': '1JPrNYlNzbxdwSlML-U6_qaB0ge3XncFf',
-    'bonus': '1eP4bxAwkZ4Pjcs35AY6_pJyz-z95mcnw'
+    '0002': '1JPrNYlNzbxdwSlML-U6_qaB0ge3XncFf'
 }

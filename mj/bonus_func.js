@@ -20,13 +20,13 @@ setInterval(() => {
   if(count == 0 && end > 0 && !settingImageUrl) {
     if(document.getElementById("bonus").disabled == true) 
       // for sound file, see: https://mixkit.co/free-sound-effects/notification/
-      new Audio("./sound_bonus.wav").play();  
+      new Audio("./sound/bonus.wav").play();  
     setProp("bonus", false, "lightgoldenrodyellow")
   }
 }, 1000)
 
 var bonusUrl = "", bonusKey = "", bonusG = {};
-var bonus = bonus_i                      // may switch data in the future
+var bonus = bonus_x                      // may switch data in the future
 
 var settingImageUrl = false;
 function set_image_url(handleAlert=true) {
@@ -56,7 +56,7 @@ function set_image_url(handleAlert=true) {
   })
   .catch(err => {
     localStorage.setItem("LastGDaccess", getEpoch() + 570)      // wait 10 min for API key to restore.
-    new Audio("./sound_error.wav").play();
+    new Audio("./sound/error.wav").play();
     if(!handleAlert) return
     alert("Error! See console log for detail.")
     restart()
@@ -114,7 +114,7 @@ function showOff2(name, bonusKey_, bonusUrl_) {
 
   win.document.open()
   var title = '<head><title>' + bonusKey_ + '</title></head>'
-  var bUrl = bonusUrl_ || 'hu_pai.gif'
+  var bUrl = bonusUrl_ || 'image/hu_pai.gif'
   var other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat;'
   win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
   win.document.close() 
@@ -135,9 +135,9 @@ var slideTimer = setInterval(nextSlide, 6000)
 
 function changeBonusSrc() {
   const BonusMap = {
-    "X": bonus_i,
-    "Y": bonus_j,
-    "Z": bonus_k
+    "X": bonus_x,
+    "Y": bonus_y,
+    "Z": bonus_z
   }
   const BKeys = Object.keys(BonusMap), n = BKeys.length
 

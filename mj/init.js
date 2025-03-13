@@ -13,7 +13,7 @@ function setInitValues() {
 
 function setInitLook() {
   document.getElementById("start").innerText = "Start"
-  document.getElementById("play_table").style.backgroundImage = "url(hu_pai.gif)"
+  document.getElementById("play_table").style.backgroundImage = "url(image/hu_pai.gif)"
   document.getElementById("canvas").hidden = true
 
   const game = document.getElementById("game")

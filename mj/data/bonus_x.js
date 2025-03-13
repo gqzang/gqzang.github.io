@@ -1,6 +1,6 @@
 "use strict"
 
-const bonus_i = {
+const bonus_x = {
     '7551': '1JtDRT21ZgMSgXHGRr1I6UDVQlIeNnKwV',
     '7550': '17Xz5DZFWRdZqvHB-xD1TcLxhzjRi8JZj',
     '7546': '11Cnm0Y0kgLC527Gh5PYRJyuktuLkEDYq',
