@@ -111,10 +111,15 @@ function showOff2(name, bonusKey_, bonusUrl_) {
   }
 
   win.document.open()
-  var title = '<head><title>' + bonusKey_ + '</title></head>'
+  const script = `<script>
+  window.addEventListener('beforeunload', function(e) {
+    e.preventDefault()
+    e.returnValue = ''
+  })</script>`
+  var title = '<html style="overscroll-behavior: none;"><head><title>' + bonusKey_ + '</title>' + script + '</head>'
   var bUrl = bonusUrl_ || 'image/hu_pai.gif'
-  var other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat;'
-  win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body>')
+  var other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none;'
+  win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body></html>')
   win.document.close() 
 }
 
