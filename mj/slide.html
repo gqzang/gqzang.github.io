@@ -39,6 +39,8 @@
 
 "use strict"
 
+document.getElementById("play_table").style.backgroundImage = "url(image/dance.gif)"
+
 const clearTimer = () => localStorage.setItem("LastGDaccess", getEpoch() - 20)
 const get = id => parseInt(document.getElementById(id).value)
 

@@ -89,3 +89,7 @@ div#play_table {
   background-position: center; 
   background-repeat: no-repeat;
 }
+
+html, body {
+  overscroll-behavior: none;
+}

@@ -149,3 +149,9 @@ function changeBonusSrc() {
       return
     }
 }
+
+// warning before left (close, refresh-button, back-button, F5 and Ctrl+R)
+window.addEventListener('beforeunload', function(e) {
+  e.preventDefault()
+  e.returnValue = ''
+})
