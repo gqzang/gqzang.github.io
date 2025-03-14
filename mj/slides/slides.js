@@ -1,7 +1,5 @@
 "use strict"
 
-document.getElementById("play_table").style.backgroundImage = "url(../image/dance.gif)"
-
 function getRandIntIn(min, max) {
   min = Math.ceil(min);    max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -13,16 +11,18 @@ function setProp(id, disabled, background) {
   ele.style.background = background
 }
     
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const getEpoch = () => Math.round((new Date()).getTime() / 1000)
 const PGDAT = "PreviousGoogleDriveAccessTime"
 const clearWaitingTime = () => localStorage.setItem(PGDAT, getEpoch() - 100)
+
 setInterval(() => {
     var lastGD = parseInt(localStorage.getItem(PGDAT)), sec = getEpoch()
     if( !lastGD ) {         // first time where storage not exists
       lastGD = sec
       localStorage.setItem(PGDAT, sec)
     }
-    const count = Math.max(0, 30 - sec + lastGD)
+    const count = Math.max(0, 60 - sec + lastGD)
     document.getElementById("timer").value = count
     document.getElementById("timer").innerText = count
     document.getElementById("timer").style.color = count > 0 ? "red" : "green"
@@ -55,18 +55,17 @@ function changeBonusSrc() {
     }
 }
 
-var slidesMap, lidesLoaded = false
+var bonusKey, slidesMap = {}, lidesLoaded = false
 function loadSlides() {
   localStorage.setItem(PGDAT, getEpoch())
   setProp("bonus", true, "black")
 
   const keys = Object.keys(bonus)
-  const bonusKey = keys[getRandIntIn(0, keys.length-1)]
+  bonusKey = keys[getRandIntIn(0, keys.length-1)]
   const id = bonus[bonusKey]
 
   const src = document.getElementById("bonusSrc").textContent
   slidesMap = {}
-  var thumbnailURL = ''
 
   gapi.client.drive.files.get({
     fileId: id,
@@ -79,8 +78,7 @@ function loadSlides() {
       zip.file(fn).async("blob").then(blob => {
         const imageURL = URL.createObjectURL(blob)
         if(fn == "thumbnail.jpg") 
-          document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
-        //   thumbnailURL = imageURL
+          document.getElementById("galary").src = imageURL
         else {
           document.getElementById("image").src = imageURL
           document.getElementById("image").hidden = false
@@ -88,53 +86,70 @@ function loadSlides() {
         }
       })
     })
-    console.log(slidesMap)
   })
   .catch(err => {
     localStorage.setItem("LastGDaccess", getEpoch() + 450)      // wait 8 min for API key to restore.
     new Audio("./sound/error.wav").play();
-    // restart()
+    restart()
   })
-
+  .finally(() => setTimeout(()=> document.getElementById("image").hidden = true, 2000))
 }
 
-/*
-const get = id => parseInt(document.getElementById(id).value)
+function listBonus() {
+}
 
-var end = 1
-var autoSlideTimer = null
+async function addBatchToSlides() {
+  if(Object.keys(slidesMap).length == 0) return
 
-function slide_func() {
-  if( get("timer") == 0 ) {               // ready to load a new image
-    setProp("bonus", true, "grey")
-    set_image_url(false)
-    return
-  }
-
-  if(bonusLoaded) {
-    addBonus()
-    new Audio("./sound/bonus.wav").play();
+  for (const [key, url] of Object.entries(slidesMap)) {
+    showOff2("show off", key, url)
+    await delay(100)
+    bonusG[key] = url                   // add to bonus gained as single image
     document.getElementById("bonusCount").innerText = Object.keys(bonusG).length
-    bonusLoaded = false     // next bonus is not loaded yet
   }
+  delete bonus[bonusKey]                // remove from availabe bonus not to repeat
+  slidesMap = {}
 }
 
-function start_slide() {
-  if(autoSlideTimer == null) 
-    autoSlideTimer = setInterval(slide_func, 1000)
-  else {
-    document.getElementById("bonus").innerText = "Slide"
-    clearInterval(autoSlideTimer)
-    autoSlideTimer = null
+var bonusG = {}
+function showOff2(name, key, url) {
+  var win = window.open("", name, 'width=500,height=1000,menubar=no,toolbar=no,location=no,status=no')
+  if( ! win ) {
+    bonusG = {}
+    return console.log("Bonus is cleared.")
   }
+  
+  win.document.open()
+  const script = `<script>
+  window.addEventListener('beforeunload', function(e) {
+    e.preventDefault()
+    e.returnValue = ''
+  })</script>`
+  var title = '<html style="overscroll-behavior: none;"><head><title>' + key + '</title>' + script + '</head>'
+  var other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none;'
+  win.document.write(title + '<body style="background-image: url(' + url + '); ' + other_style + '"></body></html>')
+  win.document.close() 
 }
-
-var bonus = bonus_a
-
+  
+function nextSlide() {
+  const keys = Object.keys(bonusG)
+  const n = keys.length
+  if( n == 0 ) return
+  
+  const i = getRandIntIn(0, n-1)
+  console.log(i, n)
+  const bKey = keys[i], bUrl = bonusG[bKey]
+  showOff2("ShowOff", bKey, bUrl)
+}
+  
+var slideTimer = setInterval(nextSlide, 6000)
+  
 function restart() {
   setProp("bonus", true, "black")
-  document.getElementById("bonus").innerText = "Slide"
-  document.getElementById("bonusSrc").textContent = 'A';  
-  bonus = bonus_a
 }
-*/
+
+// warning before left (close, refresh-button, back-button, F5 and Ctrl+R)
+window.addEventListener('beforeunload', function(e) {
+  e.preventDefault()
+  e.returnValue = ''
+})
