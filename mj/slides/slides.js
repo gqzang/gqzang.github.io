@@ -15,7 +15,7 @@ function setProp(id, disabled, background) {
     
 const getEpoch = () => Math.round((new Date()).getTime() / 1000)
 const PGDAT = "PreviousGoogleDriveAccessTime"
-const clearWaitingTime = () => localStorage.setItem(PGDAT, getEpoch() - 15)
+const clearWaitingTime = () => localStorage.setItem(PGDAT, getEpoch() - 100)
 setInterval(() => {
     var lastGD = parseInt(localStorage.getItem(PGDAT)), sec = getEpoch()
     if( !lastGD ) {         // first time where storage not exists
@@ -55,8 +55,47 @@ function changeBonusSrc() {
     }
 }
 
+var slidesMap, lidesLoaded = false
 function loadSlides() {
-    console.log("here")
+  localStorage.setItem(PGDAT, getEpoch())
+  setProp("bonus", true, "black")
+
+  const keys = Object.keys(bonus)
+  const bonusKey = keys[getRandIntIn(0, keys.length-1)]
+  const id = bonus[bonusKey]
+
+  const src = document.getElementById("bonusSrc").textContent
+  slidesMap = {}
+  var thumbnailURL = ''
+
+  gapi.client.drive.files.get({
+    fileId: id,
+    alt: "media"
+  })
+  .then(res => res.body)
+  .then(blob => new JSZip().loadAsync(blob))
+  .then(zip => {
+    Object.keys(zip.files).forEach(fn => {
+      zip.file(fn).async("blob").then(blob => {
+        const imageURL = URL.createObjectURL(blob)
+        if(fn == "thumbnail.jpg") 
+          document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
+        //   thumbnailURL = imageURL
+        else {
+          document.getElementById("image").src = imageURL
+          document.getElementById("image").hidden = false
+          slidesMap[`${src}/${bonusKey}/${fn}`] = imageURL
+        }
+      })
+    })
+    console.log(slidesMap)
+  })
+  .catch(err => {
+    localStorage.setItem("LastGDaccess", getEpoch() + 450)      // wait 8 min for API key to restore.
+    new Audio("./sound/error.wav").play();
+    // restart()
+  })
+
 }
 
 /*
