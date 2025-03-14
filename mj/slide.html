@@ -10,8 +10,6 @@
   <script src="data/bonus_x.js"></script>
   <script src="data/bonus_y.js"></script>
   <script src="data/bonus_z.js"></script>
-  <script src="data/bonus_a.js"></script>
-  <script src="data/bonus_b.js"></script>
   <script src="bonus_func.js"></script>
 </head>
 <body>
@@ -20,7 +18,7 @@
       <button id="timer" onclick="clearTimer()"></button>
     </div>
     <div style="text-align: center;">
-        <button id="bonusSrc" onclick="changeBonusSrc()">A</button> &nbsp;&nbsp;
+        <button id="bonusSrc" onclick="changeBonusSrc()">X</button> &nbsp;&nbsp;
         <button id="bonusCount" onclick="nextSlide()">0</button>
     </div>
     <div id="play_table" onclick="nextSlide()" style="cursor: pointer;">
@@ -71,13 +69,13 @@ function start_slide() {
   }
 }
 
-var bonus = bonus_a
+var bonus = bonus_x
 
 function restart() {
   setProp("bonus", true, "black")
   document.getElementById("bonus").innerText = "Slide"
-  document.getElementById("bonusSrc").textContent = 'A';  
-  bonus = bonus_a
+  document.getElementById("bonusSrc").textContent = 'X';  
+  bonus = bonus_x
 }
 
 </script>

@@ -140,9 +140,7 @@ function changeBonusSrc() {
   const BonusMap = {
     "X": bonus_x,
     "Y": bonus_y,
-    "Z": bonus_z,
-    "A": bonus_a,
-    "B": bonus_b
+    "Z": bonus_z
   }
   const BKeys = Object.keys(BonusMap), n = BKeys.length
 
