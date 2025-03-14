@@ -37,6 +37,28 @@ const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from 
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
 const gapiLoaded = () => gapi.load('client', () => 
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
+
+var bonus = bonus_am
+function changeBonusSrc() {
+  const BonusMap = {
+    "AM": bonus_am,
+    "BM": bonus_bm
+  }
+  const BKeys = Object.keys(BonusMap), n = BKeys.length
+
+  const ele = document.getElementById("bonusSrc")
+  for(let i = 0; i < n; i ++)
+    if(BKeys[i] == ele.textContent) {
+      ele.textContent = BKeys[(i+1)%n]
+      bonus = BonusMap[ele.textContent]
+      return
+    }
+}
+
+function loadSlides() {
+    console.log("here")
+}
+
 /*
 const get = id => parseInt(document.getElementById(id).value)
 
