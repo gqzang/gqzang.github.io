@@ -82,7 +82,7 @@ function loadSlides() {
         else {
           document.getElementById("image").src = imageURL
           document.getElementById("image").hidden = false
-          slidesMap[`${src}/${bonusKey}/${fn}`] = imageURL
+          slidesMap[`${src}-${bonusKey}-${fn}`] = imageURL
         }
       })
     })
@@ -103,13 +103,20 @@ function listBonus() {
 
 var slideTimer = null
 
-function addBatchToSlides() {
+var addingImages = false
+async function addBatchToSlides() {
   if(Object.keys(slidesMap).length == 0) return
-   if(slideTimer == null) clearInterval(slideTimer)
+  if(addingImages) return
+  addingImages = true                // prevent re-entry
 
-  for (const [key, url] of Object.entries(slidesMap)) {
+  if(slideTimer != null) clearInterval(slideTimer)
+
+  let i = 0
+  for(const [key, url] of Object.entries(slidesMap)) {
+    i ++
     showOff2("ShowOff", key, url)
-    // await delay(300)
+    document.getElementById("info").textContent = `${i}:   ${key} is added`
+    await delay(100)
     bonusG[key] = url                   // add to bonus gained as single image
     document.getElementById("bonusCount").innerText = Object.keys(bonusG).length
   }
@@ -117,6 +124,7 @@ function addBatchToSlides() {
   slidesMap = {}
 
   slideTimer = setInterval(nextSlide, 6000) 
+  addingImages = false
 }
 
 var bonusG = {}
