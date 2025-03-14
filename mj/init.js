@@ -26,7 +26,6 @@ function setInitLook() {
   plot.disabled = true;  plot.style.backgroundColor = "black"
 }
   
-const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
 var bonus = bonus_x
 
 function restart() {

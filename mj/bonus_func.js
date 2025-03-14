@@ -13,7 +13,7 @@ setInterval(() => {
     lastGD = sec
     localStorage.setItem("LastGDaccess", sec)
   }
-  const count = Math.max(0, 20 - sec + lastGD)
+  const count = Math.max(0, 30 - sec + lastGD)
   document.getElementById("timer").value = count
   document.getElementById("timer").innerText = count
   document.getElementById("timer").style.color = count > 0 ? "red" : "green"
@@ -54,7 +54,7 @@ function set_image_url(forMJ=true) {
     settingImageUrl = false
   })
   .catch(err => {
-    localStorage.setItem("LastGDaccess", getEpoch() + 330)      // wait 6 min for API key to restore.
+    localStorage.setItem("LastGDaccess", getEpoch() + 450)      // wait 8 min for API key to restore.
     new Audio("./sound/error.wav").play();
     if(forMJ) alert("Error! See console log for detail.")
     settingImageUrl = false
@@ -83,6 +83,8 @@ function load_bonus() {
   set_image_url()
 }
 
+const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
+// const API_KEY = "AIzaSyDrPrGkVYhPj7_t3y-mDKoNoiQoIl5VL08"         // zip_p from GZ
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
 const gapiLoaded = () => gapi.load('client', () => 
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
