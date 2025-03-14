@@ -92,23 +92,28 @@ function loadSlides() {
     new Audio("./sound/error.wav").play();
     restart()
   })
-  .finally(() => setTimeout(()=> document.getElementById("image").hidden = true, 2000))
+  .finally(() => setTimeout(()=> document.getElementById("image").hidden = true, 3000))
 }
 
 function listBonus() {
 }
 
-async function addBatchToSlides() {
+var slideTimer = null
+
+function addBatchToSlides() {
   if(Object.keys(slidesMap).length == 0) return
+   if(slideTimer == null) clearInterval(slideTimer)
 
   for (const [key, url] of Object.entries(slidesMap)) {
     showOff2("show off", key, url)
-    await delay(100)
+    // await delay(300)
     bonusG[key] = url                   // add to bonus gained as single image
     document.getElementById("bonusCount").innerText = Object.keys(bonusG).length
   }
   delete bonus[bonusKey]                // remove from availabe bonus not to repeat
   slidesMap = {}
+
+  slideTimer = setInterval(nextSlide, 6000) 
 }
 
 var bonusG = {}
@@ -141,8 +146,6 @@ function nextSlide() {
   const bKey = keys[i], bUrl = bonusG[bKey]
   showOff2("ShowOff", bKey, bUrl)
 }
-  
-var slideTimer = setInterval(nextSlide, 6000)
   
 function restart() {
   setProp("bonus", true, "black")

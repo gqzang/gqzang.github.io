@@ -13,19 +13,15 @@
 <body>
   <div class="player_v">
     <div style="text-align: center;">
-      <button id="timer" onclick="clearWaitingTime()">0</button>
-    </div>
-    <div style="text-align: center;">
-        <button id="bonusSrc" onclick="changeBonusSrc()">AM</button> &nbsp;&nbsp;
-        <button id="bonusCount" onclick="listBonus()">0</button>
+      <button id="timer" onclick="clearWaitingTime()">0</button> &nbsp;&nbsp;
+      <button id="bonus" disabled="true" style="background-color: black;" onclick="loadSlides()">Get</button> &nbsp;&nbsp;&nbsp;&nbsp;
+      <button id="bonusSrc" onclick="changeBonusSrc()">AM</button> &nbsp;&nbsp;
+      <button id="bonusCount" onclick="listBonus()">0</button>
     </div>
     <div style="text-align: center;">
       <img id="galary" onclick="addBatchToSlides()" src="../image/dance.gif" 
                       style="cursor: pointer; max-width:640px; max-height:640px">
       <img id="image" hidden src="../image/slide.jpg" style="max-width:640px; max-height:640px"><br>
-    </div>
-    <div style="text-align: center;">
-        <button id="bonus" disabled="true" style="background-color: black;" onclick="loadSlides()">Slides</button> 
     </div>
   </div>
 
