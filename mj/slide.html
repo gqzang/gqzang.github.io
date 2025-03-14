@@ -74,6 +74,8 @@ const API_KEY = "AIzaSyDrPrGkVYhPj7_t3y-mDKoNoiQoIl5VL08"         // zip_p from 
 var bonus = bonus_a
 
 function restart() {
+  setProp("bonus", true, "black")
+  document.getElementById("bonus").innerText = "Slide"
   document.getElementById("bonusSrc").textContent = 'A';  
   bonus = bonus_a
 }
