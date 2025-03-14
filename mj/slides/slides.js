@@ -89,10 +89,13 @@ function loadSlides() {
   })
   .catch(err => {
     localStorage.setItem("LastGDaccess", getEpoch() + 450)      // wait 8 min for API key to restore.
-    new Audio("./sound/error.wav").play();
+    new Audio("../sound/error.wav").play();
     restart()
   })
-  .finally(() => setTimeout(()=> document.getElementById("image").hidden = true, 3000))
+  .finally(() => {
+    new Audio("../sound/win.wav").play();
+    setTimeout(()=> document.getElementById("image").hidden = true, 5000)
+  })
 }
 
 function listBonus() {
@@ -105,7 +108,7 @@ function addBatchToSlides() {
    if(slideTimer == null) clearInterval(slideTimer)
 
   for (const [key, url] of Object.entries(slidesMap)) {
-    showOff2("show off", key, url)
+    showOff2("ShowOff", key, url)
     // await delay(300)
     bonusG[key] = url                   // add to bonus gained as single image
     document.getElementById("bonusCount").innerText = Object.keys(bonusG).length
