@@ -103,9 +103,6 @@ function loadSlides() {
   })
 }
 
-function listBonus() {
-}
-
 var slideTimer = null
 
 var addingImages = false
