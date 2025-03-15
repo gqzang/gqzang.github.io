@@ -41,8 +41,13 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 const gapiLoaded = () => gapi.load('client', () => 
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
-var bonus = bonus_am
+var bonus = bonus_am, srcAdded = {}
 function changeBonusSrc() {
+  var info = ''
+  for(const [k, v] of Object.entries(srcAdded)) 
+    info += `  ${k}=${v}`
+  if(info) setInfo('Set info:' + info)
+
   const BonusMap = {
     "AX": bonus_ax,
     "BX": bonus_bx,
@@ -121,17 +126,19 @@ async function addBatchToSlides() {
 
   if(slideTimer != null) clearInterval(slideTimer)
 
+  var src = ''
   for(const [key, url] of Object.entries(slidesMap)) {
+    if(!src) src = key.substring(0, 2)
     showOff2("ShowOff", key, url)
     await delay(100)
     bonusG[key] = url                   // add to bonus gained as single image
     document.getElementById("bonusCount").innerText = objLen(bonusG)
   }
-  let src = document.getElementById("bonusSrc").textContent
+  srcAdded[src] = srcAdded.hasOwnProperty(src) ? srcAdded[src]+1 : 1
   setInfo(`${objLen(slidesMap)} images from set ${src}-${bonusKey} are added to slides`)
   delete bonus[bonusKey]                // remove from availabe bonus not to repeat
-  slidesMap = {}
 
+  slidesMap = {}
   slideTimer = setInterval(nextSlide, 6000) 
   addingImages = false
 }
