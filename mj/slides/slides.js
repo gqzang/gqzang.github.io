@@ -159,13 +159,14 @@ function showOff2(name, key, url) {
   }
   
   win.document.open()
+  const meta = '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
   const script = `<script>
   window.addEventListener('beforeunload', function(e) {
     e.preventDefault()
     e.returnValue = ''
   })</script>`
   const key_ = key.slice(0, -4)
-  const title = '<html style="overscroll-behavior: none;"><head><title>' + key_ + '</title>' + script + '</head>'
+  const title = '<html style="overscroll-behavior: none;"><head><title>' + key_ + '</title>' + meta + script + '</head>'
   const style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none;'
   const body = `<div style="font-size:large;" onclick="window.opener.nextSlide_()">${key_}${("<br>" + "&nbsp;".repeat(50)).repeat(15)}</div>`
   win.document.write(`${title}<body style="background-image: url(${url}); color: gold; ${style}">${body}</body></html>`)
