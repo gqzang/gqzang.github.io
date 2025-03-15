@@ -10,7 +10,9 @@ function setProp(id, disabled, background) {
   ele.disabled = disabled
   ele.style.background = background
 }
-    
+
+const objLen = x => Object.keys(x).length
+const setInfo = x => document.getElementById("info").textContent = x
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 const getEpoch = () => Math.round((new Date()).getTime() / 1000)
 const PGDAT = "PreviousGoogleDriveAccessTime"
@@ -26,10 +28,11 @@ setInterval(() => {
     document.getElementById("timer").value = count
     document.getElementById("timer").innerText = count
     document.getElementById("timer").style.color = count > 0 ? "red" : "green"
-    if(count == 0 ){
-      if(document.getElementById("bonus").disabled == true) 
-        new Audio("../sound/bonus.wav").play(); 
+    if(count == 0 && document.getElementById("bonus").disabled == true){
+      new Audio("../sound/bonus.wav").play(); 
+      window.focus()
       setProp("bonus", false, "lightgoldenrodyellow")
+      setInfo("Click Get button to fetch a image set.")
     }
   }, 1000)
   
@@ -94,7 +97,9 @@ function loadSlides() {
   })
   .finally(() => {
     new Audio("../sound/win.wav").play();
+    window.focus()
     setTimeout(()=> document.getElementById("image").hidden = true, 5000)
+    setInfo("Click thumbnail to put image set into slide show.")
   })
 }
 
@@ -105,21 +110,26 @@ var slideTimer = null
 
 var addingImages = false
 async function addBatchToSlides() {
-  if(Object.keys(slidesMap).length == 0) return
+  if(objLen(slidesMap) == 0) {
+    if(! bonusKey )
+      setInfo("No image to add to slide show.")
+    else
+      setInfo("Images have been added to slide show already.")
+    return
+  }
   if(addingImages) return
   addingImages = true                // prevent re-entry
 
   if(slideTimer != null) clearInterval(slideTimer)
 
-  let i = 0
   for(const [key, url] of Object.entries(slidesMap)) {
-    i ++
     showOff2("ShowOff", key, url)
-    document.getElementById("info").textContent = `${i}:   ${key} is added`
     await delay(100)
     bonusG[key] = url                   // add to bonus gained as single image
-    document.getElementById("bonusCount").innerText = Object.keys(bonusG).length
+    document.getElementById("bonusCount").innerText = objLen(bonusG)
   }
+  let src = document.getElementById("bonusSrc").textContent
+  setInfo(`${objLen(slidesMap)} images from set ${src}-${bonusKey} are added to slides`)
   delete bonus[bonusKey]                // remove from availabe bonus not to repeat
   slidesMap = {}
 
