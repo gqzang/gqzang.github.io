@@ -142,8 +142,8 @@ async function addBatchToSlides() {
   srcAdded[src] = srcAdded.hasOwnProperty(src) ? srcAdded[src]+1 : 1
   setInfo(`${objLen(slidesMap)} images (${src}-${bonusKey}-*) are added to slides`)
 
+  // startSlide()
   slidesMap = {}
-  startSlide()
   addingImages = false
 
   delete bonus[bonusKey]                        // remove from availabe bonus not to repeat
