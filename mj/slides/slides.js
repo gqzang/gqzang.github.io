@@ -167,14 +167,16 @@ function showOff2(name, key, url) {
   const key_ = key.slice(0, -4)
   const title = '<html style="overscroll-behavior: none;"><head><title>' + key_ + '</title>' + script + '</head>'
   const style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none;'
-  const body = `<div style="text-size-adjust: auto;" onclick="window.opener.nextSlide_()">${key_}${("<br>" + "&nbsp;".repeat(20)).repeat(4)}</div>`
+  const body = `<div style="font-size:xx-large;" onclick="window.opener.nextSlide_()">${key_}${("<br>" + "&nbsp;".repeat(20)).repeat(4)}</div>`
   win.document.write(`${title}<body style="background-image: url(${url}); color: gold; ${style}">${body}</body></html>`)
   win.document.close() 
 }
   
 function nextSlide_() {
   if(objLen(bonusG) == 0) return              // nothing to show yet.
-  nextSlide() || setInfo('Slides is started')
+  nextSlide() 
+  if(slideIsRunning()) return
+  setInfo('Slides is started')
   startSlide()    // if Slide already started, do nothing
 }
 
