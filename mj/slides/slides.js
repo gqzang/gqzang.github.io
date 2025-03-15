@@ -44,6 +44,8 @@ const gapiLoaded = () => gapi.load('client', () =>
 var bonus = bonus_am
 function changeBonusSrc() {
   const BonusMap = {
+    "AX": bonus_ax,
+    "BX": bonus_bx,
     "AM": bonus_am,
     "BM": bonus_bm
   }
