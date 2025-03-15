@@ -40,7 +40,7 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 const gapiLoaded = () => gapi.load('client', () => 
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
-var bonus = bonus_am, srcAdded = {}
+var bonus = bonus_ax, srcAdded = {}
 function changeBonusSrc() {
   if(slideTimer != null) {
     clearInterval(slideTimer)    // stop slide when change source.
