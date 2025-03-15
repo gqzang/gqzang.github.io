@@ -42,10 +42,7 @@ const gapiLoaded = () => gapi.load('client', () =>
 
 var bonus = bonus_ax, srcAdded = {}
 function changeBonusSrc() {
-  if(slideTimer != null) {
-    clearInterval(slideTimer)    // stop slide when change source.
-    slideTimer = null
-  }
+  if(slideIsRunning()) return stopSlide() || setInfo("Slide is stopped.")
 
   var info = ''
   for(const [k, v] of Object.entries(srcAdded)) 
@@ -110,11 +107,14 @@ function loadSlides() {
   .finally(() => {
     new Audio("../sound/win.wav").play();
     setTimeout(()=> document.getElementById("image").hidden = true, 5000)
-    setInfo("Click thumbnail to put image set into slide show.")
+    setInfo("Images is downloaded, click thumbnail to load into slide.")
   })
 }
 
-var slideTimer = null
+var slideTimer = null           // initial state
+const slideIsRunning = () => slideTimer != null
+const stopSlide = () => slideTimer = slideTimer && clearInterval(slideTimer) || null
+const startSlide = () => slideTimer = slideTimer || setInterval(nextSlide, 6000)
 
 var addingImages = false
 async function addBatchToSlides() {
@@ -128,7 +128,7 @@ async function addBatchToSlides() {
   if(addingImages) return
   addingImages = true                // prevent re-entry
 
-  if(slideTimer != null) clearInterval(slideTimer)
+  stopSlide()     // stop slide before to load images
 
   var src = ''
   for(const [key, url] of Object.entries(slidesMap)) {
@@ -142,7 +142,7 @@ async function addBatchToSlides() {
   setInfo(`${objLen(slidesMap)} images from set ${src}-${bonusKey} are added to slides`)
 
   slidesMap = {}
-  slideTimer = setInterval(nextSlide, 6000) 
+  startSlide()
   addingImages = false
 
   delete bonus[bonusKey]                        // remove from availabe bonus not to repeat
@@ -179,7 +179,7 @@ function nextSlide() {
   const bKey = keys[i], bUrl = bonusG[bKey]
   showOff2("ShowOff", bKey, bUrl)
 
-  if(slideTimer == null) slideTimer = setInterval(nextSlide, 6000)      // start timer if it stops
+  startSlide()    // if Slide already started, do nothing
 }
   
 function restart() {

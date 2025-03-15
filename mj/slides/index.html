@@ -15,10 +15,11 @@
 <body>
   <div class="player_v">
     <div style="text-align: center;">
-      <button id="timer" onclick="clearWaitingTime()">0</button> &nbsp;&nbsp;
-      <button id="bonus" disabled="true" style="background-color: black;" onclick="loadSlides()">Get</button> &nbsp;&nbsp;&nbsp;&nbsp;
-      <button id="bonusSrc" onclick="changeBonusSrc()">AX</button> &nbsp;&nbsp;
-      <button id="bonusCount" onclick="nextSlide()">0</button>
+      <button id="timer" onclick="clearWaitingTime()">0</button>   &nbsp;&nbsp;
+      <button id="bonus" disabled="true" style="background-color: black;" onclick="loadSlides()">Get</button> 
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <button id="bonusSrc" onclick="changeBonusSrc()">AX</button>   &nbsp;&nbsp;
+      <button id="bonusCount" onclick="nextSlide() || setInfo('Slide is started')">0</button>
       <br><br>
       <label id="info" style="visibility:visible;"></label>
     </div>
