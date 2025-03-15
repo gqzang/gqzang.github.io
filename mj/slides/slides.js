@@ -29,7 +29,7 @@ setInterval(() => {
     document.getElementById("timer").innerText = count
     document.getElementById("timer").style.color = count > 0 ? "red" : "green"
     if(count == 0 && document.getElementById("bonus").disabled == true){
-      new Audio("../sound/bonus.wav").play(); 
+      if(loadOnce) new Audio("../sound/bonus.wav").play()
       setProp("bonus", false, "lightgoldenrodyellow")
       setInfo("Click Get button to fetch a image set.")
     }
@@ -47,7 +47,7 @@ function changeBonusSrc() {
   var info = ''
   for(const [k, v] of Object.entries(srcAdded)) 
     info += `  ${k}=${v}`
-  if(info) setInfo('Set info:' + info)
+  if(info) setInfo('Info:' + info)
 
   const BonusMap = {
     "AX": bonus_ax,
@@ -67,8 +67,9 @@ function changeBonusSrc() {
     }
 }
 
-var bonusKey, slidesMap = {}, lidesLoaded = false
+var bonusKey, slidesMap = {}, loadOnce = false
 function loadSlides() {
+  loadOnce = true
   localStorage.setItem(PGDAT, getEpoch())
   setProp("bonus", true, "black")
 
@@ -100,14 +101,14 @@ function loadSlides() {
     })
   })
   .catch(err => {
-    localStorage.setItem("LastGDaccess", getEpoch() + 450)      // wait 8 min for API key to restore.
+    localStorage.setItem(PGDAT, getEpoch() + 450)      // wait 8 min for API key to restore.
     new Audio("../sound/error.wav").play();
     restart()
   })
   .finally(() => {
     new Audio("../sound/win.wav").play();
     setTimeout(()=> document.getElementById("image").hidden = true, 5000)
-    setInfo("Images is downloaded, click thumbnail to load into slide.")
+    setInfo("Click thumbnail to add images to slide.")
   })
 }
 
@@ -120,9 +121,9 @@ var addingImages = false
 async function addBatchToSlides() {
   if(objLen(slidesMap) == 0) {
     if(! bonusKey )
-      setInfo("No image to add to slide show.")
+      setInfo("No image to add to slides.")
     else
-      setInfo("Images have been added to slide show already.")
+      setInfo("Images is already added to slides.")
     return
   }
   if(addingImages) return
@@ -139,7 +140,7 @@ async function addBatchToSlides() {
     document.getElementById("bonusCount").innerText = objLen(bonusG)
   }
   srcAdded[src] = srcAdded.hasOwnProperty(src) ? srcAdded[src]+1 : 1
-  setInfo(`${objLen(slidesMap)} images from set ${src}-${bonusKey} are added to slides`)
+  setInfo(`${objLen(slidesMap)} images (${src}-${bonusKey}-*) are added to slides`)
 
   slidesMap = {}
   startSlide()
@@ -169,6 +170,12 @@ function showOff2(name, key, url) {
   win.document.close() 
 }
   
+function nextSlide_() {
+  if(objLen(bonusG) == 0) return              // nothing to show yet.
+  nextSlide() || setInfo('Slide is started')
+  startSlide()    // if Slide already started, do nothing
+}
+
 function nextSlide() {
   const keys = Object.keys(bonusG)
   const n = keys.length
@@ -178,8 +185,6 @@ function nextSlide() {
   console.log(i, n)
   const bKey = keys[i], bUrl = bonusG[bKey]
   showOff2("ShowOff", bKey, bUrl)
-
-  startSlide()    // if Slide already started, do nothing
 }
   
 function restart() {
