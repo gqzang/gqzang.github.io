@@ -30,7 +30,6 @@ setInterval(() => {
     document.getElementById("timer").style.color = count > 0 ? "red" : "green"
     if(count == 0 && document.getElementById("bonus").disabled == true){
       new Audio("../sound/bonus.wav").play(); 
-      window.focus()
       setProp("bonus", false, "lightgoldenrodyellow")
       setInfo("Click Get button to fetch a image set.")
     }
@@ -43,6 +42,11 @@ const gapiLoaded = () => gapi.load('client', () =>
 
 var bonus = bonus_am, srcAdded = {}
 function changeBonusSrc() {
+  if(slideTimer != null) {
+    clearInterval(slideTimer)    // stop slide when change source.
+    slideTimer = null
+  }
+
   var info = ''
   for(const [k, v] of Object.entries(srcAdded)) 
     info += `  ${k}=${v}`
@@ -104,7 +108,6 @@ function loadSlides() {
   })
   .finally(() => {
     new Audio("../sound/win.wav").play();
-    window.focus()
     setTimeout(()=> document.getElementById("image").hidden = true, 5000)
     setInfo("Click thumbnail to put image set into slide show.")
   })
@@ -172,6 +175,8 @@ function nextSlide() {
   console.log(i, n)
   const bKey = keys[i], bUrl = bonusG[bKey]
   showOff2("ShowOff", bKey, bUrl)
+
+  if(slideTimer == null) slideTimer = setInterval(nextSlide, 6000)      // start timer if it stops
 }
   
 function restart() {
