@@ -42,7 +42,7 @@ const gapiLoaded = () => gapi.load('client', () =>
 
 var bonus = bonus_ax, srcAdded = {}
 function changeBonusSrc() {
-  if(slideIsRunning()) return stopSlide() || setInfo("Slide is stopped.")
+  if(slideIsRunning()) return stopSlide() || setInfo("Slides is stopped.")
 
   var info = ''
   for(const [k, v] of Object.entries(srcAdded)) 
@@ -108,7 +108,7 @@ function loadSlides() {
   .finally(() => {
     new Audio("../sound/win.wav").play();
     setTimeout(()=> document.getElementById("image").hidden = true, 5000)
-    setInfo("Click thumbnail to add images to slide.")
+    setInfo("Click thumbnail to add images to slides.")
   })
 }
 
@@ -164,15 +164,17 @@ function showOff2(name, key, url) {
     e.preventDefault()
     e.returnValue = ''
   })</script>`
-  var title = '<html style="overscroll-behavior: none;"><head><title>' + key + '</title>' + script + '</head>'
-  var other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none;'
-  win.document.write(title + '<body style="background-image: url(' + url + '); ' + other_style + '"></body></html>')
+  const key_ = key.slice(0, -4)
+  const title = '<html style="overscroll-behavior: none;"><head><title>' + key_ + '</title>' + script + '</head>'
+  const style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none;'
+  const body = `<div onclick="nextSlide_()">${key_}${("<br>" + "&nbsp;".repeat(20)).repeat(4)}</div>`
+  win.document.write(`${title}<body style="background-image: url(${url}); color: gold; ${style}">${body}</body></html>`)
   win.document.close() 
 }
   
 function nextSlide_() {
   if(objLen(bonusG) == 0) return              // nothing to show yet.
-  nextSlide() || setInfo('Slide is started')
+  nextSlide() || setInfo('Slides is started')
   startSlide()    // if Slide already started, do nothing
 }
 
