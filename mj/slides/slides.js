@@ -65,6 +65,7 @@ function changeBonusSrc() {
     if(BKeys[i] == ele.textContent) {
       ele.textContent = BKeys[(i+1)%n]
       bonus = BonusMap[ele.textContent]
+      if(objLen(bonus) == 0) changeBonusSrc()    // if changed to an empty one, go to the next one
       return
     }
 }
@@ -139,11 +140,13 @@ async function addBatchToSlides() {
   }
   srcAdded[src] = srcAdded.hasOwnProperty(src) ? srcAdded[src]+1 : 1
   setInfo(`${objLen(slidesMap)} images from set ${src}-${bonusKey} are added to slides`)
-  delete bonus[bonusKey]                // remove from availabe bonus not to repeat
 
   slidesMap = {}
   slideTimer = setInterval(nextSlide, 6000) 
   addingImages = false
+
+  delete bonus[bonusKey]                        // remove from availabe bonus not to repeat
+  if(objLen(bonus) == 0) changeBonusSrc()       // if all are removed, have to change src.
 }
 
 var bonusG = {}
