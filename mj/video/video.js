@@ -19,7 +19,7 @@ function decrypt(id) {
     result.push(bytes1[i] ^ bytes2[i])
 
   const resultString = String.fromCharCode(...result)       // Convert a base64 string
-  return id.charAt(0) + btoa(resultString).replace('+', '-').replace('/', '_')
+  return id.charAt(0) + btoa(resultString).replace(/\+/g, '-').replace(/\//g, '_')
 }
 
 function getRandIntIn(min, max) {
@@ -34,7 +34,7 @@ function loadVideo() {
   const key = keys[getRandIntIn(0, keys.length-1)]
   const [id_, size] = videoInfo[key].split("~~")
   const id = decrypt(id_), MB = parseInt(size) / (1024*1024)
-  console.log(`loading ${key} --- ${MB.toFixed(2)} MB`)
+  console.log(`loading ${key} -- ${id} -- ${MB.toFixed(2)} MB`)
 
   gapi.client.drive.files.get({
     fileId: id,
