@@ -7,7 +7,6 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 const gapiLoaded = () => gapi.load('client', () => 
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
   
-            
 const pswd = ""
 
 function decrypt(id) {
@@ -23,9 +22,19 @@ function decrypt(id) {
   return id.charAt(0) + btoa(resultString).replace('+', '-').replace('/', '_')
 }
 
+function getRandIntIn(min, max) {
+  min = Math.ceil(min);    max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+const objLen = x => Object.keys(x).length
+
 function loadVideo() {
-  const [id_, size] = videoInfo['a01'].split("~~")
-  const id = decrypt(id_)
+  const keys = Object.keys(videoInfo)
+  const key = keys[getRandIntIn(0, keys.length-1)]
+  const [id_, size] = videoInfo[key].split("~~")
+  const id = decrypt(id_), MB = parseInt(size) / (1024*1024)
+  console.log(`loading ${key} --- ${MB.toFixed(2)} MB`)
 
   gapi.client.drive.files.get({
     fileId: id,
@@ -35,10 +44,7 @@ function loadVideo() {
   .then(blob => new JSZip().loadAsync(blob))
   .then(zip => zip.file('video.mp4').async("blob"))
   .then(blob => {
-    const videoUrl = URL.createObjectURL(blob)
-    const videoElement = document.querySelector('video')
-    videoElement.src = videoUrl
-    console.log("here")
+    document.querySelector('video').src = URL.createObjectURL(blob)
   })
   .catch(err => {
     new Audio("../sound/error.wav").play();
