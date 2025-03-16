@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Video</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel = "icon" href = "../image/video.png" type = "image/x-icon"> 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script src="../jszip.min.js"></script>
+ </head>
 <body>
 
-<video width="640" height="480" controls>
-  <source src="test.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+  <video width="40%" height="40%" controls>
+    <source src="./ARUTW.mp4" type="video/mp4">
+  </video>
+  <pre>.....</pre>
+  <button onclick="loadVideo()">Load Video</button>
 
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script src="video.js"></script>
 </body>
 </html>
