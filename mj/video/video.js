@@ -7,7 +7,7 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 const gapiLoaded = () => gapi.load('client', () => 
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
   
-const pswd = ""
+const pswd = "103993oveR/++102103993oveR/++102"
 
 function decrypt(id) {
   const id_ = id.slice(1)
@@ -27,9 +27,16 @@ function getRandIntIn(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+function setProp(id, disabled, background) {
+  const ele = document.getElementById(id)
+  ele.disabled = disabled
+  ele.style.background = background
+}
+
 const objLen = x => Object.keys(x).length
 
 function loadVideo() {
+  setProp("load", true, "black")
   const keys = Object.keys(videoInfo)
   const key = keys[getRandIntIn(0, keys.length-1)]
   const [id_, size] = videoInfo[key].split("~~")
@@ -43,15 +50,10 @@ function loadVideo() {
   .then(res => res.body)
   .then(blob => new JSZip().loadAsync(blob))
   .then(zip => zip.file('video.mp4').async("blob"))
-  .then(blob => {
-    document.querySelector('video').src = URL.createObjectURL(blob)
-  })
-  .catch(err => {
-    new Audio("../sound/error.wav").play();
-    console.log(err)
-  })
+  .then(blob => document.querySelector('video').src = URL.createObjectURL(blob))
+  .catch(err => console.log(err) || (new Audio("../sound/error.wav").play()))
   .finally(() => {
-    new Audio("../sound/win.wav").play();
+    (new Audio("../sound/win.wav")).play()
+    setProp("load", false, "white")
   })
-
 }
