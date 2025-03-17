@@ -3,21 +3,42 @@
 <head>
   <title>Video</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <link rel = "icon" href = "../image/video.png" type = "image/x-icon"> 
+  <link rel="stylesheet" href="./video.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="../jszip.min.js"></script>
   <script src="./video_info.js"></script>
  </head>
 <body>
-
-  <video width="40%" height="40%" controls>
-    <source src="./ARUTW.mp4" type="video/mp4">
-  </video>
-  <pre>.....</pre>
-  <button id="load" style="background-color: white;" onclick="loadVideo()">Load Video</button>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pswd: 
-  <input type="password" id="pswd" size="6" onchange="savePswd()">
+  <div>
+    <video width="40%" height="40%" controls>
+      <source src="./ARUTW.mp4" type="video/mp4">
+    </video>     
+  </div>
+  <br>
+  <div>
+    <button id="load" style="background-color: white;" onclick="loadVideo()">Load Video</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pswd: 
+    <input type="password" id="pswd" size="6" onchange="savePswd()">     
+  </div>
+  <br>
+  Choose one video from one of the three list.
+  <div class="container">
+    <div class="scrollable-container">
+      <ul id="list_a">
+      </ul>
+    </div>  
+    <div class="scrollable-container">
+      <ul id="list_g">
+      </ul>
+    </div>  
+    <div class="scrollable-container">
+      <ul id="list_f">
+      </ul>
+    </div> 
+  </div>
 
   <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
   <script src="video.js"></script>

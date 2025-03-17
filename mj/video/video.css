@@ -1,0 +1,42 @@
+.scrollable-container {
+  height: 200px; /* Adjust as needed */
+  width: 90%;
+  overflow-y: auto;
+  border: 2px solid black; /* Optional: Add a border for visual clarity */
+}
+
+.scrollable-container ul {
+  list-style: none; /* Remove bullet points */
+  padding: 2px;
+  margin: 2px;
+}
+
+li:focus {
+  background: lightgreen;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: auto auto auto ;
+  background-color: white;
+  border: 0px solid white;
+  padding: 4px;
+}
+.container > div {
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  padding: 4px;
+  font-size: 24px;
+  text-align: left;
+}
+
+button {
+  font-size: 24px; 
+  color: darkolivegreen;
+  background-color: lightgoldenrodyellow;
+  padding: 3px;
+  border: 2px solid darkturquoise;
+  border-radius: 3px;
+  cursor: pointer;
+}
+  

@@ -8,11 +8,7 @@ const gapiLoaded = () => gapi.load('client', () =>
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
   
 const VUX = "VideoUrlXor"
-function savePswd() {
-  const pswd = document.getElementById("pswd").value.trim()
-  console.log(pswd)
-  localStorage.setItem(VUX, pswd)
-}
+const savePswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
 const loadPswd = () => (localStorage.getItem(VUX) || "").repeat(2)
 
 function decrypt(id) {
@@ -42,24 +38,45 @@ function setProp(id, disabled, background) {
 const objLen = x => Object.keys(x).length
 
 function loadVideo() {
-  setProp("load", true, "black")
-  const keys = Object.keys(videoInfo)
-  const key = keys[getRandIntIn(0, keys.length-1)]
-  const [id_, size] = videoInfo[key].split("~~")
-  const id = decrypt(id_), MB = parseInt(size) / (1024*1024)
-  console.log(`loading ${key} -- ${id} -- ${MB.toFixed(2)} MB`)
+  if(! videoInfo.hasOwnProperty(xl))
+    return alert("No video is selected.")
 
-  gapi.client.drive.files.get({
-    fileId: id,
-    alt: "media"
-  })
+  setProp("load", true, "black")
+  const [id_, size] = videoInfo[xl].split("~~")
+  const id = decrypt(id_), MB = parseInt(size) / (1024*1024)
+  // console.log(`loading ${xl} -- ${id} -- ${MB.toFixed(2)} MB`)
+
+  gapi.client.drive.files.get({fileId: id, alt: "media"})
   .then(res => res.body)
   .then(blob => new JSZip().loadAsync(blob))
   .then(zip => zip.file('video.mp4').async("blob"))
-  .then(blob => document.querySelector('video').src = URL.createObjectURL(blob))
+  .then(blob => {
+    document.querySelector('video').src = URL.createObjectURL(blob)
+    new Audio("../sound/win.wav").play()
+  })
   .catch(err => console.log(err) || (new Audio("../sound/error.wav").play()))
-  .finally(() => {
-    (new Audio("../sound/win.wav")).play()
-    setProp("load", false, "white")
+  .finally(() => setProp("load", false, "lightgoldenrodyellow"))
+}
+
+var xl = ''
+loadList()
+function loadList() {
+  const listMap = {
+    "a": document.getElementById("list_a"),
+    "g": document.getElementById("list_g"),
+    "f": document.getElementById("list_f")
+  }
+
+  Object.keys(videoInfo).sort().forEach(key => {
+    const [id_, size] = videoInfo[key].split("~~")
+    const newItem = document.createElement('li')
+    newItem.textContent = `${key} --- ${(parseInt(size)/(1024*1024)).toFixed(2)} MB`
+    newItem.setAttribute('tabindex', 1)
+    listMap[key.charAt(0)].appendChild(newItem)    
+  })  
+  
+  Object.values(listMap).forEach(le => le.onclick = e => {
+    xl = e.target.innerHTML.substring(0, 3)
+    document.getElementById('load').innerText = "Load Video " + xl
   })
 }
