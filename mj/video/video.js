@@ -7,12 +7,18 @@ const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/res
 const gapiLoaded = () => gapi.load('client', () => 
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
   
-const pswd = "103993oveR/++102103993oveR/++102"
+const VUX = "VideoUrlXor"
+function savePswd() {
+  const pswd = document.getElementById("pswd").value.trim()
+  console.log(pswd)
+  localStorage.setItem(VUX, pswd)
+}
+const loadPswd = () => (localStorage.getItem(VUX) || "").repeat(2)
 
 function decrypt(id) {
   const id_ = id.slice(1)
   const bytes1 = atob(id_).split('').map(char => char.charCodeAt(0))
-  const bytes2 = atob(pswd).split('').map(char => char.charCodeAt(0))
+  const bytes2 = atob(loadPswd()).split('').map(char => char.charCodeAt(0))
   const length = Math.min(bytes1.length, bytes2.length)
   const result = []
   for (let i = 0; i < length; i++) 
