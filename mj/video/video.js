@@ -60,8 +60,7 @@ function loadVideo() {
   gapi.client.drive.files.get({fileId: id, alt: "media"})
   .then(res => res.body)
   .then(blob => {       // blob is already a string type
-    const bytes = strToBytes(blob), mask = strToBytes(atob(pswd))
-    const res = xef_decrypt(bytes, mask)
+    const res = xef_decrypt(blob, strToBytes(atob(pswd)))
     return res['video.mp4']
   })
   .then(blob => {

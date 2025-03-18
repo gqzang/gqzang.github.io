@@ -15,7 +15,8 @@ function xor_crypt(src, mask) {
   return result
 }
 
-function xef_decrypt(bytes, mask) {
+function xef_decrypt(bStr, mask) {
+  const bytes = strToBytes(bStr)
   const linfo = bytes[0] * 256 + bytes[1]
   var cp = 2 + linfo                  // current position in bytes
   const info = bytesToStr(xor_crypt(bytes.slice(2, cp), mask)).split('|')
