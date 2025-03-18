@@ -37,6 +37,15 @@ function setProp(id, disabled, background) {
 }
 
 const objLen = x => Object.keys(x).length
+  
+const cid = document.getElementById("count")
+const lid = document.getElementById("load")
+var count = 0
+setInterval(() => {
+  count = lid.disabled ? count + 1 : 0
+  if(! lid.disabled) cid.style.color = "black"
+  cid.textContent = count
+}, 1000)
 
 function loadVideo() {
   if(! videoInfo.hasOwnProperty(xl))
@@ -49,7 +58,10 @@ function loadVideo() {
 
   gapi.client.drive.files.get({fileId: id, alt: "media"})
   .then(res => res.body)
-  .then(blob => new JSZip().loadAsync(blob))
+  .then(blob => {
+    cid.style.color = "green"            // data is loaded
+    return new JSZip().loadAsync(blob)
+  })
   .then(zip => zip.file('video.mp4').async("blob"))
   .then(blob => {
     document.querySelector('video').src = URL.createObjectURL(blob)
