@@ -56,13 +56,14 @@ function loadVideo() {
   const id = decrypt(id_), MB = parseInt(size) / (1024*1024)
   // console.log(`loading ${xl} -- ${id} -- ${MB.toFixed(2)} MB`)
 
+  cid.style.color = "green"            // data is loading
   gapi.client.drive.files.get({fileId: id, alt: "media"})
   .then(res => res.body)
-  .then(blob => {
-    cid.style.color = "green"            // data is loaded
-    return new JSZip().loadAsync(blob)
+  .then(blob => {       // blob is already a string type
+    const bytes = strToBytes(blob), mask = strToBytes(atob(pswd))
+    const res = xef_decrypt(bytes, mask)
+    return res['video.mp4']
   })
-  .then(zip => zip.file('video.mp4').async("blob"))
   .then(blob => {
     document.querySelector('video').src = URL.createObjectURL(blob)
     new Audio("../sound/win.wav").play()
