@@ -9,12 +9,13 @@ const gapiLoaded = () => gapi.load('client', () =>
   
 const VUX = "VideoUrlXor"
 const savePswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
-const loadPswd = () => (localStorage.getItem(VUX) || "").repeat(2)
+const loadPswd = () => (localStorage.getItem(VUX) || "")
+const pswd = loadPswd()
 
 function decrypt(id) {
   const id_ = id.slice(1)
   const bytes1 = atob(id_).split('').map(char => char.charCodeAt(0))
-  const bytes2 = atob(loadPswd()).split('').map(char => char.charCodeAt(0))
+  const bytes2 = atob(pswd.repeat(2)).split('').map(char => char.charCodeAt(0))
   const length = Math.min(bytes1.length, bytes2.length)
   const result = []
   for (let i = 0; i < length; i++) 
@@ -80,3 +81,9 @@ function loadList() {
     document.getElementById('load').innerText = "Load Video " + xl
   })
 }
+
+// warning before left (close, refresh-button, back-button, F5 and Ctrl+R)
+window.addEventListener('beforeunload', function(e) {
+  e.preventDefault()
+  e.returnValue = ''
+})

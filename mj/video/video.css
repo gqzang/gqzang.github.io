@@ -39,4 +39,13 @@ button {
   border-radius: 3px;
   cursor: pointer;
 }
-  
+
+label {
+  color: black;
+  font-size: 24px;
+  background-color: lightgoldenrodyellow;
+}
+
+html, body {
+  overscroll-behavior: none;
+}
