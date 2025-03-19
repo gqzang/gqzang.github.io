@@ -37,8 +37,8 @@ function xef_decrypt(bStr, mask) {
 
 function createU8As(bStr, a, b) {
   const U8As = [], MAX = 10*1024*1024                      // 10MB
-  for(let p = a; p < b; p += MAX ) 
+  for(var p = a; p < a + Math.floor((b-a)/MAX) * MAX; p += MAX )
     U8As.push(new Uint8Array(strToBytes(bStr.slice(p, p+MAX))))
-  U8As.push(new Uint8Array(strToBytes(bStr.slice(Math.floor((b-a)/MAX)*MAX, b))))
+  if(p < b) U8As.push(new Uint8Array(strToBytes(bStr.slice(p, b))))
   return U8As
 }
