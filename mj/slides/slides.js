@@ -64,31 +64,25 @@ function loadSlides() {
 
   const keys = Object.keys(bonus)
   bonusKey = keys[getRandIntIn(0, keys.length-1)]
-  const id = bonus[bonusKey]
+  const [id_, size] = bonus[bonusKey].split("~~")
+  const id = decrypt(id_)
 
   const src = document.getElementById("bonusSrc").textContent
   slidesMap = {}
 
-  gapi.client.drive.files.get({
-    fileId: id,
-    alt: "media"
-  })
-  .then(res => res.body)
-  .then(blob => new JSZip().loadAsync(blob))
-  .then(zip => {
-    Object.keys(zip.files).forEach(fn => {
-      zip.file(fn).async("blob").then(blob => {
-        const imageURL = URL.createObjectURL(blob)
-        if(fn == "thumbnail.jpg") 
-          document.getElementById("galary").src = imageURL
-        else {
-          document.getElementById("image").src = imageURL
-          document.getElementById("image").hidden = false
-          slidesMap[`${src}-${bonusKey}-${fn}`] = imageURL
-        }
-      })
-    })
-  })
+  gapi.client.drive.files.get({fileId: id, alt: "media"})
+  .then(res => res.body)                            // res.body is already a string type
+  .then(iStr => xef_decrypt(iStr, strToBytes(atob(pswd))))
+  .then(iObjs => Object.keys(iObjs).forEach(fn => {
+    const imageURL = URL.createObjectURL(iObjs[fn])
+    if(fn == "thumbnail.jpg") 
+      document.getElementById("galary").src = imageURL
+    else {
+      document.getElementById("image").src = imageURL
+      document.getElementById("image").hidden = false
+      slidesMap[`${src}-${bonusKey}-${fn}`] = imageURL
+    }
+  }))
   .catch(err => {
     localStorage.setItem(PGDAT, getEpoch() + 450)      // wait 8 min for API key to restore.
     new Audio("../sound/error.wav").play();
