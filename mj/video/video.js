@@ -13,7 +13,7 @@ const cid = document.getElementById("count")
 const lid = document.getElementById("load")
 var count = 0
 setInterval(() => {
-  count = lid.disabled ? count + 1 : 0
+  count = (lid.disabled && (document.getElementById('load').innerText != "Load Video")) ? count + 1 : 0
   if(! lid.disabled) cid.style.color = "black"
   cid.textContent = count
 }, 1000)
@@ -32,21 +32,49 @@ function loadVideo() {
   .then(res => res.body)          // res.body is already a string type
   .then(vStr => xef_decrypt(vStr, strToBytes(atob(pswd))))
   .then(vObjs => {
-    document.querySelector('video').src = URL.createObjectURL(vObjs['video.mp4'])
+    const videoURL = URL.createObjectURL(vObjs['video.mp4'])
+    document.querySelector('video').src = videoURL
+
     new Audio("../sound/win.wav").play()
+    setProp("load", true, "black")
+    document.getElementById('load').innerText = "Load Video"
+    
+    storeDownloadedVideo(xl, videoURL)
+    delete videoInfo[xl];  loadList()            // remove the loaded item from lists
   })
-  .catch(err => console.log(err) || (new Audio("../sound/error.wav").play()))
-  .finally(() => setProp("load", false, "lightgoldenrodyellow"))
+  .catch(err => {
+    console.log(err) 
+    new Audio("../sound/error.wav").play()
+    setProp("load", false, "lightgoldenrodyellow")
+  })
 }
 
+const selectId = document.getElementById('downloaded')
+const videoObjs = {}
+function storeDownloadedVideo(key, url) {
+  const newOption = document.createElement('option')
+  newOption.value = key
+  const [id_, size] = videoInfo[key].split("~~")
+  newOption.text = `${key} --- ${(parseInt(size)/(1024*1024)).toFixed(2)} MB`
+  selectId.add(newOption)
+  selectId.value = key
+  videoObjs[key] = url
+}
+
+function changeVideo() {
+  const name = selectId.options[selectId.selectedIndex].value
+  document.querySelector('video').src = videoObjs[name]
+}
+
+const listMap = {
+  "a": document.getElementById("list_a"),
+  "g": document.getElementById("list_g"),
+  "f": document.getElementById("list_f")
+}
 var xl = ''
 loadList()
 function loadList() {
-  const listMap = {
-    "a": document.getElementById("list_a"),
-    "g": document.getElementById("list_g"),
-    "f": document.getElementById("list_f")
-  }
+  Object.values(listMap).forEach(le => le.innerHTML = '')            // clear list first for reloading
 
   Object.keys(videoInfo).sort().forEach(key => {
     const [id_, size] = videoInfo[key].split("~~")
@@ -59,6 +87,7 @@ function loadList() {
   Object.values(listMap).forEach(le => le.onclick = e => {
     xl = e.target.innerHTML.substring(0, 3)
     document.getElementById('load').innerText = "Load Video " + xl
+    setProp("load", false, "lightgoldenrodyellow")
   })
 }
 

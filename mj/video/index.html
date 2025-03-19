@@ -13,17 +13,21 @@
  </head>
 <body style="background-color:gray;">
   <div>
-    <video width="100%" height="50%" controls>
-    <!-- <video width="25%" height="25%" controls> -->
+    <!-- <video width="100%" height="50%" controls> -->
+    <video width="25%" height="25%" controls>
         <source src="./ARUTW.mp4" type="video/mp4">
     </video>     
   </div>
   <br>
   <div>
-    <button id="load" style="background-color: white;" onclick="loadVideo()">Load Video</button>
+    <button id="load" disabled style="background-color: black;" onclick="loadVideo()">Load Video</button>
     &nbsp;<label id="count">0</label>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pswd: 
-    <input type="password" id="pswd" size="6" onchange="savePswd()">     
+    <input type="password" id="pswd" size="6" onchange="savePswd()"> 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="downloaded" onchange="changeVideo()">
+      <!-- <option value="1">test1</option> -->
+    </select>
   </div>
   <br>
   Choose one video from one of the three list.
