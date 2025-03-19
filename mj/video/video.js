@@ -58,13 +58,10 @@ function loadVideo() {
 
   cid.style.color = "green"            // data is loading
   gapi.client.drive.files.get({fileId: id, alt: "media"})
-  .then(res => res.body)
-  .then(blob => {       // blob is already a string type
-    const res = xef_decrypt(blob, strToBytes(atob(pswd)))
-    return res['video.mp4']
-  })
-  .then(blob => {
-    document.querySelector('video').src = URL.createObjectURL(blob)
+  .then(res => res.body)          // res.body is already a string type
+  .then(vStr => xef_decrypt(vStr, strToBytes(atob(pswd))))
+  .then(vObjs => {
+    document.querySelector('video').src = URL.createObjectURL(vObjs['video.mp4'])
     new Audio("../sound/win.wav").play()
   })
   .catch(err => console.log(err) || (new Audio("../sound/error.wav").play()))
