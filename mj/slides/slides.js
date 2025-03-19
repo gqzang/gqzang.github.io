@@ -1,15 +1,9 @@
 "use strict"
 
-function getRandIntIn(min, max) {
-  min = Math.ceil(min);    max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function setProp(id, disabled, background) {
-  const ele = document.getElementById(id)
-  ele.disabled = disabled
-  ele.style.background = background
-}
+const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
+const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
+const gapiLoaded = () => gapi.load('client', () => 
+            gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
 const objLen = x => Object.keys(x).length
 const setInfo = x => document.getElementById("info").textContent = x
@@ -35,11 +29,6 @@ setInterval(() => {
     }
   }, 1000)
   
-const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
-const gapiLoaded = () => gapi.load('client', () => 
-            gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
-
 var bonus = bonus_ax, srcAdded = {}
 function changeBonusSrc() {
   if(slideIsRunning()) return stopSlide() || setInfo("Slides is stopped.")
