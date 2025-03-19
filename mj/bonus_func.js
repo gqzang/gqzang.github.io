@@ -35,17 +35,14 @@ function set_image_url(forMJ=true) {
 
   var keys = Object.keys(bonus)
   bonusKey = keys[getRandomIntInclusive(0, keys.length-1)]
-  var id = bonus[bonusKey]
+  const [id_, size] = bonus[bonusKey].split("~~")
+  const id = decrypt(id_)
 
-  gapi.client.drive.files.get({
-    fileId: id,
-    alt: "media"
-  })
-  .then(res => res.body)
-  .then(blob => new JSZip().loadAsync(blob))
-  .then(zip => zip.file('bonus.jpg').async("blob"))
-  .then(blob => {
-    const imageURL = URL.createObjectURL(blob)
+  gapi.client.drive.files.get({fileId: id, alt: "media"})
+  .then(res => res.body)                            // res.body is already a string type
+  .then(iStr => xef_decrypt(iStr, strToBytes(atob(pswd))))
+  .then(iObjs => {
+    const imageURL = URL.createObjectURL(iObjs['bonus.jpg'])
     bonusUrl = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
     document.getElementById("bonus").innerText = bonusKey

@@ -40,8 +40,8 @@ function restart() {
   
   cont = false;  end = 0;   sp = false
   
-  bonusUrl = "";  bonusKey = "";  bonusLoaded = false;   
-  document.getElementById("bonusSrc").textContent = 'X';  
-  bonus = bonus_x
+  bonusUrl = "";  bonusKey = "";  bonusLoaded = false; 
+  // document.getElementById("bonusSrc").textContent = 'X';  
+  // bonus = bonus_x
 }
   

@@ -5,12 +5,12 @@
   <link rel = "icon" href = "image/Mahjong.png" type = "image/x-icon"> 
   <link rel="stylesheet" href="mj_style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-  <script src="jszip.min.js"></script>
-  <script src="data/bonus_x.js"></script>
-  <script src="data/bonus_y.js"></script>
-  <script src="data/bonus_z.js"></script>
+  <script src="data/bonus_xef_x.js"></script>
+  <script src="data/bonus_xef_y.js"></script>
+  <script src="data/bonus_xef_z.js"></script>
   <script src="bonus_func.js"></script>
   <script src="init.js"></script>
+  <script src="./xef.js"></script>
 </head>
 <body>
 <!-- style="background-image: url(image/hu_pai.gif);"> -->
@@ -147,6 +147,7 @@
     <button id="start" onclick="playMJ()">Start</button> 
   </div>
 </div>
+Pswd: <input type="password" id="pswd" size="6" onchange="savePswd()">     
 
 <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
 <script src="mahjong.js"></script>
