@@ -15,7 +15,45 @@ function xor_crypt(src, mask) {
   return result
 }
 
+/*
+  This version is about 50% faster than v0, by decoding a 190MB video, it takes
+  about ~18S, while v0 takes ~28S.
+  It reduces the the passing around long string, by using inner function.
+*/
 function xef_decrypt(bStr, mask, bType='image/jpg') {
+  var bytes = strToBytes(bStr.slice(0, 2))
+  const linfo = bytes[0] * 256 + bytes[1]
+  var cp = 2 + linfo                  // current position in bytes
+  bytes = strToBytes(bStr.slice(2, cp))
+  const info = bytesToStr(xor_crypt(bytes, mask)).split('|')
+  const min_len = parseInt(info[0])
+
+  const result = {}
+  for(let i = 1; i < info.length; i += 2) {
+    const fn = info[i], size = parseInt(info[i+1])
+    const xStr = bStr.slice(cp, cp + Math.min(min_len, size))
+    const xU8A = new Uint8Array(xor_crypt(strToBytes(xStr), mask))
+
+    const rU8As = []
+    const a = cp + Math.min(min_len, size), b = cp + size, BSize = 10*1024*1024
+    for(var p = a; p < a + Math.floor((b-a)/BSize) * BSize; p += BSize ) 
+      rU8As.push(block_proc(p, p+BSize))
+    if(p < b) rU8As.push(block_proc(p, b))
+
+    function block_proc(a, b)  {
+      const u8A = new Uint8Array(b-a);
+      for(let i = 0; i < b-a; i++)
+        u8A[i] = bStr.charCodeAt(a+i)
+      return u8A
+    }
+
+    result[fn] = new Blob([xU8A].concat(rU8As), { type: bType })
+    cp += size
+  }
+  return result  
+}
+
+function xef_decrypt_v0(bStr, mask, bType='image/jpg') {
   var bytes = strToBytes(bStr.slice(0, 2))
   const linfo = bytes[0] * 256 + bytes[1]
   var cp = 2 + linfo                  // current position in bytes
@@ -32,7 +70,7 @@ function xef_decrypt(bStr, mask, bType='image/jpg') {
     result[fn] = new Blob([xU8A].concat(rU8As), { type: bType })
     cp += size
   }
-  return result  
+  return result
 }
 
 function createU8As(bStr, a, b) {
