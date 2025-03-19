@@ -55,7 +55,7 @@ function storeDownloadedVideo(key, url) {
   const newOption = document.createElement('option')
   newOption.value = key
   const [id_, size] = videoInfo[key].split("~~")
-  newOption.text = `${key} --- ${(parseInt(size)/(1024*1024)).toFixed(2)} MB`
+  newOption.text = `${key}: ${(parseInt(size)/(1024*1024)).toFixed(2)}`
   selectId.add(newOption)
   selectId.value = key
   videoObjs[key] = url
@@ -79,7 +79,7 @@ function loadList() {
   Object.keys(videoInfo).sort().forEach(key => {
     const [id_, size] = videoInfo[key].split("~~")
     const newItem = document.createElement('li')
-    newItem.textContent = `${key} --- ${(parseInt(size)/(1024*1024)).toFixed(2)} MB`
+    newItem.textContent = `${key}: ${(parseInt(size)/(1024*1024)).toFixed(2)}`
     newItem.setAttribute('tabindex', 1)
     listMap[key.charAt(0)].appendChild(newItem)    
   })  
