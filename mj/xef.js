@@ -15,7 +15,7 @@ function xor_crypt(src, mask) {
   return result
 }
 
-function xef_decrypt(bStr, mask) {
+function xef_decrypt(bStr, mask, bType='image/jpg') {
   var bytes = strToBytes(bStr.slice(0, 2))
   const linfo = bytes[0] * 256 + bytes[1]
   var cp = 2 + linfo                  // current position in bytes
@@ -29,7 +29,7 @@ function xef_decrypt(bStr, mask) {
     const xStr = bStr.slice(cp, cp + Math.min(min_len, size))
     const xU8A = new Uint8Array(xor_crypt(strToBytes(xStr), mask))
     const rU8As = createU8As(bStr, cp + Math.min(min_len, size), cp + size)
-    result[fn] = new Blob([xU8A].concat(rU8As), { type: 'video/mp4' })
+    result[fn] = new Blob([xU8A].concat(rU8As), { type: bType })
     cp += size
   }
   return result  
