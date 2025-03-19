@@ -20,7 +20,7 @@ function xor_crypt(src, mask) {
   about ~18S, while v0 takes ~28S.
   It reduces the the passing around long string, by using inner function.
 */
-function xef_decrypt(bStr, mask, bType='image/jpg') {
+async function xef_decrypt(bStr, mask, bType='image/jpg') {
   var bytes = strToBytes(bStr.slice(0, 2))
   const linfo = bytes[0] * 256 + bytes[1]
   var cp = 2 + linfo                  // current position in bytes
@@ -34,16 +34,19 @@ function xef_decrypt(bStr, mask, bType='image/jpg') {
     const xStr = bStr.slice(cp, cp + Math.min(min_len, size))
     const xU8A = new Uint8Array(xor_crypt(strToBytes(xStr), mask))
 
-    const rU8As = []
-    const a = cp + Math.min(min_len, size), b = cp + size, BSize = 10*1024*1024
+    const bound = []
+    const a = cp + Math.min(min_len, size), b = cp + size, BSize = 64*1024
     for(var p = a; p < a + Math.floor((b-a)/BSize) * BSize; p += BSize ) 
-      rU8As.push(block_proc(p, p+BSize))
-    if(p < b) rU8As.push(block_proc(p, b))
+      bound.push([p, p+BSize])
+    if(p < b) bound.push([p, b])
+    const promises = bound.map(async x => await block_proc(x[0], x[1]))
+    rU8As = await Promise.all(promises)
 
-    function block_proc(a, b)  {
+    async function block_proc(a, b)  {
       const u8A = new Uint8Array(b-a);
       for(let i = 0; i < b-a; i++)
         u8A[i] = bStr.charCodeAt(a+i)
+      await new Promise(resolve => setTimeout(resolve, 50))
       return u8A
     }
 
