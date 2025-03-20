@@ -18,7 +18,7 @@ setInterval(() => {
   cid.textContent = count
 }, 1000)
 
-function loadVideo() {
+async function loadVideo() {
   if(! videoInfo.hasOwnProperty(xl))
     return alert("No video is selected.")
 
@@ -28,25 +28,22 @@ function loadVideo() {
   // console.log(`loading ${xl} -- ${id} -- ${MB.toFixed(2)} MB`)
 
   cid.style.color = "green"            // data is loading
-  gapi.client.drive.files.get({fileId: id, alt: "media"})
-  .then(res => res.body)          // res.body is already a string type
-  .then(vStr => xef_decrypt(vStr, strToBytes(atob(pswd))))
-  .then(vObjs => {
+  try {
+    const res = await gapi.client.drive.files.get({fileId: id, alt: "media"})
+    const vObjs = xef_decrypt(res.body, strToBytes(atob(pswd)))              // res.body is string type
     const videoURL = URL.createObjectURL(vObjs['video.mp4'])
     document.querySelector('video').src = videoURL
-
     new Audio("../sound/win.wav").play()
     setProp("load", true, "black")
     document.getElementById('load').innerText = "Load Video"
     
     storeDownloadedVideo(xl, videoURL)
     delete videoInfo[xl];  loadList()            // remove the loaded item from lists
-  })
-  .catch(err => {
+  } catch(err) {
     console.log(err) 
     new Audio("../sound/error.wav").play()
     setProp("load", false, "lightgoldenrodyellow")
-  })
+  }
 }
 
 const selectId = document.getElementById('downloaded')
