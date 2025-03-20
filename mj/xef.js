@@ -34,16 +34,15 @@ function xef_decrypt(bStr, mask, bType='image/jpg') {
     const xStr = bStr.slice(cp, cp + Math.min(min_len, size))
     const xU8A = new Uint8Array(xor_crypt(strToBytes(xStr), mask))
 
-    const rU8As = []
-    const a = cp + Math.min(min_len, size), b = cp + size, BSize = 10*1024*1024
-    for(var p = a; p < a + Math.floor((b-a)/BSize) * BSize; p += BSize ) 
-      rU8As.push(block_proc(p, p+BSize))
-    if(p < b) rU8As.push(block_proc(p, b))
-
+    const batch = [], rU8As = [], BS = 1024*1024
+    const a = cp + Math.min(min_len, size), b = cp + size, n = Math.floor((b-a)/BS)
+    for(var p = a; p < a + n * BS; p += BS ) batch.push([p, p+BS])
+    if(p < b) batch.push([p, b])
+    batch.forEach(x => rU8As.push(block_proc(...x)))
+    
     function block_proc(a, b)  {
       const u8A = new Uint8Array(b-a);
-      for(let i = 0; i < b-a; i++)
-        u8A[i] = bStr.charCodeAt(a+i)
+      for(let i = 0; i < b-a; i++) u8A[i] = bStr.charCodeAt(a+i)
       return u8A
     }
 
