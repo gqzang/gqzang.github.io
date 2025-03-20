@@ -19,6 +19,12 @@ function xor_crypt(src, mask) {
   This version is about 50% faster than v0, by decoding a 190MB video, it takes
   about ~18S, while v0 takes ~28S.
   It reduces the the passing around long string, by using inner function.
+
+  NOTE: after many various test of eliminating that 18S, which cause the browser un-responsive,
+        looks like it is used for forming the response string (res->body), and all the other ops
+        like decrypt large blook, allocate memory for Uint8Array, etc does not really take much
+        time at all, and can't be reduced further.
+  SO: we have to bear with the un-responsive time.
 */
 function xef_decrypt(bStr, mask, bType='image/jpg') {
   var bytes = strToBytes(bStr.slice(0, 2))
@@ -34,16 +40,15 @@ function xef_decrypt(bStr, mask, bType='image/jpg') {
     const xStr = bStr.slice(cp, cp + Math.min(min_len, size))
     const xU8A = new Uint8Array(xor_crypt(strToBytes(xStr), mask))
 
-    const rU8As = []
-    const a = cp + Math.min(min_len, size), b = cp + size, BSize = 10*1024*1024
-    for(var p = a; p < a + Math.floor((b-a)/BSize) * BSize; p += BSize ) 
-      rU8As.push(block_proc(p, p+BSize))
-    if(p < b) rU8As.push(block_proc(p, b))
-
+    const batch = [], rU8As = [], BS = 1024*1024
+    const a = cp + Math.min(min_len, size), b = cp + size, n = Math.floor((b-a)/BS)
+    for(var p = a; p < a + n * BS; p += BS ) batch.push([p, p+BS])
+    if(p < b) batch.push([p, b])
+    batch.forEach(x => rU8As.push(block_proc(...x)))
+    
     function block_proc(a, b)  {
       const u8A = new Uint8Array(b-a);
-      for(let i = 0; i < b-a; i++)
-        u8A[i] = bStr.charCodeAt(a+i)
+      for(let i = 0; i < b-a; i++) u8A[i] = bStr.charCodeAt(a+i)
       return u8A
     }
 
