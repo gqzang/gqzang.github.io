@@ -19,6 +19,12 @@ function xor_crypt(src, mask) {
   This version is about 50% faster than v0, by decoding a 190MB video, it takes
   about ~18S, while v0 takes ~28S.
   It reduces the the passing around long string, by using inner function.
+
+  NOTE: after many various test of eliminating that 18S, which cause the browser un-responsive,
+        looks like it is used for forming the response string (res->body), and all the other ops
+        like decrypt large blook, allocate memory for Uint8Array, etc does not really take much
+        time at all, and can't be reduced further.
+  SO: we have to bear with the un-responsive time.
 */
 function xef_decrypt(bStr, mask, bType='image/jpg') {
   var bytes = strToBytes(bStr.slice(0, 2))
