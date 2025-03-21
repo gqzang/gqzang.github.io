@@ -25,7 +25,6 @@ async function loadVideo() {
   setProp("load", true, "black")
   const [id_, size] = videoInfo[xl].split("~~")
   const id = decrypt(id_), MB = parseInt(size) / (1024*1024)
-  // console.log(`loading ${xl} -- ${id} -- ${MB.toFixed(2)} MB`)
 
   cid.style.color = "green"            // data is loading
   try {
@@ -33,10 +32,9 @@ async function loadVideo() {
     const vObjs = xef_decrypt(res.body, strToBytes(atob(pswd)))              // res.body is string type
     const videoURL = URL.createObjectURL(vObjs['video.mp4'])
     document.querySelector('video').src = videoURL
+
     new Audio("../sound/win.wav").play()
-    setProp("load", true, "black")
-    document.getElementById('load').innerText = "Load Video"
-    
+    document.getElementById('load').innerText = "Load Video"   
     storeDownloadedVideo(xl, videoURL)
     delete videoInfo[xl];  loadList()            // remove the loaded item from lists
   } catch(err) {
