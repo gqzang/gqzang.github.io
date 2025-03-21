@@ -8,21 +8,26 @@ const gapiLoaded = () => gapi.load('client', () =>
             gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
   
 const objLen = x => Object.keys(x).length
-  
+const getEpoch = () => Math.round((new Date()).getTime() / 1000)
 const cid = document.getElementById("count")
 const lid = document.getElementById("load")
-var count = 0
+const LST = "LoadingStartTime"
+const updateTimer = () => cid.textContent = getEpoch() - parseInt(localStorage.getItem(LST))
+const clearTimer = () => cid.textContent = localStorage.setItem(LST, getEpoch()) | 0
+
 setInterval(() => {
-  count = (lid.disabled && (document.getElementById('load').innerText != "Load Video")) ? count + 1 : 0
-  if(! lid.disabled) cid.style.color = "black"
-  cid.textContent = count
+  if(!localStorage.getItem(LST)) clearTimer()
+  if(lid.disabled && (document.getElementById('load').innerText != "Load Video"))
+    updateTimer()
 }, 1000)
 
 async function loadVideo() {
   if(! videoInfo.hasOwnProperty(xl))
     return alert("No video is selected.")
 
-  setProp("load", true, "black")
+  localStorage.setItem(LST, getEpoch())
+  setProp("load", true, "lightgray")
+
   const [id_, size] = videoInfo[xl].split("~~")
   const id = decrypt(id_), MB = parseInt(size) / (1024*1024)
 
@@ -34,7 +39,8 @@ async function loadVideo() {
     document.querySelector('video').src = videoURL
 
     new Audio("../sound/win.wav").play()
-    document.getElementById('load').innerText = "Load Video"   
+    document.getElementById('load').innerText = "Load Video" 
+    updateTimer()
     storeDownloadedVideo(xl, videoURL)
     delete videoInfo[xl];  loadList()            // remove the loaded item from lists
   } catch(err) {
@@ -83,6 +89,7 @@ function loadList() {
     xl = e.target.innerHTML.substring(0, 3)
     document.getElementById('load').innerText = "Load Video " + xl
     setProp("load", false, "lightgoldenrodyellow")
+    clearTimer()
   })
 }
 
