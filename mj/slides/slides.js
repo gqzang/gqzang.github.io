@@ -73,18 +73,10 @@ async function loadSlides() {
   try {
     const res = await gapi.client.drive.files.get({fileId: id, alt: "media"})
     const iObjs = xef_decrypt(res.body, strToBytes(atob(pswd)))       // res.body is already a string type
-    for(const [fn, img] of Object.entries(iObjs)) {
-      const imageURL = URL.createObjectURL(img)
-      if(fn == "thumbnail.jpg") {
-        (document.getElementById("galary").src = imageURL) 
-        continue
-      }
-      document.getElementById("image").src = imageURL
-      document.getElementById("image").hidden = false
-      slidesMap[`${src}-${bonusKey}-${fn}`] = imageURL
-    }
+    for(const [fn, img] of Object.entries(iObjs))
+      fn == "thumbnail.jpg" ? document.getElementById("galary").src = URL.createObjectURL(img) :
+                              slidesMap[`${src}-${bonusKey}-${fn}`] = URL.createObjectURL(img)
     new Audio("../sound/win.wav").play();
-    setTimeout(()=> document.getElementById("image").hidden = true, 5000)
     setInfo("Click thumbnail to add images to slides.")
   }
   catch(err) {
@@ -102,10 +94,7 @@ const startSlide = () => slideTimer = slideTimer || setInterval(nextSlide, 6000)
 var addingImages = false
 async function addBatchToSlides() {
   if(objLen(slidesMap) == 0) {
-    if(! bonusKey )
-      setInfo("No image to add to slides.")
-    else
-      setInfo("Images is already added to slides.")
+    setInfo(! bonusKey ? "No image to add to slides." : "Images is already added to slides.")
     return
   }
   if(addingImages) return
@@ -124,7 +113,6 @@ async function addBatchToSlides() {
   srcAdded[src] = srcAdded.hasOwnProperty(src) ? srcAdded[src]+1 : 1
   setInfo(`${objLen(slidesMap)} images (${src}-${bonusKey}-*) are added to slides`)
 
-  // startSlide()
   slidesMap = {}
   addingImages = false
 
