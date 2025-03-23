@@ -73,7 +73,8 @@ const gapiLoaded = () => gapi.load('client', () =>
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
 
 function addBonus() {
-  const newBonusKey = Object.keys(bonusG).length.toString().padStart(4, '0') + '-' + bonusKey
+  const newBonusKey = Object.keys(bonusG).length.toString().padStart(4, '0') + '-' + 
+                      document.getElementById("bonusSrc").textContent + '-' + bonusKey
   bonusG[newBonusKey] = bonusUrl           // add to bonus gained
   delete bonus[bonusKey]                // remove from availabe bonus not to repeat
   return newBonusKey
