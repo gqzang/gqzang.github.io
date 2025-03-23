@@ -195,6 +195,7 @@ function showBigGame() {
 
 var end = 0
 async function playMJ() {
+  stopSlide()
   if(end != 0){
     restart()
     return

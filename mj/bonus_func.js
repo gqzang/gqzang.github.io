@@ -83,7 +83,7 @@ function addBonus() {
 function showOff() {
   const newBonusKey = addBonus()
   showOff2("ShowOff", newBonusKey, bonusUrl)
-  clearInterval(slideTimer);  slideTimer = setInterval(nextSlide, 6000)     // restart timer
+  stopSlide()
   restart()
 }
 
@@ -129,9 +129,12 @@ function nextSlide() {
   console.log(i, n)
   const bKey = keys[i], bUrl = bonusG[bKey]
   showOff2("ShowOff", bKey, bUrl)
+  startSlide()
 }
 
-var slideTimer = setInterval(nextSlide, 6000)
+var slideTimer = null           // initial state
+const stopSlide = () => slideTimer = slideTimer && clearInterval(slideTimer) || null
+const startSlide = () => slideTimer = slideTimer || setInterval(nextSlide, 6000)
 
 function changeBonusSrc() {
   const BonusMap = {
