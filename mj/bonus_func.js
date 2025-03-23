@@ -93,31 +93,7 @@ function showOff2(name, bonusKey_, bonusUrl_) {
     bonusG = {}
     return console.log("Bonus is cleared.")
   }
-
-  win.document.open()
-  const doc = `
-<html style="overscroll-behavior: none;">
-<head>
-  <title>${bonusKey_}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-    window.addEventListener('beforeunload', function(e) {
-      e.preventDefault()
-      e.returnValue = ''
-    })
-  </script>
-</head>
-<body style="background-image: url(${bonusUrl_ || 'image/hu_pai.gif'}); background-size: contain; background-position: center; 
-             background-repeat: no-repeat; background-color:black; overscroll-behavior: none; color: gold;">
-  <div style="font-size:large;" onclick="window.opener.nextSlide()">
-    ${bonusKey_}
-    ${("<br>" + "&nbsp;".repeat(50)).repeat(15)}
-  </div>
-</body>
-</html>
-`
-  win.document.write(doc)
-  win.document.close() 
+  createSlide(win, bonusKey_, bonusUrl_, "nextSlide")
 }
 
 function nextSlide() {

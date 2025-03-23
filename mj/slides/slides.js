@@ -123,36 +123,9 @@ async function addBatchToSlides() {
 var bonusG = {}
 function showOff2(name, key, url) {
   var win = window.open("", name, 'width=500,height=1000,menubar=no,toolbar=no,location=no,status=no')
-  if( ! win ) {
-    bonusG = {}
-    return console.log("Bonus is cleared.")
-  }
-  
-  win.document.open()
-  const key_ = key.slice(0, -4)
-  const doc = `
-<html style="overscroll-behavior: none;">
-<head>
-  <title>${key_}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-    window.addEventListener('beforeunload', function(e) {
-      e.preventDefault()
-      e.returnValue = ''
-    })
-  </script>
-</head>
-<body style="background-image: url(${url}); background-size: contain; background-position: center; 
-             background-repeat: no-repeat; background-color:black; overscroll-behavior: none; color: gold;">
-  <div style="font-size:large;" onclick="window.opener.nextSlide_()">
-    ${key_}
-    ${("<br>" + "&nbsp;".repeat(50)).repeat(15)}
-  </div>
-</body>
-</html>
-`
-  win.document.write(doc)
-  win.document.close() 
+  if( win ) return createSlide(win, key, url, "nextSlide_")
+  bonusG = {}
+  return console.log("Bonus is cleared.")
 }
   
 function nextSlide_() {

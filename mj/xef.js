@@ -113,3 +113,30 @@ function setProp(id, disabled, background) {
   ele.style.background = background
 }
 
+function createSlide(win, key, url, slideFuncName) {
+  win.document.open()
+  const key_ = key.slice(0, -4)
+  const doc = `
+<html style="overscroll-behavior: none;">
+<head>
+  <title>${key_}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    window.addEventListener('beforeunload', function(e) {
+      e.preventDefault()
+      e.returnValue = ''
+    })
+  </script>
+</head>
+<body style="background-image: url(${url}); background-size: contain; background-position: center; 
+             background-repeat: no-repeat; background-color:black; overscroll-behavior: none; color: gold;">
+  <div style="font-size:large;" onclick="window.opener.${slideFuncName}()">
+    ${key_}
+    ${("<br>" + "&nbsp;".repeat(50)).repeat(15)}
+  </div>
+</body>
+</html>
+`
+  win.document.write(doc)
+  win.document.close()
+}

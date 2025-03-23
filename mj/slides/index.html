@@ -20,7 +20,8 @@
       <button id="bonus" disabled="true" style="background-color: black;" onclick="loadSlides()">Get</button> 
       &nbsp;&nbsp;&nbsp;&nbsp;
       <button id="bonusSrc" onclick="changeBonusSrc()">AX</button>   &nbsp;&nbsp;
-      <button id="bonusCount" onclick="nextSlide_()">0</button>
+      <button id="bonusCount" onclick="nextSlide_()">0</button>  &nbsp;&nbsp;
+      <input type="password" id="pswd" size="3" onchange="savePswd()">
       <br><br>
       <label id="info" style="visibility:visible;"></label>
     </div>
@@ -30,7 +31,6 @@
       <!-- <img id="image" hidden src="../image/slide.jpg" style="max-width:640px; max-height:640px"><br> -->
     </div>
   </div>
-  Pswd: <input type="password" id="pswd" size="6" onchange="savePswd()">     
 <script src="slides.js"></script>
 <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
 </body>
