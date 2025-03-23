@@ -6,7 +6,7 @@ function setInitValues() {
     "P3": "600", "C3": "5", "D3": "0", "G3": "0",
     "P1": "600", "C1": "5", "D1": "0", "G1": "0",
     "P0": "1000", "C01": "0", "C02": "0", "C03": "0",
-    "gcnt": "0", "gtime": "50", "batch": "1000", "scale": "3"
+    "gcnt": "0", "gtime": "50", "scale": "3"
   }
   for(const k in vMap)set(k, vMap[k])
 }
@@ -35,7 +35,7 @@ function restart() {
   setLevel()
   change_pDist(0)
     
-  dealer = parseInt(getRandomIntInclusive(0, 3))
+  dealer = parseInt(getRandIntIn(0, 3))
   xL = [0];     hist = [[0], ...[0,1,2,3].map(i=>[get("P"+i)])]
   
   cont = false;  end = 0;   sp = false

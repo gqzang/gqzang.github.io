@@ -1,11 +1,5 @@
 "use strict"
 
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 const getEpoch = () => Math.round((new Date()).getTime() / 1000)
 setInterval(() => {
   var lastGD = parseInt(localStorage.getItem("LastGDaccess")), sec = getEpoch()
@@ -31,10 +25,10 @@ var settingImageUrl = false;
 async function set_image_url(forMJ=true) {
   if(settingImageUrl) return                  // don't allow to re-entry until done
   settingImageUrl = true
-  localStorage.setItem("LastGDaccess", getEpoch() + getRandomIntInclusive(0, 10))
+  localStorage.setItem("LastGDaccess", getEpoch() + getRandIntIn(0, 10))
 
   var keys = Object.keys(bonus)
-  bonusKey = keys[getRandomIntInclusive(0, keys.length-1)]
+  bonusKey = keys[getRandIntIn(0, keys.length-1)]
   const [id_, size] = bonus[bonusKey].split("~~")
   const id = decrypt(id_)
 
@@ -58,12 +52,6 @@ async function set_image_url(forMJ=true) {
   }
 }
 
-function setProp(id, disabled, background) {
-  var ele = document.getElementById(id)
-  ele.disabled = disabled
-  ele.style.background = background
-}
-
 var bonusLoaded = false
 function load_bonus() {
   if(bonusLoaded) {
@@ -80,7 +68,6 @@ function load_bonus() {
 }
 
 const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
-// const API_KEY = "AIzaSyDrPrGkVYhPj7_t3y-mDKoNoiQoIl5VL08"         // zip_p from GZ
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
 const gapiLoaded = () => gapi.load('client', () => 
               gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
@@ -107,15 +94,28 @@ function showOff2(name, bonusKey_, bonusUrl_) {
   }
 
   win.document.open()
-  const script = `<script>
-  window.addEventListener('beforeunload', function(e) {
-    e.preventDefault()
-    e.returnValue = ''
-  })</script>`
-  var title = '<html style="overscroll-behavior: none;"><head><title>' + bonusKey_ + '</title>' + script + '</head>'
-  var bUrl = bonusUrl_ || 'image/hu_pai.gif'
-  var other_style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none;'
-  win.document.write(title + '<body style="background-image: url(' + bUrl + '); ' + other_style + '"></body></html>')
+  const doc = `
+<html style="overscroll-behavior: none;">
+<head>
+  <title>${bonusKey_}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    window.addEventListener('beforeunload', function(e) {
+      e.preventDefault()
+      e.returnValue = ''
+    })
+  </script>
+</head>
+<body style="background-image: url(${bonusUrl_ || 'image/hu_pai.gif'}); background-size: contain; background-position: center; 
+             background-repeat: no-repeat; background-color:black; overscroll-behavior: none; color: gold;">
+  <div style="font-size:large;" onclick="window.opener.nextSlide()">
+    ${bonusKey_}
+    ${("<br>" + "&nbsp;".repeat(50)).repeat(15)}
+  </div>
+</body>
+</html>
+`
+  win.document.write(doc)
   win.document.close() 
 }
 
@@ -124,7 +124,7 @@ function nextSlide() {
   const n = keys.length
   if( n == 0 ) return
 
-  const i = getRandomIntInclusive(0, n-1)
+  const i = getRandIntIn(0, n-1)
   console.log(i, n)
   const bKey = keys[i], bUrl = bonusG[bKey]
   showOff2("ShowOff", bKey, bUrl)

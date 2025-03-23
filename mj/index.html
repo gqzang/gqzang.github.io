@@ -114,11 +114,11 @@
       <div>Time
         <input type="text" id="gtime" value="50" size="2">
       </div>
-      <div>Batch
-        <input type="text" id="batch" value="1000" size="3">
-      </div>
       <div>Scale
         <input type="text" id="scale" value="3" size="1">
+      </div>
+      <div>Pswd: 
+        <input type="password" id="pswd" size="3" onchange="savePswd()">     
       </div>
     </div>
   </div>
@@ -148,7 +148,6 @@
     <button id="start" onclick="playMJ()">Start</button> 
   </div>
 </div>
-Pswd: <input type="password" id="pswd" size="6" onchange="savePswd()">     
 
 <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
 <script src="mahjong.js"></script>

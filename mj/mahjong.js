@@ -59,7 +59,7 @@ function change_pDist(d=1) {
 }
 change_pDist(0)
 
-const randSel = pMap => pMap.get(getRandomIntInclusive(0, pMap.size - 1))
+const randSel = pMap => pMap.get(getRandIntIn(0, pMap.size - 1))
 
 function show(txt) {
   const gameLog = document.getElementById('game')
@@ -84,7 +84,7 @@ for(const key in scoreProb)
   for(let i = 0; i < scoreProb[key]; i ++, v++)
     scoreMap.set(v, key)
 
-var dealer = parseInt(getRandomIntInclusive(0, 3))
+var dealer = parseInt(getRandIntIn(0, 3))
 
 var xL = [0], hist = [[0], ...[0,1,2,3].map(i=>[get("P"+i)])]
 
@@ -94,7 +94,7 @@ function playOneGame() {
 
   let score = randSel(scoreMap)
   let winner = randSel(winnerMap)
-  let gunner = getRandomIntInclusive(0, 3)
+  let gunner = getRandIntIn(0, 3)
   let info = "d:" + dealer + "  w:" + winner + "  g:" + gunner + "  s:" + score.padStart(2, '0') + '  ~~~'
 
   let update = [0, 0, 0, 0]
@@ -203,7 +203,8 @@ async function playMJ() {
   setProp("start", true, "black")
   
   while(true) {
-    for (let i = 0; i < get("batch"); i++) {
+    const batch = 1000 // fixed now 
+    for (let i = 0; i < batch; i++) {
       let res = playOneGame()
       for(let j = 1; j < 4; j ++) res += ClothAndDebt(j)
       logGame(res)
