@@ -1,10 +1,5 @@
 "use strict"
 
-const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
-const gapiLoaded = () => gapi.load('client', () => 
-            gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
-
 const objLen = x => Object.keys(x).length
 const setInfo = x => document.getElementById("info").textContent = x
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -123,7 +118,7 @@ async function addBatchToSlides() {
 var bonusG = {}
 function showOff2(name, key, url) {
   var win = window.open("", name, 'width=500,height=1000,menubar=no,toolbar=no,location=no,status=no')
-  if( win ) return createSlide(win, key, url, "nextSlide_")
+  if( win ) return createSlide(win, key.slice(0, -4), url, "nextSlide_")
   bonusG = {}
   return console.log("Bonus is cleared.")
 }
@@ -150,9 +145,3 @@ function nextSlide() {
 function restart() {
   setProp("bonus", true, "black")
 }
-
-// warning before left (close, refresh-button, back-button, F5 and Ctrl+R)
-window.addEventListener('beforeunload', function(e) {
-  e.preventDefault()
-  e.returnValue = ''
-})

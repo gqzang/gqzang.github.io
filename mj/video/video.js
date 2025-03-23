@@ -2,11 +2,6 @@
 
 // refer to: https://www.softpost.org/web-development/why-we-use-blob-urls-in-video-source-in-html
 
-const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
-const gapiLoaded = () => gapi.load('client', () => 
-            gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
-  
 const objLen = x => Object.keys(x).length
 const getEpoch = () => Math.round((new Date()).getTime() / 1000)
 const cid = document.getElementById("count")
@@ -92,9 +87,3 @@ function loadList() {
     clearTimer()
   })
 }
-
-// warning before left (close, refresh-button, back-button, F5 and Ctrl+R)
-window.addEventListener('beforeunload', function(e) {
-  e.preventDefault()
-  e.returnValue = ''
-})

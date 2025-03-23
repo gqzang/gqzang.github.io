@@ -67,11 +67,6 @@ function load_bonus() {
   set_image_url()
 }
 
-const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
-const gapiLoaded = () => gapi.load('client', () => 
-              gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
-
 function addBonus() {
   const newBonusKey = Object.keys(bonusG).length.toString().padStart(4, '0') + '-' + 
                       document.getElementById("bonusSrc").textContent + '-' + bonusKey
@@ -129,9 +124,3 @@ function changeBonusSrc() {
       return
     }
 }
-
-// warning before left (close, refresh-button, back-button, F5 and Ctrl+R)
-window.addEventListener('beforeunload', function(e) {
-  e.preventDefault()
-  e.returnValue = ''
-})

@@ -115,11 +115,10 @@ function setProp(id, disabled, background) {
 
 function createSlide(win, key, url, slideFuncName) {
   win.document.open()
-  const key_ = key.slice(0, -4)
   const doc = `
 <html style="overscroll-behavior: none;">
 <head>
-  <title>${key_}</title>
+  <title>${key}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
     window.addEventListener('beforeunload', function(e) {
@@ -131,7 +130,7 @@ function createSlide(win, key, url, slideFuncName) {
 <body style="background-image: url(${url}); background-size: contain; background-position: center; 
              background-repeat: no-repeat; background-color:black; overscroll-behavior: none; color: gold;">
   <div style="font-size:large;" onclick="window.opener.${slideFuncName}()">
-    ${key_}
+    ${key}
     ${("<br>" + "&nbsp;".repeat(50)).repeat(15)}
   </div>
 </body>
@@ -140,3 +139,14 @@ function createSlide(win, key, url, slideFuncName) {
   win.document.write(doc)
   win.document.close()
 }
+
+const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
+const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
+const gapiLoaded = () => gapi.load('client', () => 
+            gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] }))
+
+// warning before left (close, refresh-button, back-button, F5 and Ctrl+R)
+window.addEventListener('beforeunload', function(e) {
+  e.preventDefault()
+  e.returnValue = ''
+})
