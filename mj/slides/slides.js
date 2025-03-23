@@ -129,18 +129,29 @@ function showOff2(name, key, url) {
   }
   
   win.document.open()
-  const meta = '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
-  const script = `<script>
-  window.addEventListener('beforeunload', function(e) {
-    e.preventDefault()
-    e.returnValue = ''
-  })</script>`
   const key_ = key.slice(0, -4)
-  const title = '<html style="overscroll-behavior: none;"><head><title>' + key_ + '</title>' + meta + script + '</head>'
-  let style = 'background-size: contain; background-position: center; background-repeat: no-repeat; overscroll-behavior: none; '
-  style += `background-image: url(${url}); color: gold; background-color:black;`
-  const body = `<div style="font-size:large;" onclick="window.opener.nextSlide_()">${key_}${("<br>" + "&nbsp;".repeat(50)).repeat(15)}</div>`
-  win.document.write(`${title}<body style="${style}">${body}</body></html>`)
+  const doc = `
+<html style="overscroll-behavior: none;">
+<head>
+  <title>${key_}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    window.addEventListener('beforeunload', function(e) {
+      e.preventDefault()
+      e.returnValue = ''
+    })
+  </script>
+</head>
+<body style="background-image: url(${url}); background-size: contain; background-position: center; 
+             background-repeat: no-repeat; background-color:black; overscroll-behavior: none; color: gold;">
+  <div style="font-size:large;" onclick="window.opener.nextSlide_()">
+    ${key_}
+    ${("<br>" + "&nbsp;".repeat(50)).repeat(15)}
+  </div>
+</body>
+</html>
+`
+  win.document.write(doc)
   win.document.close() 
 }
   
