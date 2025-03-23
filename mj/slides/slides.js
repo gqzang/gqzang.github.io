@@ -81,11 +81,6 @@ async function loadSlides() {
   }
 }
 
-var slideTimer = null           // initial state
-const slideIsRunning = () => slideTimer != null
-const stopSlide = () => slideTimer = slideTimer && clearInterval(slideTimer) || null
-const startSlide = () => slideTimer = slideTimer || setInterval(nextSlide, 6000)
-
 var addingImages = false
 async function addBatchToSlides() {
   if(objLen(slidesMap) == 0) {

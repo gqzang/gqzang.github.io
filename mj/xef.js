@@ -140,6 +140,11 @@ function createSlide(win, key, url, slideFuncName) {
   win.document.close()
 }
 
+var slideTimer = null           // initial state
+const slideIsRunning = () => slideTimer != null
+const stopSlide = () => slideTimer = slideTimer && clearInterval(slideTimer) || null
+const startSlide = () => slideTimer = slideTimer || setInterval(nextSlide, 6000)
+
 const API_KEY = 'AIzaSyAoZfGbF6tOm2jQfdLNIEhZHp80n9EZ8GY'         // zip_p from JK
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'
 const gapiLoaded = () => gapi.load('client', () => 

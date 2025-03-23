@@ -103,10 +103,6 @@ function nextSlide() {
   startSlide()
 }
 
-var slideTimer = null           // initial state
-const stopSlide = () => slideTimer = slideTimer && clearInterval(slideTimer) || null
-const startSlide = () => slideTimer = slideTimer || setInterval(nextSlide, 6000)
-
 function changeBonusSrc() {
   const BonusMap = {
     "X": bonus_x,
