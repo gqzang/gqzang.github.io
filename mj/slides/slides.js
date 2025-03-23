@@ -57,7 +57,7 @@ function changeBonusSrc() {
 }
 
 var bonusKey, slidesMap = {}, loadOnce = false
-function loadSlides() {
+async function loadSlides() {
   loadOnce = true
   localStorage.setItem(PGDAT, getEpoch())
   setProp("bonus", true, "black")
@@ -70,29 +70,28 @@ function loadSlides() {
   const src = document.getElementById("bonusSrc").textContent
   slidesMap = {}
 
-  gapi.client.drive.files.get({fileId: id, alt: "media"})
-  .then(res => res.body)                            // res.body is already a string type
-  .then(iStr => xef_decrypt(iStr, strToBytes(atob(pswd))))
-  .then(iObjs => Object.keys(iObjs).forEach(fn => {
-    const imageURL = URL.createObjectURL(iObjs[fn])
-    if(fn == "thumbnail.jpg") 
-      document.getElementById("galary").src = imageURL
-    else {
+  try {
+    const res = await gapi.client.drive.files.get({fileId: id, alt: "media"})
+    const iObjs = xef_decrypt(res.body, strToBytes(atob(pswd)))       // res.body is already a string type
+    for(const [fn, img] of Object.entries(iObjs)) {
+      const imageURL = URL.createObjectURL(img)
+      if(fn == "thumbnail.jpg") {
+        (document.getElementById("galary").src = imageURL) 
+        continue
+      }
       document.getElementById("image").src = imageURL
       document.getElementById("image").hidden = false
       slidesMap[`${src}-${bonusKey}-${fn}`] = imageURL
     }
-  }))
-  .catch(err => {
-    localStorage.setItem(PGDAT, getEpoch() + 450)      // wait 8 min for API key to restore.
-    new Audio("../sound/error.wav").play();
-    restart()
-  })
-  .finally(() => {
     new Audio("../sound/win.wav").play();
     setTimeout(()=> document.getElementById("image").hidden = true, 5000)
     setInfo("Click thumbnail to add images to slides.")
-  })
+  }
+  catch(err) {
+    localStorage.setItem(PGDAT, getEpoch() + 450)      // wait 8 min for API key to restore.
+    new Audio("../sound/error.wav").play();
+    restart()
+  }
 }
 
 var slideTimer = null           // initial state

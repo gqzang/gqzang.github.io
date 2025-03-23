@@ -28,7 +28,7 @@ setInterval(() => {
 var bonusUrl = "", bonusKey = "", bonusG = {};
 
 var settingImageUrl = false;
-function set_image_url(forMJ=true) {
+async function set_image_url(forMJ=true) {
   if(settingImageUrl) return                  // don't allow to re-entry until done
   settingImageUrl = true
   localStorage.setItem("LastGDaccess", getEpoch() + getRandomIntInclusive(0, 10))
@@ -38,10 +38,9 @@ function set_image_url(forMJ=true) {
   const [id_, size] = bonus[bonusKey].split("~~")
   const id = decrypt(id_)
 
-  gapi.client.drive.files.get({fileId: id, alt: "media"})
-  .then(res => res.body)                            // res.body is already a string type
-  .then(iStr => xef_decrypt(iStr, strToBytes(atob(pswd))))
-  .then(iObjs => {
+  try {
+    const res = await gapi.client.drive.files.get({fileId: id, alt: "media"})
+    const iObjs = xef_decrypt(res.body, strToBytes(atob(pswd)))    // res.body is already a string type
     const imageURL = URL.createObjectURL(iObjs['bonus.jpg'])
     bonusUrl = imageURL
     document.getElementById("play_table").style.backgroundImage = "url(" + imageURL + ")"
@@ -49,14 +48,14 @@ function set_image_url(forMJ=true) {
     setProp("bonus", false, "gold"); bonusLoaded = true;
     console.log(imageURL)
     settingImageUrl = false
-  })
-  .catch(err => {
+  }
+  catch(err) {
     localStorage.setItem("LastGDaccess", getEpoch() + 450)      // wait 8 min for API key to restore.
     new Audio("./sound/error.wav").play();
     if(forMJ) alert("Error! See console log for detail.")
     settingImageUrl = false
     restart()
-  })
+  }
 }
 
 function setProp(id, disabled, background) {
