@@ -85,9 +85,10 @@ function createU8As(bStr, a, b) {
 }
 
 const VUX = "VideoUrlXor"
-const savePswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
 const loadPswd = () => (localStorage.getItem(VUX) || "")
-const pswd = loadPswd()
+const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
+const savePswd = () => setPswd() || alert(pswd = loadPswd())
+var pswd = loadPswd()
 
 function decrypt(id) {
   const id_ = id.slice(1)
