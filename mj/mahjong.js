@@ -51,7 +51,7 @@ function change_pDist(d=1) {
   let pDist = states["pDist"]
   pDist = (pDist + d) % 4
   set("pDist", pDist)
-  document.getElementById('pDist').innerText = "pDist " + pDist
+  document.getElementById('pDist').innerText = "pD " + pDist
   for(let i = 0; i < 4; i ++)
     set("wp"+i, winPropArr[pDist][i])
   setWinProb()
