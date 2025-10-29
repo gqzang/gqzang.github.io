@@ -1,0 +1,43 @@
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<html> 
+<head> 
+	<title> 
+		YouTube Player
+	</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel = "icon" href = "./black_youtube.png" type = "image/x-icon"> 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+	<script>
+		window.jQuery || document.write('<script src="./jquery-3.3.1.min.js"><\/script>');
+	</script>
+    <script src="./ytp.js"></script> 
+
+    <script>
+        $(document).ready( function() {
+            ytp_main();
+        });
+    </script>    
+
+<style type="text/css">
+    #info { max-width: 550px; }
+    </style>
+</head> 
+
+<body background="../background.jpg"> 
+	<div id="video-placeholder"></div>
+	<br> 	
+	<div> 
+		Video Height:
+		<select id="videoSizeSel"> 
+			<option value="360" selected>360</option> 
+			<option value="480">480</option> 
+			<option value="720">720</option> 
+			<option value="1080">1080</option> 
+		</select> 
+		&nbsp;&nbsp;
+		Video ID: <input type="text" id="vid" name="vid" size="10">
+	</div>
+</body> 
+</html>
