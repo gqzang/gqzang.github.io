@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image-JS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel = "icon" href = "./slide.jpg" type = "image/x-icon"> 
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+    <script type="module">
+
+import {fetchURL, readImg, writeCanvas} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'
+
+async function processAndDisplayImage(imageUrl) {
+    try {
+        let image = await fetchURL(imageUrl);
+        image = image.invert();
+        const canvas = document.getElementById('myCanvas');
+        writeCanvas(image, canvas)
+        // image.display(canvas)
+    } catch (error) {
+        console.error("Error processing image:", error);
+        alert("Failed to load or process image. Check console for details.");
+    }
+}
+
+// const publicImageUrl = 'https://lh3.googleusercontent.com/pw/AP1GczPoaEkBjyFFMbJuzDgtVRncpuCdzTiP3l7AbHcStk_5hMOIS-n3nrmC1UKBFYVyruC0ZB8prcyDCmsQ3Z_QwSyWgRO63D_yg8GoLL5F_3Jr9BEOYgbLnf-VKfanHfHBlCoPQRojOt7X4OdSXabQAH8UWg=w2048'
+const publicImageUrl = 'https://gqzang.github.io/mj/image/Mahjong.jpg'
+processAndDisplayImage(publicImageUrl)
+
+    </script>
+</body>
+</html>
