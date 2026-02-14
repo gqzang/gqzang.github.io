@@ -38,7 +38,11 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
     return result
 }
 
-const pswd = "103993oveR/++102"
+const VUX = "VideoUrlXor"
+const loadPswd = () => (localStorage.getItem(VUX) || "")
+const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
+const savePswd = () => setPswd() || alert(pswd = loadPswd())
+var pswd = loadPswd()
 
 const imageBuffer = [], maxLen = 100
 var loading = false
@@ -66,9 +70,14 @@ async function get_image() {
     }
     loading = false
 }
-setInterval(() => get_image(), 1000)
 
-setInterval(() => {
-    const url = imageBuffer.shift()
-    if(url) document.body.style.backgroundImage = `url(${url})`
-}, 5000)
+function start() {
+    setInterval(() => get_image(), 1000)
+
+    setInterval(() => {
+        const url = imageBuffer.shift()
+        if(url) document.body.style.backgroundImage = `url(${url})`
+    }, 5000)
+    
+    document.getElementById('ctrl').style.display = 'none'    
+}
