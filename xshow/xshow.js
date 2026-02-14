@@ -40,27 +40,35 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
 
 const pswd = "103993oveR/++102"
 
-async function xshow() {
+const imageBuffer = [], maxLen = 100
+var loading = false
+async function get_image() {
+    if(loading || imageBuffer.length > maxLen) return
+    loading = true
+
     const mask = strToBytes(atob(pswd))
     const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
     const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
-    // const url = baseUrl + '1/B-sel-x/x0001.xef'
-    const url = baseUrl + get_rand_image_ref(['1/B-sel-x/', '1/B-sel/', '4/MA-x/'])
+    const ref = get_rand_image_ref(['1/B-sel-x/', '1/B-sel/', '4/MA-x/'])
 
     try {
-        const response = await fetch(url)
+        const response = await fetch(baseUrl + ref)
         const buf = await response.arrayBuffer()
         const iObjs = xef_decrypt(buf, mask)
         for(const [fn, img] of Object.entries(iObjs)) {
-            const url = URL.createObjectURL(img)
-            document.body.style.backgroundImage = `url(${url})`
+            imageBuffer.push(URL.createObjectURL(img))
             break               // only first image to show
         }
-          console.log("here")
+        console.log("get " + ref, imageBuffer.length)
     }
     catch (error) {
         console.error("Error fetching binary data:", error);
     }
+    loading = false
 }
+setInterval(() => get_image(), 1000)
 
-xshow()
+setInterval(() => {
+    const url = imageBuffer.shift()
+    if(url) document.body.style.backgroundImage = `url(${url})`
+}, 5000)
