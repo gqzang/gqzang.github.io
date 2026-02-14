@@ -39,10 +39,11 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
 pswd = "103993oveR/++102"
 
 async function xshow() {
-    mask = strToBytes(atob(pswd))
+    const mask = strToBytes(atob(pswd))
+    const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
+    const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
+    const url = baseUrl + '1/B-sel-x/x0001.xef'
 
-    // document.body.style.backgroundColor = "lightblue"
-    url = 'https://storage.googleapis.com/xef-1/B-sel/x0001.xef'
     try {
         const response = await fetch(url)
         const buf = await response.arrayBuffer()
