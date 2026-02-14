@@ -1,0 +1,19 @@
+button {
+    font-size: 36px;
+    color: darkolivegreen;
+    background-color: lightgoldenrodyellow;
+    padding: 3px;
+    border: 2px solid darkturquoise;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+input {
+    padding: 1px 1px;
+    font-size: 24px;
+}
+
+textarea {
+    font-size: 24px;
+    resize: none;
+}
