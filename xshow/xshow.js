@@ -1,3 +1,5 @@
+"use strict"
+
 const strToBytes = str => Array.from(str, char => char.charCodeAt(0))
 
 function bytesToStr(byteArray) {
@@ -36,13 +38,14 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
     return result
 }
 
-pswd = "103993oveR/++102"
+const pswd = "103993oveR/++102"
 
 async function xshow() {
     const mask = strToBytes(atob(pswd))
     const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
     const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
-    const url = baseUrl + '1/B-sel-x/x0001.xef'
+    // const url = baseUrl + '1/B-sel-x/x0001.xef'
+    const url = baseUrl + get_rand_image_ref('1/B-sel-x/')
 
     try {
         const response = await fetch(url)
