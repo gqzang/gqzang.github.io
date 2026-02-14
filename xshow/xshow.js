@@ -45,7 +45,7 @@ async function xshow() {
     const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
     const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
     // const url = baseUrl + '1/B-sel-x/x0001.xef'
-    const url = baseUrl + get_rand_image_ref('1/B-sel-x/')
+    const url = baseUrl + get_rand_image_ref(['1/B-sel-x/', '1/B-sel/', '4/MA-x/'])
 
     try {
         const response = await fetch(url)
