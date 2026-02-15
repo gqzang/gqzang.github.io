@@ -17,3 +17,13 @@ textarea {
     font-size: 24px;
     resize: none;
 }
+
+input[type="checkbox"] {
+    transform: scale(2); /* Makes the checkbox 2 times bigger */
+    -webkit-transform: scale(2); /* Safari and Chrome */
+    margin: 20px; /* Adjust margin for proper spacing */
+}
+
+label {
+    font-size: 1.5rem; /* Sets the text size to 1.5 times the root font size */
+}
