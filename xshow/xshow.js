@@ -122,3 +122,31 @@ export async function startY() {
 }
 
 window.startX = startX
+
+function createCheckboxes() {
+    const container = document.getElementById("checkboxContainer")
+    const list = Object.keys(src_info)
+    list.forEach(itemValue => {
+        // Create the checkbox input element
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = itemValue.toLowerCase();
+        checkbox.value = itemValue;
+        checkbox.name = "Image Sources"; // Optional: groups the checkboxes logically
+
+        // Create the label element
+        const label = document.createElement("label");
+        label.htmlFor = itemValue.toLowerCase(); // Associate the label with the checkbox ID
+        label.appendChild(document.createTextNode(itemValue));
+
+        // Append the checkbox and label to the container
+        container.appendChild(checkbox);
+        container.appendChild(label);
+
+        // Optional: Add a line break for better display
+        container.appendChild(document.createElement("br"));
+    });
+}
+
+// Call the function to create the checkboxes
+createCheckboxes()
