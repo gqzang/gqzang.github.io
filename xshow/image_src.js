@@ -19,3 +19,16 @@ function get_rand_image_ref(src_lst) {
         i -= src_info[x]
     }
 }
+
+const src_rotation = {
+    '1/B-sel/': 0,
+    '1/B-sel-x/': 0,
+    '2/MA-p1/': 270,
+    '3/MA-p2/': 270,
+    '4/MA-x/': 270
+}
+
+function get_rotation(ref) {
+    const src = ref.split("/x")[0] + '/'
+    return src_rotation[src]
+}

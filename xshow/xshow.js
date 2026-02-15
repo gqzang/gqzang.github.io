@@ -49,7 +49,7 @@ const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
 var src_lst =['1/B-sel-x/', '1/B-sel/', '4/MA-x/']
 
-const imageBuffer = [], maxLen = 100
+const imageBuffer = [], maxLen = 32, imageRepo = []
 var loading = false
 async function get_image() {
     if(loading || imageBuffer.length > maxLen) return
@@ -61,7 +61,10 @@ async function get_image() {
         const buf = await response.arrayBuffer()
         const iObjs = xef_decrypt(buf, mask)
         for(const [fn, img] of Object.entries(iObjs)) {
-            imageBuffer.push(URL.createObjectURL(img))
+            const url = URL.createObjectURL(img)
+            const deg = get_rotation(ref)
+            const urlR = await get_rotate_image_url(url, deg)
+            imageBuffer.push(urlR)
             break               // only first image to show
         }
         console.log("get " + ref, imageBuffer.length)
@@ -72,7 +75,7 @@ async function get_image() {
     loading = false
 }
 
-function start2() {
+function startX() {
     setInterval(() => get_image(), 1000)
 
     setInterval(() => {
@@ -105,7 +108,7 @@ async function get_rotate_image_url(url, deg) {
     return URL.createObjectURL(blob)
 }
 
-export async function startX() {
+export async function startY() {
     await get_image()
     const ib = imageBuffer
     const url = await get_rotate_image_url(ib[0], 270)
