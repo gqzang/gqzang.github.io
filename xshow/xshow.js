@@ -52,7 +52,7 @@ var src_lst =['1/B-sel-x/', '1/B-sel/', '4/MA-x/']
 const imageBuffer = [], maxLen = 32, imageRepo = []
 var loading = false
 async function get_image() {
-    if(loading || imageBuffer.length > maxLen) return
+    if(loading || imageBuffer.length >= maxLen) return
     loading = true
     const ref = get_rand_image_ref(src_lst)
 
@@ -79,8 +79,13 @@ function startX() {
     setInterval(() => get_image(), 1000)
 
     setInterval(() => {
-        const url = imageBuffer.shift()
-        if(url) document.body.style.backgroundImage = `url(${url})`
+        var url = imageBuffer.shift()
+        if( ! url ) {
+            if( imageRepo.length == 0 ) return    // no image in Repo to be backup
+            const i = Math.floor(Math.random() * imageRepo.length)
+            url = imageRepo[i]              // randomly select 1 image from Repo
+        } else imageRepo.push(url)
+        document.body.style.backgroundImage = `url(${url})`
     }, 5000)
     
     document.getElementById('ctrl').style.display = 'none'    
