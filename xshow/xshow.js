@@ -60,13 +60,11 @@ async function get_image() {
         const response = await fetch(baseUrl + ref)
         const buf = await response.arrayBuffer()
         const iObjs = xef_decrypt(buf, mask)
-        for(const [fn, img] of Object.entries(iObjs)) {
-            const url = URL.createObjectURL(img)
-            const deg = get_rotation(ref)
-            const urlR = await get_rotate_image_url(url, deg)
-            imageBuffer.push(urlR)
-            break               // only first image to show
-        }
+        const url = URL.createObjectURL(Object.values(iObjs)[0])
+        const deg = get_rotation(ref)
+        const urlR = await get_rotate_image_url(url, deg)
+        imageBuffer.push(urlR)
+        if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
         console.log("get " + ref, imageBuffer.length)
     }
     catch (error) {
@@ -75,22 +73,21 @@ async function get_image() {
     loading = false
 }
 
+function showImage() {
+    var url = imageBuffer.shift()
+    if( ! url ) {
+        if( imageRepo.length == 0 ) return    // no image in Repo to be backup
+        const i = Math.floor(Math.random() * imageRepo.length)
+        url = imageRepo[i]              // randomly select 1 image from Repo
+    } else imageRepo.push(url)
+    document.body.style.backgroundImage = `url(${url})`
+}
+
 function startX() {
     if( ! get_image_source_list() ) return
     const delay = parseInt(document.getElementById("delay").value.trim(), 10)
-
     setInterval(() => get_image(), 1000)
-
-    setInterval(() => {
-        var url = imageBuffer.shift()
-        if( ! url ) {
-            if( imageRepo.length == 0 ) return    // no image in Repo to be backup
-            const i = Math.floor(Math.random() * imageRepo.length)
-            url = imageRepo[i]              // randomly select 1 image from Repo
-        } else imageRepo.push(url)
-        document.body.style.backgroundImage = `url(${url})`
-    }, delay * 1000)
-    
+    setInterval(() => showImage(), delay * 1000)
     document.getElementById('ctrl').style.display = 'none'    
 }
 
