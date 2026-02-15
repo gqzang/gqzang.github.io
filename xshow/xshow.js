@@ -83,12 +83,29 @@ function start2() {
     document.getElementById('ctrl').style.display = 'none'    
 }
 
-import {fetchURL} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'
+import {fetchURL, writeCanvas} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'
+
+async function get_rotate_image_url(image) {
+    const img = image.grey()
+    // 1. Convert the image-js Image object to an HTMLCanvasElement
+    writeCanvas(img, document.getElementById('canvas'))
+
+    // 2. Use the canvas.toBlob() method to create a Blob
+    return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+            if(blob) resolve(blob)
+            else reject(new Error('Canvas toBlob failed'))
+        }, 'image/png', 1.0)    // Specify the desired MIME type and quality
+    })
+}
 
 export async function startX() {
     await get_image()
     const ib = imageBuffer
     const image = await fetchURL(ib[0])
+    const blob = await get_rotate_image_url(image)
+    const url = URL.createObjectURL(blob)
+    document.body.style.backgroundImage = `url(${url})`
     console.log("here")
 }
 
