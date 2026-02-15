@@ -47,7 +47,7 @@ const mask = strToBytes(atob(pswd))
 
 const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
-var src_lst =['1/B-sel-x/', '1/B-sel/', '4/MA-x/']
+const src_lst =[]
 
 const imageBuffer = [], maxLen = 32, imageRepo = []
 var loading = false
@@ -76,6 +76,8 @@ async function get_image() {
 }
 
 function startX() {
+    if( ! get_image_source_list() ) return
+
     setInterval(() => get_image(), 1000)
 
     setInterval(() => {
@@ -125,19 +127,17 @@ window.startX = startX
 
 function createCheckboxes() {
     const container = document.getElementById("checkboxContainer")
-    const list = Object.keys(src_info)
-    list.forEach(itemValue => {
+    Object.keys(src_info).forEach(x => {
         // Create the checkbox input element
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.id = itemValue.toLowerCase();
-        checkbox.value = itemValue;
-        checkbox.name = "Image Sources"; // Optional: groups the checkboxes logically
+        checkbox.id = x.toLowerCase();
+        checkbox.value = x;
 
         // Create the label element
         const label = document.createElement("label");
-        label.htmlFor = itemValue.toLowerCase(); // Associate the label with the checkbox ID
-        label.appendChild(document.createTextNode(itemValue));
+        label.htmlFor = x.toLowerCase(); // Associate the label with the checkbox ID
+        label.appendChild(document.createTextNode(x));
 
         // Append the checkbox and label to the container
         container.appendChild(checkbox);
@@ -150,3 +150,11 @@ function createCheckboxes() {
 
 // Call the function to create the checkboxes
 createCheckboxes()
+
+function get_image_source_list() {
+    Object.keys(src_info).forEach(x => {
+        const checkbox = document.getElementById(x.toLowerCase())
+        if(checkbox.checked) src_lst.push(x)
+    })
+    return src_lst.length > 0 || alert("No image source is selected!") 
+}
