@@ -43,17 +43,18 @@ const loadPswd = () => (localStorage.getItem(VUX) || "")
 const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
 var pswd = loadPswd()
+const mask = strToBytes(atob(pswd))
+
+const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
+const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
+var src_lst =['1/B-sel-x/', '1/B-sel/', '4/MA-x/']
 
 const imageBuffer = [], maxLen = 100
 var loading = false
 async function get_image() {
     if(loading || imageBuffer.length > maxLen) return
     loading = true
-
-    const mask = strToBytes(atob(pswd))
-    const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
-    const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
-    const ref = get_rand_image_ref(['1/B-sel-x/', '1/B-sel/', '4/MA-x/'])
+    const ref = get_rand_image_ref(src_lst)
 
     try {
         const response = await fetch(baseUrl + ref)
@@ -71,7 +72,7 @@ async function get_image() {
     loading = false
 }
 
-function start() {
+function start2() {
     setInterval(() => get_image(), 1000)
 
     setInterval(() => {
@@ -81,3 +82,14 @@ function start() {
     
     document.getElementById('ctrl').style.display = 'none'    
 }
+
+import {fetchURL} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'
+
+export async function startX() {
+    await get_image()
+    const ib = imageBuffer
+    const image = await fetchURL(ib[0])
+    console.log("here")
+}
+
+window.startX = startX
