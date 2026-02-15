@@ -77,6 +77,7 @@ async function get_image() {
 
 function startX() {
     if( ! get_image_source_list() ) return
+    const delay = parseInt(document.getElementById("delay").value.trim(), 10)
 
     setInterval(() => get_image(), 1000)
 
@@ -88,7 +89,7 @@ function startX() {
             url = imageRepo[i]              // randomly select 1 image from Repo
         } else imageRepo.push(url)
         document.body.style.backgroundImage = `url(${url})`
-    }, 5000)
+    }, delay * 1000)
     
     document.getElementById('ctrl').style.display = 'none'    
 }

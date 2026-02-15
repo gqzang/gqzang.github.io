@@ -1,6 +1,7 @@
 <html style="overscroll-behavior: none;">
 <head>
   <title>xshow</title>
+  <link rel = "icon" href = "./xshow.png" type = "image/x-icon"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
     window.addEventListener('beforeunload', function(e) {
@@ -17,15 +18,17 @@
 <script type="module" src="xshow.js"></script>
 
 <canvas id="canvas" hidden></canvas>
-<div id="ctrl">Pswd: 
-  <input type="password" id="pswd" size="3" onchange="savePswd()">   
+<div id="ctrl">
+  Pswd: <input type="password" id="pswd" size="3" onchange="savePswd()">   
+  &nbsp;&nbsp;&nbsp;
+  Delay<input type="text" id="delay" size="1" value="5">   
+  &nbsp;&nbsp;&nbsp;
   <button id="plot" onclick="window.startX()">Start</button> 
 
   <h3>Select image source(s):</h3>
   <div id="checkboxContainer">
       <!-- Checkboxes will be inserted here by JavaScript -->
   </div>
-
 </div>
 
 </body>
