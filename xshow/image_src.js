@@ -8,10 +8,15 @@ const src_info = {
     '4/MA-x/': 7561
 }
 
+const i_s = []
 function get_rand_image_ref(src_lst) {
-    var n = 0
-    for(const x of src_lst) n += src_info[x]
-    var i = Math.floor(Math.random() * n) + 1
+    var n = 0, i; for(const x of src_lst) n += src_info[x]
+    while(true) {
+        var i = Math.floor(Math.random() * n) + 1
+        if( i_s.includes(i) ) continue
+        i_s.push(i)
+        break
+    }
 
     for(const x of src_lst) {
         if(i <= src_info[x]) 
