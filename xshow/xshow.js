@@ -128,21 +128,22 @@ function createCheckboxes() {
     Object.keys(src_info).forEach(x => {
         // Create the checkbox input element
         const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.id = x.toLowerCase();
-        checkbox.value = x;
+        checkbox.type = "checkbox"
+        checkbox.id = x.toLowerCase()
+        checkbox.value = x
+        checkbox.checked = x == Object.keys(src_info)[0]
 
         // Create the label element
-        const label = document.createElement("label");
+        const label = document.createElement("label")
         label.htmlFor = x.toLowerCase(); // Associate the label with the checkbox ID
-        label.appendChild(document.createTextNode(x));
+        label.appendChild(document.createTextNode(x))
 
         // Append the checkbox and label to the container
-        container.appendChild(checkbox);
-        container.appendChild(label);
+        container.appendChild(checkbox)
+        container.appendChild(label)
 
         // Optional: Add a line break for better display
-        container.appendChild(document.createElement("br"));
+        container.appendChild(document.createElement("br"))
     });
 }
 
