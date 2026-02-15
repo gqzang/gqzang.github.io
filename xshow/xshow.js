@@ -89,6 +89,7 @@ function startX() {
     setInterval(() => get_image(), 1000)
     setInterval(() => showImage(), delay * 1000)
     document.getElementById('ctrl').style.display = 'none'    
+    document.addEventListener('click', event => console.log("next") || showImage() )
 }
 
 import {fetchURL, writeCanvas} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'
