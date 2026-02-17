@@ -50,9 +50,9 @@ const src_lst =[]
 var er = 0                  // extra rotation
 
 const imageBuffer = [], maxLen = 32, imageRepo = []
-var loading = false
+var loading = false, stop = false
 async function get_image() {
-    if(loading || imageBuffer.length >= maxLen) return
+    if(loading || imageBuffer.length >= maxLen || stop) return
     loading = true
 
     const mask = strToBytes(atob(pswd))
@@ -85,6 +85,17 @@ function showImage() {
     document.body.style.backgroundImage = `url(${url})`
 }
 
+function showTimedAlert(message, duration) {
+    const alertBox = document.getElementById('customAlert');
+    alertBox.innerHTML = message;
+    alertBox.style.display = 'block'; // Show the alert box
+
+    // Use setTimeout to hide the alert after the specified duration (in milliseconds)
+    setTimeout(function() {
+        alertBox.style.display = 'none'; // Hide the alert box
+    }, duration);
+}
+
 function startX() {
     if( ! get_image_source_list() ) return
     er = document.getElementById("er").checked ? 90 : 0
@@ -92,7 +103,12 @@ function startX() {
     setInterval(() => get_image(), 1000)
     setInterval(() => showImage(), delay * 1000)
     document.getElementById('ctrl').style.display = 'none'    
-    document.addEventListener('click', event => console.log("next") || showImage() )
+    document.addEventListener('click', () => console.log("next") || showImage() )
+    document.addEventListener('contextmenu', event => {
+        event.preventDefault()
+        stop = ! stop
+        showTimedAlert((stop ? "stop" : "resume") + " loading new images.", 1000);
+    });
 }
 
 import {fetchURL, writeCanvas} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'

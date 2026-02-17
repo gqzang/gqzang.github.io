@@ -27,3 +27,18 @@ input[type="checkbox"] {
 label {
     font-size: 1.5rem; /* Sets the text size to 1.5 times the root font size */
 }
+
+.alert-box {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 35%;
+    transform: translate(-50%, -50%);
+    transform: scale(1.5);
+    background-color: yellow;
+    color: red;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
