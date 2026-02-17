@@ -40,29 +40,31 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
 
 const VUX = "VideoUrlXor"
 const loadPswd = () => (localStorage.getItem(VUX) || "")
-const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
-const savePswd = () => setPswd() || alert(pswd = loadPswd())
 var pswd = loadPswd()
-const mask = strToBytes(atob(pswd))
+const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
+export const savePswd = () => setPswd() || alert(pswd = loadPswd())
+window.savePswd = savePswd
 
 const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
-const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
 const src_lst =[]
+var er = 0                  // extra rotation
 
 const imageBuffer = [], maxLen = 32, imageRepo = []
 var loading = false
 async function get_image() {
     if(loading || imageBuffer.length >= maxLen) return
     loading = true
-    const ref = get_rand_image_ref(src_lst)
 
+    const mask = strToBytes(atob(pswd))
+    const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
+    const ref = get_rand_image_ref(src_lst)
     try {
         const response = await fetch(baseUrl + ref)
         const buf = await response.arrayBuffer()
         const iObjs = xef_decrypt(buf, mask)
         const url = URL.createObjectURL(Object.values(iObjs)[0])
         const deg = get_rotation(ref)
-        const urlR = await get_rotate_image_url(url, deg)
+        const urlR = await get_rotate_image_url(url, deg + er)
         imageBuffer.push(urlR)
         if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
         console.log("get " + ref, imageBuffer.length)
@@ -85,6 +87,7 @@ function showImage() {
 
 function startX() {
     if( ! get_image_source_list() ) return
+    er = document.getElementById("er").checked ? 90 : 0
     const delay = parseInt(document.getElementById("delay").value.trim(), 10)
     setInterval(() => get_image(), 1000)
     setInterval(() => showImage(), delay * 1000)
@@ -108,7 +111,7 @@ async function get_blob_from_image(image) {
 }
 
 async function get_rotate_image_url(url, deg) {
-    if(deg == 0) return url
+    if(deg % 360 == 0) return url
     const image = (await fetchURL(url)).rotate(deg)
     const blob = await get_blob_from_image(image)
     return URL.createObjectURL(blob)
