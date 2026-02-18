@@ -83,8 +83,8 @@ function showImage() {
         url_ref = imageRepo[i]              // randomly select 1 image from Repo
     } else imageRepo.push(url_ref)
     document.body.style.backgroundImage = `url(${url_ref[0]})`
-    const tt = url_ref[1].split("/")
-    const name = tt[0] + tt[2].split(".").slice(0, -1)
+    const tt = url_ref[1].split("/x")
+    const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".").slice(0, -1)
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
                         'R' + i + '/' + imageRepo.length
     // console.log("show: " + name + " (" + pos + ")")
@@ -117,6 +117,8 @@ function startX() {
     });
 }
 
+window.startX = startX
+
 import {fetchURL, writeCanvas} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'
 
 async function get_blob_from_image(image) {
@@ -138,16 +140,6 @@ async function get_rotate_image_url(url, deg) {
     const blob = await get_blob_from_image(image)
     return URL.createObjectURL(blob)
 }
-
-export async function startY() {
-    await get_image()
-    const ib = imageBuffer
-    const url = await get_rotate_image_url(ib[0], 270)
-    document.body.style.backgroundImage = `url(${url})`
-    console.log("here")
-}
-
-window.startX = startX
 
 function createCheckboxes() {
     const container = document.getElementById("checkboxContainer")
