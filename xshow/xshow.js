@@ -65,7 +65,7 @@ async function get_image() {
         const url = URL.createObjectURL(Object.values(iObjs)[0])
         const deg = get_rotation(ref)
         const urlR = await get_rotate_image_url(url, deg + er)
-        imageBuffer.push(urlR)
+        imageBuffer.push([urlR, ref])
         if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
         console.log("get " + ref, imageBuffer.length)
     }
@@ -76,13 +76,19 @@ async function get_image() {
 }
 
 function showImage() {
-    var url = imageBuffer.shift()
-    if( ! url ) {
+    var url_ref = imageBuffer.shift(), i = -1
+    if( ! url_ref ) {
         if( imageRepo.length == 0 ) return    // no image in Repo to be backup
-        const i = Math.floor(Math.random() * imageRepo.length)
-        url = imageRepo[i]              // randomly select 1 image from Repo
-    } else imageRepo.push(url)
-    document.body.style.backgroundImage = `url(${url})`
+        i = Math.floor(Math.random() * imageRepo.length)
+        url_ref = imageRepo[i]              // randomly select 1 image from Repo
+    } else imageRepo.push(url_ref)
+    document.body.style.backgroundImage = `url(${url_ref[0]})`
+    const tt = url_ref[1].split("/")
+    const name = tt[0] + tt[2].split(".").slice(0, -1)
+    const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
+                        'R' + i + '/' + imageRepo.length
+    // console.log("show: " + name + " (" + pos + ")")
+    document.getElementById("info").innerHTML = name + " (" + pos + ")"
 }
 
 function showTimedAlert(message, duration) {
