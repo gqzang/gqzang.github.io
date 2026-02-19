@@ -25,24 +25,19 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
     const info = bytesToStr(xor_crypt(bytes, mask)).split('|')
     const min_len = parseInt(info[0])
 
-    const result = {}
-    for(let i = 1; i < info.length; i += 2) {
-        const fn = info[i], size = parseInt(info[i + 1])
-        const xLen = Math.min(min_len, size)
-        const aBuf = buf.slice(cp, cp + xLen)
-        const xU8A = new Uint8Array(xor_crypt(aBuf, mask))
-        const rU8A = buf.slice(cp + xLen, cp + size)
-        result[fn] = new Blob([xU8A].concat(rU8A), { type: bType })
-        cp += size
-    }
-    return result
+    const size = parseInt(info[2])
+    const xLen = Math.min(min_len, size)
+    const aBuf = buf.slice(cp, cp + xLen)
+    const xU8A = new Uint8Array(xor_crypt(aBuf, mask))
+    const rU8A = buf.slice(cp + xLen, cp + size)
+    return new Blob([xU8A].concat(rU8A), { type: bType })
 }
 
 const VUX = "VideoUrlXor"
 const loadPswd = () => (localStorage.getItem(VUX) || "")
 var pswd = loadPswd()
 const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
-export const savePswd = () => setPswd() || alert(pswd = loadPswd())
+const savePswd = () => setPswd() || alert(pswd = loadPswd())
 window.savePswd = savePswd
 
 const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
@@ -61,11 +56,8 @@ async function get_image() {
     try {
         const response = await fetch(baseUrl + ref)
         const buf = await response.arrayBuffer()
-        const iObjs = xef_decrypt(buf, mask)
-        const url = URL.createObjectURL(Object.values(iObjs)[0])
-        const deg = get_rotation(ref)
-        const urlR = await get_rotate_image_url(url, deg + er)
-        imageBuffer.push([urlR, ref])
+        const url = await get_image_url(xef_decrypt(buf, mask), get_rotation(ref) + er)
+        imageBuffer.push([url, ref])
         if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
         console.log("get " + ref, imageBuffer.length)
     }
@@ -117,28 +109,31 @@ function startX() {
     });
 }
 
-window.startX = startX
+async function get_image_url(blob, deg) {
+    if(deg % 360 == 0) return URL.createObjectURL(blob)
 
-import {fetchURL, writeCanvas} from 'https://cdn.jsdelivr.net/npm/image-js@latest/+esm'
+    const imageBitmap = await createImageBitmap(blob)
 
-async function get_blob_from_image(image) {
-    // 1. Convert the image-js Image object to an HTMLCanvasElement
-    writeCanvas(image, document.getElementById('canvas'))
+    const radians = (deg * Math.PI) / 180;
+    const sideways = (deg + 90) % 180 == 0
+    const width = sideways ? imageBitmap.height : imageBitmap.width
+    const height = sideways ? imageBitmap.width : imageBitmap.height
 
-    // 2. Use the canvas.toBlob() method to create a Blob
-    return new Promise((resolve, reject) => {
-        canvas.toBlob(blob => {
-            if(blob) resolve(blob)
-            else reject(new Error('Canvas toBlob failed'))
-        }, 'image/png', 1.0)    // Specify the desired MIME type and quality
+    const canvas = document.createElement("canvas")
+    canvas.width = width
+    canvas.height = height
+    const ctx = canvas.getContext("2d")
+
+    ctx.translate(width / 2, height / 2)
+    ctx.rotate(radians);
+    ctx.drawImage(imageBitmap, -imageBitmap.width / 2, -imageBitmap.height / 2);
+
+    const blob2 = await new Promise((resolve) => {
+        canvas.toBlob((newBlob) => {
+            resolve(newBlob);
+        }, blob.type); // Use the original blob type for the output
     })
-}
-
-async function get_rotate_image_url(url, deg) {
-    if(deg % 360 == 0) return url
-    const image = (await fetchURL(url)).rotate(deg)
-    const blob = await get_blob_from_image(image)
-    return URL.createObjectURL(blob)
+    return URL.createObjectURL(blob2)
 }
 
 function createCheckboxes() {
