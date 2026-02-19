@@ -10,8 +10,7 @@ function bytesToStr(byteArray) {
 }
 
 function xor_crypt(src, mask) {
-    const result = []
-    const l = mask.length
+    const result = [], l = mask.length
     for (let i = 0; i < src.length; i++)
         result.push(src[i] ^ mask[i % l])
     return result
@@ -53,16 +52,15 @@ async function get_image() {
     const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
     const ref = get_rand_image_ref(src_lst)
     try {
-        const response = await fetch(baseUrl + ref)
-        const buf = await response.arrayBuffer()
-        const url = await get_image_url(xef_decrypt(buf, mask), get_rotation(ref) + er)
+        const res = await fetch(baseUrl + ref)
+        const buf = await res.arrayBuffer()
+        const blob = xef_decrypt(buf, mask)
+        const url = await get_image_url(blob, get_rotation(ref) + er)
         imageBuffer.push([url, ref])
         if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
         console.log("get " + ref, imageBuffer.length)
     }
-    catch (error) {
-        console.error("Error fetching binary data:", error)
-    }
+    catch (error) {console.error("Error fetching binary data:", error)}
     loading = false
 }
 
@@ -73,6 +71,7 @@ function showImage() {
         i = Math.floor(Math.random() * imageRepo.length)
         url_ref = imageRepo[i]              // randomly select 1 image from Repo
     } else imageRepo.push(url_ref)
+
     document.body.style.backgroundImage = `url(${url_ref[0]})`
     const tt = url_ref[1].split("/x")
     const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
@@ -83,9 +82,9 @@ function showImage() {
 
 function showTimedAlert(message, duration) {
     const alertBox = document.getElementById('customAlert')
-    alertBox.innerHTML = message
+    stop = ! stop
+    alertBox.innerHTML = (stop ? "stop": "resume") + message
     alertBox.style.display = 'block'     // Show the alert box
-
     // Use setTimeout to hide the alert after the specified duration (in milliseconds)
     setTimeout(() => { alertBox.style.display = 'none' }, duration)
 }
@@ -98,11 +97,8 @@ function startX() {
     setInterval(() => showImage(), delay * 1000)
     document.getElementById('ctrl').style.display = 'none'    
     document.addEventListener('click', () => console.log("next") || showImage() )
-    document.addEventListener('contextmenu', event => {
-        event.preventDefault()
-        stop = ! stop
-        showTimedAlert((stop ? "stop" : "resume") + " loading new images.", 1000)
-    })
+    document.addEventListener('contextmenu', 
+        e => e.preventDefault() || showTimedAlert(" loading new images.", 1000))
 }
 
 async function get_image_url(blob, deg) {
@@ -124,17 +120,12 @@ async function get_image_url(blob, deg) {
     ctx.rotate(radians)
     ctx.drawImage(imageBitmap, -imageBitmap.width / 2, -imageBitmap.height / 2)
 
-    const blob2 = await new Promise((resolve) => {
-        canvas.toBlob((newBlob) => {
-            resolve(newBlob)
-        }, blob.type)    // Use the original blob type for the output
-    })
+    const blob2 = await new Promise(resolve => 
+        canvas.toBlob(nb => resolve(nb), blob.type))    // Use the original blob type
     return URL.createObjectURL(blob2)
 }
 
-function createCheckboxes() {
-    const container = document.getElementById("checkboxContainer")
-    Object.keys(src_info).forEach(x => {
+(() => Object.keys(src_info).forEach( x => {
         // Create the checkbox input element
         const checkbox = document.createElement("input")
         checkbox.type = "checkbox"
@@ -147,17 +138,12 @@ function createCheckboxes() {
         label.htmlFor = x.toLowerCase() // Associate the label with the checkbox ID
         label.appendChild(document.createTextNode(x))
 
-        // Append the checkbox and label to the container
+        // Append the checkbox, label to the container with a line break for better display
+        const container = document.getElementById("checkboxContainer")
         container.appendChild(checkbox)
         container.appendChild(label)
-
-        // Optional: Add a line break for better display
         container.appendChild(document.createElement("br"))
-    })
-}
-
-// Call the function to create the checkboxes
-createCheckboxes()
+    }))()                // createCheckboxes
 
 function get_image_source_list() {
     Object.keys(src_info).forEach(x => {

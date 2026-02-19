@@ -4,16 +4,13 @@
   <link rel = "icon" href = "./xshow.png" type = "image/x-icon"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
-    window.addEventListener('beforeunload', function(e) {
-      e.preventDefault()
-      e.returnValue = ''
-    })
+    window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})
   </script>
   <script src="image_src.js"></script>
   <link rel="stylesheet" href="./xshow.css">
 </head>
-<body style="background-size: contain; background-position: center; 
-             background-repeat: no-repeat; background-color:black; overscroll-behavior: none; color: gold;">
+<body style="background-size: contain; background-position: center; background-repeat: no-repeat; 
+            background-color:black; overscroll-behavior: none; color: gold;">
 
 <div id="info" class="label" style="color: white; margin-left: 5%; margin-top: 3%;"></div>
 <div id="customAlert" class="alert-box"></div>
