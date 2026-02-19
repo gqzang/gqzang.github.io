@@ -1,12 +1,12 @@
 "use strict"
 
-const strToBytes = str => Array.from(str, char => char.charCodeAt(0))
+const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 
 function bytesToStr(byteArray) {
-    let result = '';
+    let result = ''
     for (let i = 0; i < byteArray.length; i++)
-        result += String.fromCharCode(byteArray[i]);
-    return result;
+        result += String.fromCharCode(byteArray[i])
+    return result
 }
 
 function xor_crypt(src, mask) {
@@ -18,7 +18,7 @@ function xor_crypt(src, mask) {
 }
 
 function xef_decrypt(buffer, mask, bType = 'image/jpg') {
-    const buf = new Uint8Array(buffer);
+    const buf = new Uint8Array(buffer)
     const linfo = buf[0] * 256 + buf[1]
     var cp = 2 + linfo                  // current position in bytes
     const bytes = buf.slice(2, cp)
@@ -38,7 +38,6 @@ const loadPswd = () => (localStorage.getItem(VUX) || "")
 var pswd = loadPswd()
 const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
-window.savePswd = savePswd
 
 const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const src_lst =[]
@@ -50,8 +49,8 @@ async function get_image() {
     if(loading || imageBuffer.length >= maxLen || stop) return
     loading = true
 
-    const mask = strToBytes(atob(pswd))
-    const baseUrl = bytesToStr(xor_crypt(strToBytes(atob(baseUrlX)), mask))
+    const mask = b64StrToBytes(pswd)
+    const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
     const ref = get_rand_image_ref(src_lst)
     try {
         const response = await fetch(baseUrl + ref)
@@ -62,7 +61,7 @@ async function get_image() {
         console.log("get " + ref, imageBuffer.length)
     }
     catch (error) {
-        console.error("Error fetching binary data:", error);
+        console.error("Error fetching binary data:", error)
     }
     loading = false
 }
@@ -76,22 +75,19 @@ function showImage() {
     } else imageRepo.push(url_ref)
     document.body.style.backgroundImage = `url(${url_ref[0]})`
     const tt = url_ref[1].split("/x")
-    const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".").slice(0, -1)
+    const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
                         'R' + i + '/' + imageRepo.length
-    // console.log("show: " + name + " (" + pos + ")")
     document.getElementById("info").innerHTML = name + " (" + pos + ")"
 }
 
 function showTimedAlert(message, duration) {
-    const alertBox = document.getElementById('customAlert');
-    alertBox.innerHTML = message;
-    alertBox.style.display = 'block'; // Show the alert box
+    const alertBox = document.getElementById('customAlert')
+    alertBox.innerHTML = message
+    alertBox.style.display = 'block'     // Show the alert box
 
     // Use setTimeout to hide the alert after the specified duration (in milliseconds)
-    setTimeout(function() {
-        alertBox.style.display = 'none'; // Hide the alert box
-    }, duration);
+    setTimeout(() => { alertBox.style.display = 'none' }, duration)
 }
 
 function startX() {
@@ -105,8 +101,8 @@ function startX() {
     document.addEventListener('contextmenu', event => {
         event.preventDefault()
         stop = ! stop
-        showTimedAlert((stop ? "stop" : "resume") + " loading new images.", 1000);
-    });
+        showTimedAlert((stop ? "stop" : "resume") + " loading new images.", 1000)
+    })
 }
 
 async function get_image_url(blob, deg) {
@@ -114,7 +110,7 @@ async function get_image_url(blob, deg) {
 
     const imageBitmap = await createImageBitmap(blob)
 
-    const radians = (deg * Math.PI) / 180;
+    const radians = (deg * Math.PI) / 180
     const sideways = (deg + 90) % 180 == 0
     const width = sideways ? imageBitmap.height : imageBitmap.width
     const height = sideways ? imageBitmap.width : imageBitmap.height
@@ -125,13 +121,13 @@ async function get_image_url(blob, deg) {
     const ctx = canvas.getContext("2d")
 
     ctx.translate(width / 2, height / 2)
-    ctx.rotate(radians);
-    ctx.drawImage(imageBitmap, -imageBitmap.width / 2, -imageBitmap.height / 2);
+    ctx.rotate(radians)
+    ctx.drawImage(imageBitmap, -imageBitmap.width / 2, -imageBitmap.height / 2)
 
     const blob2 = await new Promise((resolve) => {
         canvas.toBlob((newBlob) => {
-            resolve(newBlob);
-        }, blob.type); // Use the original blob type for the output
+            resolve(newBlob)
+        }, blob.type)    // Use the original blob type for the output
     })
     return URL.createObjectURL(blob2)
 }
@@ -140,7 +136,7 @@ function createCheckboxes() {
     const container = document.getElementById("checkboxContainer")
     Object.keys(src_info).forEach(x => {
         // Create the checkbox input element
-        const checkbox = document.createElement("input");
+        const checkbox = document.createElement("input")
         checkbox.type = "checkbox"
         checkbox.id = x.toLowerCase()
         checkbox.value = x
@@ -148,7 +144,7 @@ function createCheckboxes() {
 
         // Create the label element
         const label = document.createElement("label")
-        label.htmlFor = x.toLowerCase(); // Associate the label with the checkbox ID
+        label.htmlFor = x.toLowerCase() // Associate the label with the checkbox ID
         label.appendChild(document.createTextNode(x))
 
         // Append the checkbox and label to the container
@@ -157,7 +153,7 @@ function createCheckboxes() {
 
         // Optional: Add a line break for better display
         container.appendChild(document.createElement("br"))
-    });
+    })
 }
 
 // Call the function to create the checkboxes
