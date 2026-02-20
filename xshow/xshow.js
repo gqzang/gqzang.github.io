@@ -32,17 +32,14 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
     return new Blob([xU8A].concat(rU8A), { type: bType })
 }
 
-const VUX = "VideoUrlXor"
+const docEle = x => document.getElementById(x)
+const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const loadPswd = () => (localStorage.getItem(VUX) || "")
 var pswd = loadPswd()
-const setPswd = () => localStorage.setItem(VUX, document.getElementById("pswd").value.trim())
+const setPswd = () => localStorage.setItem(VUX, docEle("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
 
-const baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
-const src_lst =[]
-var er = 0                  // extra rotation
-
-const imageBuffer = [], maxLen = 32, imageRepo = []
+const imageBuffer = [], maxLen = 32, imageRepo = [], src_lst =[]
 var loading = false, stop = false
 async function get_image() {
     if(loading || imageBuffer.length >= maxLen || stop) return
@@ -55,7 +52,8 @@ async function get_image() {
         const res = await fetch(baseUrl + ref)
         const buf = await res.arrayBuffer()
         const blob = xef_decrypt(buf, mask)
-        const url = await get_image_url(blob, get_rotation(ref) + er)
+        const rotation = get_rotation(ref) + (docEle("er").checked ? 90 : 0)
+        const url = await get_image_url(blob, rotation)
         imageBuffer.push([url, ref])
         if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
         console.log("get " + ref, imageBuffer.length)
@@ -77,12 +75,12 @@ function showImage() {
     const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
                         'R' + i + '/' + imageRepo.length
-    document.getElementById("info").innerHTML = name + " (" + pos + ")"
+    docEle("info").innerHTML = name + " (" + pos + ")"
 }
 
 function showTimedAlert(message, duration) {
-    const alertBox = document.getElementById('customAlert')
     stop = ! stop
+    const alertBox = docEle('customAlert')
     alertBox.innerHTML = (stop ? "stop": "resume") + message
     alertBox.style.display = 'block'     // Show the alert box
     // Use setTimeout to hide the alert after the specified duration (in milliseconds)
@@ -91,11 +89,9 @@ function showTimedAlert(message, duration) {
 
 function startX() {
     if( ! get_image_source_list() ) return
-    er = document.getElementById("er").checked ? 90 : 0
-    const delay = parseInt(document.getElementById("delay").value.trim(), 10)
     setInterval(() => get_image(), 1000)
-    setInterval(() => showImage(), delay * 1000)
-    document.getElementById('ctrl').style.display = 'none'    
+    setInterval(() => showImage(), parseInt(docEle("delay").value.trim(), 10) * 1000)
+    docEle('ctrl').style.display = 'none'    
     document.addEventListener('click', () => console.log("next") || showImage() )
     document.addEventListener('contextmenu', 
         e => e.preventDefault() || showTimedAlert(" loading new images.", 1000))
@@ -105,50 +101,35 @@ async function get_image_url(blob, deg) {
     if(deg % 360 == 0) return URL.createObjectURL(blob)
 
     const imageBitmap = await createImageBitmap(blob)
-
-    const radians = (deg * Math.PI) / 180
-    const sideways = (deg + 90) % 180 == 0
-    const width = sideways ? imageBitmap.height : imageBitmap.width
-    const height = sideways ? imageBitmap.width : imageBitmap.height
+    const iwh = [imageBitmap.width, imageBitmap.height]
+    const cwh = (deg + 90) % 180 == 0 ? [iwh[1], iwh[0]] : iwh
 
     const canvas = document.createElement("canvas")
-    canvas.width = width
-    canvas.height = height
+    canvas.width = cwh[0]; canvas.height = cwh[1]
     const ctx = canvas.getContext("2d")
+    ctx.translate(cwh[0] / 2, cwh[1] / 2); ctx.rotate((deg * Math.PI) / 180)
+    ctx.drawImage(imageBitmap, -iwh[0] / 2, -iwh[1] / 2)
 
-    ctx.translate(width / 2, height / 2)
-    ctx.rotate(radians)
-    ctx.drawImage(imageBitmap, -imageBitmap.width / 2, -imageBitmap.height / 2)
-
-    const blob2 = await new Promise(resolve => 
-        canvas.toBlob(nb => resolve(nb), blob.type))    // Use the original blob type
+    const blob2 = await new Promise(resolve => canvas.toBlob(b => resolve(b), blob.type))
     return URL.createObjectURL(blob2)
 }
 
 (() => Object.keys(src_info).forEach( x => {
         // Create the checkbox input element
-        const checkbox = document.createElement("input")
-        checkbox.type = "checkbox"
-        checkbox.id = x.toLowerCase()
-        checkbox.value = x
-        checkbox.checked = x == Object.keys(src_info)[0]
+        const chkbox = document.createElement("input")
+        chkbox.type = "checkbox"; chkbox.id = chkbox.value = x
+        chkbox.checked = [0, 1, 4].map(i => Object.keys(src_info)[i]).includes(x)
 
         // Create the label element
         const label = document.createElement("label")
-        label.htmlFor = x.toLowerCase() // Associate the label with the checkbox ID
+        label.htmlFor = x            // Associate the label with the checkbox ID
         label.appendChild(document.createTextNode(x))
 
         // Append the checkbox, label to the container with a line break for better display
-        const container = document.getElementById("checkboxContainer")
-        container.appendChild(checkbox)
-        container.appendChild(label)
-        container.appendChild(document.createElement("br"))
+        docEle("checkboxContainer").append(chkbox, label, document.createElement("br"))
     }))()                // createCheckboxes
 
 function get_image_source_list() {
-    Object.keys(src_info).forEach(x => {
-        const checkbox = document.getElementById(x.toLowerCase())
-        if(checkbox.checked) src_lst.push(x)
-    })
+    Object.keys(src_info).forEach( x => { if(docEle(x).checked) src_lst.push(x) })
     return src_lst.length > 0 || alert("No image source is selected!") 
 }
