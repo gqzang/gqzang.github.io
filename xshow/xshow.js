@@ -87,13 +87,14 @@ function showTimedAlert(message, duration) {
     setTimeout(() => { alertBox.style.display = 'none' }, duration)
 }
 
+var timerId
 function startX() {
     docEle('ctrl').style.display = 'none'
     docEle('back').style.display = 'inline'
+    timerId = setInterval(() => showImage(), parseInt(docEle("delay").value.trim(), 10) * 1000)
     if( ! get_image_source_list() || started ) return
 
     setInterval(() => get_image(), 1000)
-    setInterval(() => showImage(), parseInt(docEle("delay").value.trim(), 10) * 1000)
     document.addEventListener('contextmenu', e => { 
         e.preventDefault()
         stop = ! stop
@@ -101,6 +102,7 @@ function startX() {
     })
     document.addEventListener('click', e => {
         if (docEle('back').contains(e.target)) {
+            clearTimeout(timerId)
             docEle('ctrl').style.display = 'block'
             docEle('back').style.display = 'none'
         } else console.log("next") || showImage()
