@@ -40,7 +40,7 @@ const setPswd = () => localStorage.setItem(VUX, docEle("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
 
 const imageBuffer = [], maxLen = 32, imageRepo = [], src_lst =[]
-var loading = false, stop = false
+var loading = false, stop = false, started = false
 async function get_image() {
     if(loading || imageBuffer.length >= maxLen || stop) return
     loading = true
@@ -71,7 +71,7 @@ function showImage() {
         url_ref = imageRepo[i]              // randomly select 1 image from Repo
     } else imageRepo.push(url_ref)
 
-    // document.body.style.backgroundImage = `url(${url_ref[0]})`
+    document.body.style.backgroundImage = `url(${url_ref[0]})`
     const tt = url_ref[1].split("/x")
     const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
@@ -80,22 +80,33 @@ function showImage() {
 }
 
 function showTimedAlert(message, duration) {
-    stop = ! stop
     const alertBox = docEle('customAlert')
-    alertBox.innerHTML = (stop ? "stop": "resume") + message
+    alertBox.innerHTML = message
     alertBox.style.display = 'block'     // Show the alert box
     // Use setTimeout to hide the alert after the specified duration (in milliseconds)
     setTimeout(() => { alertBox.style.display = 'none' }, duration)
 }
 
 function startX() {
-    if( ! get_image_source_list() ) return
+    docEle('ctrl').style.display = 'none'
+    docEle('back').style.display = 'inline'
+    if( ! get_image_source_list() || started ) return
+
     setInterval(() => get_image(), 1000)
     setInterval(() => showImage(), parseInt(docEle("delay").value.trim(), 10) * 1000)
-    docEle('ctrl').style.display = 'none'    
-    document.addEventListener('click', () => console.log("next") || showImage() )
-    document.addEventListener('contextmenu', 
-        e => e.preventDefault() || showTimedAlert(" loading new images.", 1000))
+    document.addEventListener('contextmenu', e => { 
+        e.preventDefault()
+        stop = ! stop
+        showTimedAlert((stop ? "stop": "resume") + " loading new images.", 1000)
+    })
+    document.addEventListener('click', e => {
+        if (docEle('back').contains(e.target)) {
+            docEle('ctrl').style.display = 'block'
+            docEle('back').style.display = 'none'
+        } else console.log("next") || showImage()
+    })
+    started = true
+    docEle("er").disabled = true       // can't change rotation anymore
 }
 
 async function get_image_url(blob, deg) {
@@ -131,15 +142,7 @@ async function get_image_url(blob, deg) {
     }))()                // createCheckboxes
 
 function get_image_source_list() {
+    src_lst.length = 0
     Object.keys(src_info).forEach( x => { if(docEle(x).checked) src_lst.push(x) })
-    return src_lst.length > 0 || alert("No image source is selected!") 
+    return src_lst.length > 0 || showTimedAlert("No image source is selected!", 1000) 
 }
-
-let backBtn = docEle('back');
-document.addEventListener('click', e => {
-    if (backBtn.contains(e.target)) {
-        console.log('Clicked inside container');
-    } else {
-        console.log('Clicked outside container');
-    }
-});
