@@ -48,6 +48,7 @@ async function get_image() {
     const mask = b64StrToBytes(pswd)
     const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
     const ref = get_rand_image_ref(src_lst)
+    if( !ref ) return (loading = false) || console.log("fail to find a ref")
     try {
         const res = await fetch(baseUrl + ref)
         const buf = await res.arrayBuffer()
@@ -70,7 +71,7 @@ function showImage() {
         url_ref = imageRepo[i]              // randomly select 1 image from Repo
     } else imageRepo.push(url_ref)
 
-    document.body.style.backgroundImage = `url(${url_ref[0]})`
+    // document.body.style.backgroundImage = `url(${url_ref[0]})`
     const tt = url_ref[1].split("/x")
     const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
@@ -133,3 +134,12 @@ function get_image_source_list() {
     Object.keys(src_info).forEach( x => { if(docEle(x).checked) src_lst.push(x) })
     return src_lst.length > 0 || alert("No image source is selected!") 
 }
+
+let backBtn = docEle('back');
+document.addEventListener('click', e => {
+    if (backBtn.contains(e.target)) {
+        console.log('Clicked inside container');
+    } else {
+        console.log('Clicked outside container');
+    }
+});

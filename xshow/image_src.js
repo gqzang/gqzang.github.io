@@ -8,21 +8,21 @@ const src_info = {
     '4/MA-x/': 7561
 }
 
-const i_s = []
+const r_s = []                          // contains all selected refs
 function get_rand_image_ref(src_lst) {
-    var n = 0, i; for(const x of src_lst) n += src_info[x]
-    while(true) {
-        var i = Math.floor(Math.random() * n) + 1
-        if( i_s.includes(i) ) continue
-        i_s.push(i)
-        break
+    var n = 0; for(const x of src_lst) n += src_info[x]
+    for(const k = 0; k < 10; k ++) {            // only try 10 times
+        var i = Math.floor(Math.random() * n) + 1, j
+        for(j = 0; j < src_lst.length; j ++) {
+            if(i <= src_info[src_lst[j]]) break
+            i -= src_info[src_lst[j]]
+        }
+        const ref = src_lst[j] + 'x' + String(i).padStart(4, '0') + '.xef'   
+        if(r_s.includes(ref)) continue
+        r_s.push(ref)
+        return ref
     }
-
-    for(const x of src_lst) {
-        if(i <= src_info[x]) 
-            return x + 'x' + String(i).padStart(4, '0') + '.xef'            
-        i -= src_info[x]
-    }
+    return null
 }
 
 const src_rotation = {
