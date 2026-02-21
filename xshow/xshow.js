@@ -93,7 +93,7 @@ var timerId
 function startX() {
     docEle('ctrl').style.display = 'none'
     docEle('back').style.display = 'inline'
-    timerId = setInterval(() => showImage(), parseInt(docEle("delay").value.trim(), 10) * 1000)
+    timerId = setInterval(() => showImage(), parseFloat(docEle("delay").value.trim()) * 1000)
     if( ! get_image_source_list() || started ) return
 
     setInterval(() => get_image(), 1000)
