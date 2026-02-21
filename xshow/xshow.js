@@ -114,17 +114,17 @@ function startX() {
 async function get_image_url(blob, deg) {
     if(deg % 360 == 0) return URL.createObjectURL(blob)
 
-    const imageBitmap = await createImageBitmap(blob)
-    const iwh = [imageBitmap.width, imageBitmap.height]
-    const cwh = (deg + 90) % 180 == 0 ? [iwh[1], iwh[0]] : iwh
+    const ibm = await createImageBitmap(blob)
+    const rot = (deg + 90) % 180 == 0
+    const cvs = document.createElement("canvas")
+    cvs.height = rot ? ibm.width : ibm.height
+    cvs.width = docEle("hw").checked ? cvs.height / 2 : (rot ? ibm.height : ibm.width)
 
-    const canvas = document.createElement("canvas")
-    canvas.width = cwh[0]; canvas.height = cwh[1]
-    const ctx = canvas.getContext("2d")
-    ctx.translate(cwh[0] / 2, cwh[1] / 2); ctx.rotate((deg * Math.PI) / 180)
-    ctx.drawImage(imageBitmap, -iwh[0] / 2, -iwh[1] / 2)
+    const ctx = cvs.getContext("2d")
+    ctx.translate(cvs.width / 2, cvs.height / 2); ctx.rotate((deg * Math.PI) / 180)
+    ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
 
-    const blob2 = await new Promise(resolve => canvas.toBlob(b => resolve(b), blob.type))
+    const blob2 = await new Promise(resolve => cvs.toBlob(b => resolve(b), blob.type))
     return URL.createObjectURL(blob2)
 }
 
@@ -148,3 +148,6 @@ function get_image_source_list() {
     Object.keys(src_info).forEach( x => { if(docEle(x).checked) src_lst.push(x) })
     return src_lst.length > 0 || showTimedAlert("No image source is selected!", 1000) 
 }
+
+const handle_er = () => docEle("hw").disabled = docEle("er").checked
+const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
