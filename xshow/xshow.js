@@ -71,7 +71,8 @@ function showImage() {
         url_ref = imageRepo[i]              // randomly select 1 image from Repo
     } else imageRepo.push(url_ref)
 
-    document.body.style.backgroundImage = `url(${url_ref[0]})`
+    // document.body.style.backgroundImage = `url(${url_ref[0]})`
+    docEle("image-container").style.backgroundImage = `url(${url_ref[0]})`
     const tt = url_ref[1].split("/x")
     const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
@@ -151,3 +152,35 @@ function get_image_source_list() {
 
 const handle_er = () => docEle("hw").disabled = docEle("er").checked
 const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
+
+// Define variables for zoom
+const container = docEle("image-container")
+let currentZoom = 100       // Start with 100% (cover behavior)
+const minZoom = 10
+const maxZoom = 300         // Maximum zoom percentage
+const stepSize = 10         // Zoom step percentage
+
+// Add a 'wheel' event listener to the container
+container.addEventListener("wheel", event => {
+    // Prevent the default page scroll
+    event.preventDefault();
+
+    // Determine the scroll direction
+    // event.deltaY > 0 means scrolling down (zoom out)
+    // event.deltaY < 0 means scrolling up (zoom in)
+    const direction = event.deltaY > 0 ? -1 : 1
+
+    // Calculate the new zoom level
+    currentZoom += direction * stepSize
+
+    // Constrain the zoom level within min/max limits
+    if (currentZoom < minZoom) {
+        currentZoom = minZoom
+    }
+    if (currentZoom > maxZoom) {
+        currentZoom = maxZoom
+    }
+
+    // Apply the new background-size using the 'cover' value with percentage
+    container.style.backgroundSize = currentZoom + "%";
+});
