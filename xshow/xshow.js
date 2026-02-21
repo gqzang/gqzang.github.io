@@ -63,7 +63,9 @@ async function get_image() {
     loading = false
 }
 
-function showImage() {
+function showImage(ignoreStop = false) {
+    if( ! ignoreStop && stop ) return
+    
     var url_ref = imageBuffer.shift(), i = -1
     if( ! url_ref ) {
         if( imageRepo.length == 0 ) return    // no image in Repo to be backup
@@ -105,7 +107,7 @@ function startX() {
             clearTimeout(timerId)
             docEle('ctrl').style.display = 'block'
             docEle('back').style.display = 'none'
-        } else console.log("next") || showImage()
+        } else console.log("next") || showImage(true)
     })
     started = true
     docEle("er").disabled = true       // can't change rotation anymore
