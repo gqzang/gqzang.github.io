@@ -158,28 +158,33 @@ const zoomTarget = docEle('zoom-container')
 let currentZoom = 1
 const zoomSpeed = 0.2, maxZoom = 4, minZoom = 1
 
-// Add event listener for the mouse wheel
-zoomTarget.addEventListener('wheel', e => {
-    if( ! docEle('zoom').checked ) return
-    e.preventDefault(); // Prevent default page scroll
+function handle_zoom() {
+    if( ! docEle("zoom").checked ) 
+        zoomTarget.removeEventListener('wheel', preventScroll);
+    else
+    // Add event listener for the mouse wheel
+    zoomTarget.addEventListener('wheel', e => {
+        if( ! docEle('zoom').checked ) return
+        e.preventDefault(); // Prevent default page scroll
 
-    // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
-    const delta = e.deltaY > 0 ? -1 : 1
-    const newZoom = currentZoom + delta * zoomSpeed
+        // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
+        const delta = e.deltaY > 0 ? -1 : 1
+        const newZoom = currentZoom + delta * zoomSpeed
 
-    // Constrain zoom level
-    if (newZoom >= minZoom && newZoom <= maxZoom) {
-        currentZoom = newZoom
+        // Constrain zoom level
+        if (newZoom >= minZoom && newZoom <= maxZoom) {
+            currentZoom = newZoom
 
-        // Get mouse position relative to the element
-        const mouseX = e.offsetX, mouseY = e.offsetY
+            // Get mouse position relative to the element
+            const mouseX = e.offsetX, mouseY = e.offsetY
 
-        // Set the transform origin to the mouse position (in percentages)
-        const xPercent = (mouseX / zoomTarget.offsetWidth) * 100
-        const yPercent = (mouseY / zoomTarget.offsetHeight) * 100
-        zoomTarget.style.transformOrigin = `${xPercent}% ${yPercent}%`
+            // Set the transform origin to the mouse position (in percentages)
+            const xPercent = (mouseX / zoomTarget.offsetWidth) * 100
+            const yPercent = (mouseY / zoomTarget.offsetHeight) * 100
+            zoomTarget.style.transformOrigin = `${xPercent}% ${yPercent}%`
 
-        // Apply the new scale
-        zoomTarget.style.transform = `scale(${currentZoom})`
-    }
-})
+            // Apply the new scale
+            zoomTarget.style.transform = `scale(${currentZoom})`
+        }
+    })
+}
