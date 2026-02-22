@@ -1,0 +1,44 @@
+
+function show_html(title, container) {
+  return `
+<html style="overscroll-behavior: none;">
+<head>
+  <title>${title}</title>
+  <link rel = "icon" href = "./icon.png" type = "image/x-icon"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})
+  </script>
+  <script src="../xshow/image_src.js"></script>
+  <link rel="stylesheet" href="../xshow/xshow.css">
+  <script src="../xshow/jquery-3.3.1.min.js"></script>
+</head>
+<body style="background-size: contain; background-position: center; background-repeat: no-repeat; 
+            background-color:black; overscroll-behavior: none; color: gold;">
+
+<div id="${container}">
+  <img id="back" style="opacity: 5; width: 8%; height: 4%; display: none" src = './icon.png'>
+  <label id="info" style="color: white; margin-left: 1%; margin-top: 2%;"></label>
+  <div id="customAlert" class="alert-box"></div>
+  <div id="ctrl">
+    Pswd: <input type="password" id="pswd" size="3" onchange="savePswd()">   
+    &nbsp;&nbsp;&nbsp;
+    Delay<input type="text" id="delay" size="1" value="5">   
+    <p>
+    Extra Rotation<input type="checkbox" id="er" onchange="handle_er()"/>
+    &nbsp;&nbsp;&nbsp;
+    <button id="plot" onclick="startX()">Start</button> 
+    <br> h=2w<input type="checkbox" id="hw" onchange="handle_hw()"/>
+    
+    <h3>Select image source(s):</h3>
+    <div id="checkboxContainer">
+        <!-- Checkboxes will be inserted here by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<script src="../xshow/xshow.js"></script>
+
+</body>
+</html>`
+}

@@ -1,25 +1,6 @@
-<html style="overscroll-behavior: none;">
-<head>
-  <title>xshow</title>
-  <link rel = "icon" href = "./icon.png" type = "image/x-icon"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-    window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})
-  </script>
-  <script src="../xshow/image_src.js"></script>
-  <link rel="stylesheet" href="../xshow/xshow.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-</head>
-<body style="background-size: contain; background-position: center; background-repeat: no-repeat; 
-            background-color:black; overscroll-behavior: none; color: gold;">
-
-<div id="none-zoom-container">
-  <div id="xz-panel"></div>
-</div>
-
+<script src="../xshow/show_temp.js"></script>
 <script>
-  $('#xz-panel').load('../xshow/panel.html')
-</script>  
-
-</body>
-</html>
+  document.open()
+  document.write(show_html('xshow', 'none-zoom-container'))
+  document.close()
+</script>
