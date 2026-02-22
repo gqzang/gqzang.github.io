@@ -71,9 +71,9 @@ function showImage(ignoreStop = false) {
         if( imageRepo.length == 0 ) return    // no image in Repo to be backup
         i = Math.floor(Math.random() * imageRepo.length)
         url_ref = imageRepo[i]              // randomly select 1 image from Repo
-    } else imageRepo.push(url_ref)
+    } else imageRepo.push(url_ref);
 
-    document.body.style.backgroundImage = `url(${url_ref[0]})`
+    (docEle("zoom-container") || document.body).style.backgroundImage = `url(${url_ref[0]})`
     const tt = url_ref[1].split("/x")
     const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
@@ -153,3 +153,32 @@ function get_image_source_list() {
 
 const handle_er = () => docEle("hw").disabled = docEle("er").checked
 const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
+
+const zoomTarget = docEle('zoom-container')
+let currentZoom = 1
+const zoomSpeed = 0.2, maxZoom = 4, minZoom = 1
+
+// Add event listener for the mouse wheel
+zoomTarget && zoomTarget.addEventListener('wheel', e => {
+    e.preventDefault(); // Prevent default page scroll
+
+    // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
+    const delta = e.deltaY > 0 ? -1 : 1
+    const newZoom = currentZoom + delta * zoomSpeed
+
+    // Constrain zoom level
+    if (newZoom >= minZoom && newZoom <= maxZoom) {
+        currentZoom = newZoom
+
+        // Get mouse position relative to the element
+        const mouseX = e.offsetX, mouseY = e.offsetY
+
+        // Set the transform origin to the mouse position (in percentages)
+        const xPercent = (mouseX / zoomTarget.offsetWidth) * 100
+        const yPercent = (mouseY / zoomTarget.offsetHeight) * 100
+        zoomTarget.style.transformOrigin = `${xPercent}% ${yPercent}%`
+
+        // Apply the new scale
+        zoomTarget.style.transform = `scale(${currentZoom})`
+    }
+})
