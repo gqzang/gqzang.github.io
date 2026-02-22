@@ -1,6 +1,9 @@
-<script src="../xshow/show_temp.js"></script>
+<script src="../xshow/template.js"></script>
 <script>
-  document.open()
-  document.write(show_html('zshow', 'zoom-container'))
-  document.close()
+  (async () => {
+    const html = await impl_temp("../xshow/show_temp.html", {title: 'zshow', container: 'zoom-container'})
+    document.open()
+    document.write(html)
+    document.close()
+  })()
 </script>
