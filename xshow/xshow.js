@@ -73,7 +73,7 @@ function showImage(ignoreStop = false) {
         url_ref = imageRepo[i]              // randomly select 1 image from Repo
     } else imageRepo.push(url_ref);
 
-    (docEle("zoom-container") || document.body).style.backgroundImage = `url(${url_ref[0]})`
+    docEle("zoom-container").style.backgroundImage = `url(${url_ref[0]})`
     const tt = url_ref[1].split("/x")
     const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
@@ -159,7 +159,8 @@ let currentZoom = 1
 const zoomSpeed = 0.2, maxZoom = 4, minZoom = 1
 
 // Add event listener for the mouse wheel
-zoomTarget && zoomTarget.addEventListener('wheel', e => {
+zoomTarget.addEventListener('wheel', e => {
+    if( ! docEle('zoom').checked ) return
     e.preventDefault(); // Prevent default page scroll
 
     // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
