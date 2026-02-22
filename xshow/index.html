@@ -1,37 +1,25 @@
 <html style="overscroll-behavior: none;">
 <head>
   <title>xshow</title>
-  <link rel = "icon" href = "./xshow.png" type = "image/x-icon"> 
+  <link rel = "icon" href = "./icon.png" type = "image/x-icon"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
     window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})
   </script>
-  <script src="./image_src.js"></script>
-  <link rel="stylesheet" href="./xshow.css">
+  <script src="../xshow/image_src.js"></script>
+  <link rel="stylesheet" href="../xshow/xshow.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body style="background-size: contain; background-position: center; background-repeat: no-repeat; 
             background-color:black; overscroll-behavior: none; color: gold;">
 
-<img id="back" style="opacity: 5; width: 8%; height: 4%; display: none" src = './xshow.png'>
-<label id="info" style="color: white; margin-left: 1%; margin-top: 2%;"></label>
-<div id="customAlert" class="alert-box"></div>
-<div id="ctrl">
-  Pswd: <input type="password" id="pswd" size="3" onchange="savePswd()">   
-  &nbsp;&nbsp;&nbsp;
-  Delay<input type="text" id="delay" size="1" value="5">   
-  <p>
-  Extra Rotation<input type="checkbox" id="er" onchange="handle_er()"/>
-  &nbsp;&nbsp;&nbsp;
-  <button id="plot" onclick="startX()">Start</button> 
-  <br> h=2w<input type="checkbox" id="hw" onchange="handle_hw()"/>
-  
-  <h3>Select image source(s):</h3>
-  <div id="checkboxContainer">
-      <!-- Checkboxes will be inserted here by JavaScript -->
-  </div>
+<div id="none-zoom-container">
+  <div id="xz-panel"></div>
 </div>
 
-<script src="./xshow.js"></script>
+<script>
+  $('#xz-panel').load('../xshow/panel.html')
+</script>  
 
 </body>
 </html>

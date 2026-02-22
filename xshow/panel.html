@@ -1,0 +1,20 @@
+<img id="back" style="opacity: 5; width: 8%; height: 4%; display: none" src = './icon.png'>
+<label id="info" style="color: white; margin-left: 1%; margin-top: 2%;"></label>
+<div id="customAlert" class="alert-box"></div>
+<div id="ctrl">
+  Pswd: <input type="password" id="pswd" size="3" onchange="savePswd()">   
+  &nbsp;&nbsp;&nbsp;
+  Delay<input type="text" id="delay" size="1" value="5">   
+  <p>
+  Extra Rotation<input type="checkbox" id="er" onchange="handle_er()"/>
+  &nbsp;&nbsp;&nbsp;
+  <button id="plot" onclick="startX()">Start</button> 
+  <br> h=2w<input type="checkbox" id="hw" onchange="handle_hw()"/>
+  
+  <h3>Select image source(s):</h3>
+  <div id="checkboxContainer">
+      <!-- Checkboxes will be inserted here by JavaScript -->
+  </div>
+</div>
+
+<script src="../xshow/xshow.js"></script>
