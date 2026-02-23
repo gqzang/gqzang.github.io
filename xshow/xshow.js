@@ -109,6 +109,7 @@ function browseHist(deep = true) {
     if( hPtr == prev ) return
     const [url, name] = hist[hPtr];
     (docEle("zoom-container") || document.body).style.backgroundImage = `url(${url})`
+    zoomTarget && (currentZoom = 1) && (zoomTarget.style.transform = `scale(1)`)
     docEle("info").innerHTML = name + ' (H' + hPtr + ')'
 }
 
