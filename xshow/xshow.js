@@ -110,13 +110,14 @@ function browseHist(deep = true) {
     const [url, name] = hist[hPtr];
     (docEle("zoom-container") || document.body).style.backgroundImage = `url(${url})`
     zoomTarget && (currentZoom = 1) && (zoomTarget.style.transform = `scale(1)`)
-    docEle("info").innerHTML = name + ' (H' + hPtr + ')'
+    docEle("info").innerHTML = `${name} (H${hPtr}/${hist.length-1})`
 }
 
 var timerId
 function startX() {
     docEle('ctrl').style.display = 'none'
     docEle('back').style.display = 'inline'
+    docEle('pause').style.display = 'inline'
     timerId = setInterval(() => showImage(), parseFloat(docEle("delay").value.trim()) * 1000)
     if( ! get_image_source_list() || started ) return
 

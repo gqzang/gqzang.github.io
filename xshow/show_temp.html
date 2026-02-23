@@ -14,6 +14,7 @@
 
 <div id="${container}">
   <img id="back" style="opacity: 5; width: 8%; height: 4%; display: none" src = './${title}.png'>
+  &nbsp; <input type="checkbox" id="pause" style="display: none" onchange="handle_pause()"/>
   <label id="info" style="color: white; margin-left: 1%; margin-top: 2%;"></label>
   <div id="customAlert" class="alert-box"></div>
   <div id="ctrl">
@@ -25,8 +26,6 @@
     &nbsp;&nbsp;&nbsp;
     <button id="plot" onclick="startX()">Start</button> 
     <br> h=2w<input type="checkbox" id="hw" onchange="handle_hw()"/>
-    &nbsp;&nbsp;&nbsp;
-    Pause<input type="checkbox" id="pause" onchange="handle_pause()"/>
 
     <h3>Select image source(s):</h3>
     <div id="checkboxContainer">
