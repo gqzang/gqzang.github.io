@@ -1,9 +1,16 @@
 <script src="../xshow/template.js"></script>
 <script>
-  (async () => {
-    const html = await impl_temp("./show_temp.html", {title: 'xshow', container: 'none-zoom-container'})
-    document.open()
-    document.write(html)
-    document.close()
-  })()
+    const qStr = window.location.search
+    const params = {
+      title: qStr == '?zoom' ? 'zshow' : 'xshow',
+      container: (qStr == '?zoom' ? '' : 'none-') + 'zoom-container'
+    }
+    console.log(params);
+
+    (async () => {
+        const html = await impl_temp("./show_temp.html", params)
+        document.open()
+        document.write(html)
+        document.close()
+    })()
 </script>

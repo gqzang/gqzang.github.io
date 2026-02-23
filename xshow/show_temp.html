@@ -1,20 +1,20 @@
 <html style="overscroll-behavior: none;">
 <head>
   <title>${title}</title>
-  <link rel = "icon" href = "./icon.png" type = "image/x-icon"> 
+  <link rel = "icon" href = "./${title}.png" type = "image/x-icon"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
     window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})
   </script>
-  <script src="../xshow/image_src.js"></script>
+  <script src="./image_src.js"></script>
   <link rel="stylesheet" href="../xshow/xshow.css">
-  <script src="../xshow/jquery-3.3.1.min.js"></script>
+  <script src="./jquery-3.3.1.min.js"></script>
 </head>
 <body style="background-size: contain; background-position: center; background-repeat: no-repeat; 
             background-color:black; overscroll-behavior: none; color: gold;">
 
 <div id="${container}">
-  <img id="back" style="opacity: 5; width: 8%; height: 4%; display: none" src = './icon.png'>
+  <img id="back" style="opacity: 5; width: 8%; height: 4%; display: none" src = './${title}.png'>
   <label id="info" style="color: white; margin-left: 1%; margin-top: 2%;"></label>
   <div id="customAlert" class="alert-box"></div>
   <div id="ctrl">
@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<script src="../xshow/xshow.js"></script>
+<script src="./xshow.js"></script>
 
 </body>
 </html>
