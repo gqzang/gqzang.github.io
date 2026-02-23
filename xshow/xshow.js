@@ -71,6 +71,8 @@ function updateInfo() {
     docEle("info").innerHTML = `${p1}(B${imageBuffer.length} R${p3}`
 }
 
+const hist = []
+var hPtr
 function showImage(forced = false) {
     if( ! forced && docEle("pause").checked ) return
     
@@ -88,6 +90,8 @@ function showImage(forced = false) {
                         'R' + i + '/' + imageRepo.length
     docEle("info").innerHTML = name + " (" + pos + ")"
     zoomTarget && (currentZoom = 1) && (zoomTarget.style.transform = `scale(1)`)
+    hist.unshift([url_ref[0], name])
+    hPtr = 0
 }
 
 function showTimedAlert(message, duration) {
@@ -96,6 +100,16 @@ function showTimedAlert(message, duration) {
     alertBox.style.display = 'block'     // Show the alert box
     // Use setTimeout to hide the alert after the specified duration (in milliseconds)
     setTimeout(() => { alertBox.style.display = 'none' }, duration)
+}
+
+function browseHist(deep = true) {
+    const prev = hPtr
+    if( deep && hPtr < hist.length - 1 ) hPtr ++
+    if( !deep && hPtr > 0 ) hPtr --
+    if( hPtr == prev ) return
+    const [url, name] = hist[hPtr];
+    (docEle("zoom-container") || document.body).style.backgroundImage = `url(${url})`
+    docEle("info").innerHTML = name + ' (H' + hPtr + ')'
 }
 
 var timerId
@@ -108,6 +122,7 @@ function startX() {
     setInterval(() => get_image(), 1000)
     document.addEventListener('contextmenu', e => { 
         e.preventDefault()
+        if( docEle("pause").checked ) return browseHist()
         stop = ! stop
         showTimedAlert((stop ? "stop": "resume") + " loading new images.", 1000)
     })
@@ -116,10 +131,18 @@ function startX() {
             clearTimeout(timerId)
             docEle('ctrl').style.display = 'block'
             docEle('back').style.display = 'none'
-        } else console.log("next") || showImage(true)
+            return
+        } 
+        if( docEle("pause").checked ) return browseHist(false)      
+        console.log("next") || showImage(true)
     })
     started = true
     docEle("er").disabled = true       // can't change rotation anymore
+}
+
+function handle_pause() {
+    stop = docEle("pause").checked
+    showTimedAlert((stop ? "stop": "resume") + " auto-slide and loading new images.", 1000)
 }
 
 async function get_image_url(blob, deg) {
