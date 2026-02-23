@@ -87,6 +87,7 @@ function showImage(forced = false) {
     const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
                         'R' + i + '/' + imageRepo.length
     docEle("info").innerHTML = name + " (" + pos + ")"
+    zoomTarget && (currentZoom = 1) && (zoomTarget.style.transform = `scale(1)`)
 }
 
 function showTimedAlert(message, duration) {
@@ -164,7 +165,7 @@ const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
 
 const zoomTarget = docEle('zoom-container')
 let currentZoom = 1
-const zoomSpeed = 0.2, maxZoom = 4, minZoom = 1
+const zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
 
 // Add event listener for the mouse wheel
 zoomTarget && zoomTarget.addEventListener('wheel', e => {
