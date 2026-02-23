@@ -58,13 +58,21 @@ async function get_image() {
         imageBuffer.push([url, ref])
         if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
         console.log("get " + ref, imageBuffer.length)
+        updateInfo()
     }
     catch (error) {console.error("Error fetching binary data:", error)}
     loading = false
 }
 
-function showImage(ignoreStop = false) {
-    if( ! ignoreStop && stop ) return
+function updateInfo() {
+    const txt = docEle("info").innerHTML
+    const [p1, tmp] = txt.split('(')
+    const [_, p3] = tmp.split('R')
+    docEle("info").innerHTML = `${p1}(B${imageBuffer.length} R${p3}`
+}
+
+function showImage(forced = false) {
+    if( ! forced && docEle("pause").checked ) return
     
     var url_ref = imageBuffer.shift(), i = -1
     if( ! url_ref ) {
