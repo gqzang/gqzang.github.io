@@ -99,8 +99,8 @@ function startX() {
 
 const handle_er = () => docEle("hw").disabled = docEle("er").checked
 const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
-const handle_pause = () => showTimedAlert(
-    ((stop = docEle("pause").checked) ? "stop": "resume") + " auto-slide and loading", 1000);
+const handle_pause = () => { if( docEle("pause").checked ) browseHist(false);
+    showTimedAlert(((stop = docEle("pause").checked) ? "stop": "resume") + " auto-slide and loading", 1000) }
 
 (() => Object.keys(src_info).forEach( x => {
     const chkbox = document.createElement("input")  // Create the checkbox input element
