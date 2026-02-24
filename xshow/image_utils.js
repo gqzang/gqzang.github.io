@@ -1,6 +1,8 @@
 "use strict"
 
 const docEle = x => document.getElementById(x)
+const get_rotation = ref => src_rotation[ref.split("/x")[0] + '/']
+const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 
 const src_info = {
     '1/B-sel/': 6811,
@@ -35,13 +37,6 @@ const src_rotation = {
     '3/MA-p2/': 270,
     '4/MA-x/': 270
 }
-
-function get_rotation(ref) {
-    const src = ref.split("/x")[0] + '/'
-    return src_rotation[src]
-}
-
-const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 
 function bytesToStr(byteArray) {
     let result = ''

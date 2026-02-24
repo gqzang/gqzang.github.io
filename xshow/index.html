@@ -6,12 +6,12 @@
       html = html.replaceAll('${' + k + '}', v)
     return html
   }
+  
   const qStr = window.location.search
   const params = {
     title: qStr == '?zoom' ? 'zshow' : 'xshow',
     container: (qStr == '?zoom' ? '' : 'none-') + 'zoom-container'
-  }
-  console.log(params);
+  };
 
   (async () => {
     const html = await impl_temp("./show_temp.html", params)
