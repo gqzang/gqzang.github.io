@@ -33,8 +33,8 @@ async function get_image() {
 }
 
 var hist = [], hPtr
-function showImage(forced = false) {
-    if( ! forced && docEle("pause").checked ) return
+function showImage() {
+    if( docEle("pause").checked ) return
     
     var url_ref = imageBuffer.shift(), i = -1
     if( ! url_ref ) {
@@ -57,10 +57,8 @@ function setImgInfo(url, info) {
 }
 
 function browseHist(deep = true) {
-    const prev = hPtr
-    if( deep && hPtr < hist.length - 1 ) hPtr ++
-    if( !deep && hPtr > 0 ) hPtr --
-    if( hPtr != prev ) setImgInfo(hist[hPtr][0], `${hist[hPtr][1]} (H${hPtr}/${hist.length-1})`)
+    hPtr = ((deep ? hPtr + 1 : hPtr - 1) + hist.length) % hist.length        // use circular history
+    setImgInfo(hist[hPtr][0], `${hist[hPtr][1]} (H${hPtr}/${hist.length-1})`)
 }
 
 function showTimedAlert(message, duration) {
@@ -92,7 +90,7 @@ function startX() {
             return
         } 
         if( docEle("pause").checked ) return browseHist()      
-        if( docEle('ctrl').style.display == 'none' ) console.log("next") || showImage(true)
+        if( docEle('ctrl').style.display == 'none' ) console.log("next") || showImage()
     })
     started = docEle("er").disabled = true       // can't change rotation anymore
 }
@@ -100,7 +98,7 @@ function startX() {
 const handle_er = () => docEle("hw").disabled = docEle("er").checked
 const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
 const handle_pause = () => { if( docEle("pause").checked ) browseHist(false);
-    showTimedAlert(((stop = docEle("pause").checked) ? "stop": "resume") + " auto-slide and loading", 1000) }
+    showTimedAlert((docEle("pause").checked ? "stop": "resume") + " auto-slide", 1000) }
 
 (() => Object.keys(src_info).forEach( x => {
     const chkbox = document.createElement("input")  // Create the checkbox input element
