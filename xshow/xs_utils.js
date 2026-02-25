@@ -3,6 +3,10 @@
 const docEle = x => document.getElementById(x)
 const get_rotation = ref => src_rotation[ref.split("/x")[0] + '/']
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
+const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
+const loadPswd = () => (localStorage.getItem(VUX) || "")
+const setPswd = () => localStorage.setItem(VUX, docEle("pswd").value.trim())
+const savePswd = () => setPswd() || alert(pswd = loadPswd())
 
 const src_info = {
     '1/B-sel/': 6811,
