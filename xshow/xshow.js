@@ -68,7 +68,8 @@ function startX() {
         if( docEle('back').contains(e.target) ) { 
             docEle('back').style.display = 'none';    docEle('ctrl').style.display = 'block';
             return clearInterval(timerId) } 
-        if( docEle("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? 1 : -1)
+        const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), hist.length)
+        if( docEle("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
         if( docEle('ctrl').style.display == 'none' ) showImage()
     })
     started = docEle("er").disabled = true       // can't change rotation anymore
