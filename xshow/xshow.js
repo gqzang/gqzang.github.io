@@ -21,7 +21,7 @@ async function loadImage() {
         const buf = await (await fetch(baseUrl + ref)).arrayBuffer()
         const rotation = get_rotation(ref) + (docEle("er").checked ? 90 : 0)
         iBuf.unshift([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
-    } catch (error) {console.error("Error fetching binary data:", error)}
+    } catch (err) {console.error("Error fetching binary data:", err)}
     if(iBuf.length == 1 && iRepo.length == 0) showImage()   // show 1st image after loaded.
     const [p1, tmp] = docEle("info").innerHTML.split('('), p3 = tmp.split('R')[1]
     if(p3) docEle("info").innerHTML = `${p1}(B${iBuf.length} R${p3}`
@@ -30,12 +30,10 @@ async function loadImage() {
 
 function showImage() {
     if( docEle("pause").checked ) return
-
     let url_ref = iBuf.pop(), i = -1
     if( url_ref ) hPtr = iRepo.unshift(url_ref) && 0
     else if( iRepo.length == 0 ) return                     // no image in Repo to be backup
     else url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)]  // random select 1
-
     const pos = i < 0 ? `B${iBuf.length} R${iRepo.length}` : `R${i}/${iRepo.length}`
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
@@ -58,7 +56,6 @@ function startX() {
     timerId = setInterval(showImage, parseFloat(docEle("delay").value.trim()) * 1000)
     if( ! get_image_source_list() || started ) return
     started = docEle("er").disabled = true       // can't change rotation anymore
-
     setInterval(loadImage, 1000)
     document.addEventListener('contextmenu', e => { e.preventDefault();
         showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
