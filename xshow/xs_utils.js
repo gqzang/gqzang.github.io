@@ -1,30 +1,32 @@
 "use strict"
 
 const docEle = x => document.getElementById(x)
-const get_rotation = ref => src_rotation[ref.split("/x")[0] + '/']
+const get_rotation = ref => src_info[ref.split("/x")[0] + '/'][1]
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const loadPswd = () => (localStorage.getItem(VUX) || "")
 const setPswd = () => localStorage.setItem(VUX, docEle("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
+const showTimedAlert = (msg, time) => { const alertBox = docEle('customAlert')
+    alertBox.innerHTML = msg; alertBox.style.display = 'block'     // Show the alert box
+    setTimeout(() => { alertBox.style.display = 'none' }, time) }
 
-const src_info = {
-    '1/B-sel/': 6811,
-    '1/B-sel-x/': 2026,
-    '2/MA-p1/': 4198,
-    '3/MA-p2/': 4158,
-    '4/MA-x/': 7561
-}
+const src_info = {      // numbers and rotations
+    '1/B-sel/': [6811, 0],
+    '1/B-sel-x/': [2026, 0],
+    '2/MA-p1/': [4198, 270],
+    '3/MA-p2/': [4158, 270],
+    '4/MA-x/': [7561, 270]
+}, r_s = [], src_lst =[]
 
-const r_s = [],  src_lst =[]
 function get_rand_image_ref(src_lst) {
-    var n = 0; for(const x of src_lst) n += src_info[x]
+    var n = 0; for(const x of src_lst) n += src_info[x][0]
     if( n > 0 )
         for(let k = 0; k < 10; k ++) {            // only try 10 times
             var i = Math.floor(Math.random() * n) + 1, j
             for(j = 0; j < src_lst.length; j ++) {
-                if(i <= src_info[src_lst[j]]) break
-                i -= src_info[src_lst[j]]
+                if(i <= src_info[src_lst[j]][0]) break
+                i -= src_info[src_lst[j]][0]
             }
             const ref = src_lst[j] + 'x' + String(i).padStart(4, '0') + '.xef'   
             if(r_s.includes(ref)) continue
@@ -32,14 +34,6 @@ function get_rand_image_ref(src_lst) {
             return ref
         }
     return null
-}
-
-const src_rotation = {
-    '1/B-sel/': 0,
-    '1/B-sel-x/': 0,
-    '2/MA-p1/': 270,
-    '3/MA-p2/': 270,
-    '4/MA-x/': 270
 }
 
 function bytesToStr(byteArray) {

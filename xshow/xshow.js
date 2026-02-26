@@ -4,9 +4,6 @@ const handle_er = () => docEle("hw").disabled = docEle("er").checked
 const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
 const handle_pause = () => { docEle("pause").checked && browseHist(0);
     showTimedAlert((docEle("pause").checked ? "stop": "resume") + " auto-slide", 1000) }
-const showTimedAlert = (message, duration) => { const alertBox = docEle('customAlert')
-    alertBox.innerHTML = message; alertBox.style.display = 'block'     // Show the alert box
-    setTimeout(() => { alertBox.style.display = 'none' }, duration) }
 const get_name = ref => Object.keys(src_info).indexOf(ref.split("/x")[0] + '/') 
                             + '~' + ref.split("/x")[1].split(".")[0]
 
