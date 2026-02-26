@@ -7,8 +7,10 @@ const handle_pause = () => { docEle("pause").checked && browseHist(0);
 const showTimedAlert = (message, duration) => { const alertBox = docEle('customAlert')
     alertBox.innerHTML = message; alertBox.style.display = 'block'     // Show the alert box
     setTimeout(() => { alertBox.style.display = 'none' }, duration) }
+const get_name = ref => Object.keys(src_info).indexOf(ref.split("/x")[0] + '/') 
+                            + '~' + ref.split("/x")[1].split(".")[0]
 
-var pswd = loadPswd(), loading = false, stop = false, started = false, currentZoom = 1  // global ctrl vars
+let pswd = loadPswd(), loading = false, stop = false, started = false, curZoom = 1, hPtr = 0
 const iBuf = [], maxLen = 16, iRepo = []
 async function loadImage() {
     if(loading || iBuf.length >= maxLen || stop) return
@@ -18,7 +20,7 @@ async function loadImage() {
         const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
         const buf = await (await fetch(baseUrl + ref)).arrayBuffer()
         const rotation = get_rotation(ref) + (docEle("er").checked ? 90 : 0)
-        iBuf.push([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
+        iBuf.unshift([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
     } catch (error) {console.error("Error fetching binary data:", error)}
     if(iBuf.length == 1 && iRepo.length == 0) showImage()   // show 1st image after loaded.
     const [p1, tmp] = docEle("info").innerHTML.split('('), p3 = tmp.split('R')[1]
@@ -26,40 +28,36 @@ async function loadImage() {
     setTimeout(() => loading = false, 100)          // give a little time to re-entry
 }
 
-var hist = [], hPtr = 0
 function showImage() {
     if( docEle("pause").checked ) return
-    
-    var url_ref = iBuf.shift(), i = -1
-    if( ! url_ref ) {
-        if( iRepo.length == 0 ) return    // no image in Repo to be backup
-        url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)] 
-    } else iRepo.push(url_ref);
 
-    const tt = url_ref[1].split("/x")
-    const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
+    let url_ref = iBuf.pop(), i = -1
+    if( url_ref ) hPtr = iRepo.unshift(url_ref) && 0
+    else if( iRepo.length == 0 ) return                     // no image in Repo to be backup
+    else url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)]  // random select 1
+
     const pos = i < 0 ? `B${iBuf.length} R${iRepo.length}` : `R${i}/${iRepo.length}`
-    setImgInfo(url_ref[0], `${name} (${pos})`)
-    hPtr = hist.unshift([url_ref[0], name]) && 0
+    setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
 
 function setImgInfo(url, info) {
     (zoomTgt || document.body).style.backgroundImage = `url(${url})`
-    zoomTgt && (currentZoom = 1) && (zoomTgt.style.transform = `scale(1)`)
+    zoomTgt && (curZoom = 1) && (zoomTgt.style.transform = `scale(1)`)
     docEle("info").innerHTML = info
 }
 
-function browseHist(delta = 1) {
-    hPtr = delta && ((hPtr + delta + hist.length) % hist.length)        // use circular history
-    setImgInfo(hist[hPtr][0], `${hist[hPtr][1]} (H${hPtr}/${hist.length-1})`)
+function browseHist(delta) {
+    hPtr = delta && ((hPtr + delta + iRepo.length) % iRepo.length)        // use circular history
+    setImgInfo(iRepo[hPtr][0], `${get_name(iRepo[hPtr][1])} (H${hPtr}/${iRepo.length-1})`)
 }
 
-var timerId
+let timerId
 function startX() {
     docEle('ctrl').style.display = 'none'
     docEle('back').style.display = docEle('pause').style.display = 'inline'
     timerId = setInterval(showImage, parseFloat(docEle("delay").value.trim()) * 1000)
     if( ! get_image_source_list() || started ) return
+    started = docEle("er").disabled = true       // can't change rotation anymore
 
     setInterval(loadImage, 1000)
     document.addEventListener('contextmenu', e => { e.preventDefault();
@@ -68,11 +66,9 @@ function startX() {
         if( docEle('back').contains(e.target) ) { 
             docEle('back').style.display = 'none';    docEle('ctrl').style.display = 'block';
             return clearInterval(timerId) } 
-        const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), hist.length)
+        const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
         if( docEle("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
-        if( docEle('ctrl').style.display == 'none' ) showImage()
-    })
-    started = docEle("er").disabled = true       // can't change rotation anymore
+        if( docEle('ctrl').style.display == 'none' ) showImage()    })
 }
 
 Object.keys(src_info).forEach( x => {
@@ -89,10 +85,10 @@ Object.keys(src_info).forEach( x => {
 const zoomTgt = docEle('zoom-container'), zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
 zoomTgt && zoomTgt.addEventListener('wheel', e => { e.preventDefault()
     // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
-    const delta = e.deltaY > 0 ? -1 : 1, newZoom = currentZoom + delta * zoomSpeed
+    const delta = e.deltaY > 0 ? -1 : 1, newZoom = curZoom + delta * zoomSpeed
     if (newZoom < minZoom || newZoom > maxZoom) return
     // Set the transform origin to the mouse position (in percentages)
     const xP = e.offsetX / zoomTgt.offsetWidth, yP = e.offsetY / zoomTgt.offsetHeight
     zoomTgt.style.transformOrigin = `${xP * 100}% ${yP * 100}%`       
-    zoomTgt.style.transform = `scale(${currentZoom = newZoom})`   // Apply the new scale
+    zoomTgt.style.transform = `scale(${curZoom = newZoom})`   // Apply the new scale
 })
