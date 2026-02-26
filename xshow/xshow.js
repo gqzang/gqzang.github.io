@@ -20,7 +20,7 @@ async function loadImage() {
         const rotation = get_rotation(ref) + (docEle("er").checked ? 90 : 0)
         iBuf.push([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
     } catch (error) {console.error("Error fetching binary data:", error)}
-    if(iBuf.length == 1 && iRepo.length == 0) showImage()
+    if(iBuf.length == 1 && iRepo.length == 0) showImage()   // show 1st image after loaded.
     const [p1, tmp] = docEle("info").innerHTML.split('('), p3 = tmp.split('R')[1]
     if(p3) docEle("info").innerHTML = `${p1}(B${iBuf.length} R${p3}`
     setTimeout(() => loading = false, 100)          // give a little time to re-entry
@@ -62,15 +62,13 @@ function startX() {
     if( ! get_image_source_list() || started ) return
 
     setInterval(loadImage, 1000)
-    document.addEventListener('contextmenu', e => { e.preventDefault()
-        if( docEle("pause").checked ) return browseHist(-1)
-        showTimedAlert(((stop = ! stop) ? "stop": "resume") + " loading new images.", 1000)
-    })
+    document.addEventListener('contextmenu', e => { e.preventDefault();
+        showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
     document.addEventListener('click', e => {
-        if (docEle('back').contains(e.target)) { 
-            docEle('back').style.display = 'none'; docEle('ctrl').style.display = 'block'
+        if( docEle('back').contains(e.target) ) { 
+            docEle('back').style.display = 'none';    docEle('ctrl').style.display = 'block';
             return clearInterval(timerId) } 
-        if( docEle("pause").checked ) return browseHist()      
+        if( docEle("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? 1 : -1)
         if( docEle('ctrl').style.display == 'none' ) showImage()
     })
     started = docEle("er").disabled = true       // can't change rotation anymore
