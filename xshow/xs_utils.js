@@ -37,16 +37,14 @@ function get_rand_image_ref(src_lst) {
 }
 
 function bytesToStr(byteArray) {
-    let result = ''
-    for (let i = 0; i < byteArray.length; i++)
-        result += String.fromCharCode(byteArray[i])
+    let result = '', i = 0
+    for(; i < byteArray.length; i++) result += String.fromCharCode(byteArray[i])
     return result
 }
 
 function xor_crypt(src, mask) {
-    const result = [], l = mask.length
-    for (let i = 0; i < src.length; i++)
-        result.push(src[i] ^ mask[i % l])
+    let result = [], l = mask.length, i = 0
+    for(; i < src.length; i++) result.push(src[i] ^ mask[i % l])
     return result
 }
 
