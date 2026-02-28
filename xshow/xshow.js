@@ -1,190 +1,85 @@
 "use strict"
 
-const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
+const handle_er = () => de("hw").disabled = de("er").checked
+const handle_hw = () => de("er").disabled = started || de("hw").checked
+const handle_pause = () => { de("pause").checked && browseHist(0);
+    showTimedAlert((de("pause").checked ? "stop": "resume") + " auto-slide", 1000) }
+const get_name = ref => Object.keys(src_info).indexOf(ref.split("/x")[0] + '/') 
+                            + '~' + ref.split("/x")[1].split(".")[0]
 
-function bytesToStr(byteArray) {
-    let result = ''
-    for (let i = 0; i < byteArray.length; i++)
-        result += String.fromCharCode(byteArray[i])
-    return result
-}
-
-function xor_crypt(src, mask) {
-    const result = [], l = mask.length
-    for (let i = 0; i < src.length; i++)
-        result.push(src[i] ^ mask[i % l])
-    return result
-}
-
-function xef_decrypt(buffer, mask, bType = 'image/jpg') {
-    const buf = new Uint8Array(buffer)
-    const linfo = buf[0] * 256 + buf[1]
-    var cp = 2 + linfo                  // current position in bytes
-    const bytes = buf.slice(2, cp)
-    const info = bytesToStr(xor_crypt(bytes, mask)).split('|')
-    const min_len = parseInt(info[0])
-
-    const size = parseInt(info[2])
-    const xLen = Math.min(min_len, size)
-    const aBuf = buf.slice(cp, cp + xLen)
-    const xU8A = new Uint8Array(xor_crypt(aBuf, mask))
-    const rU8A = buf.slice(cp + xLen, cp + size)
-    return new Blob([xU8A].concat(rU8A), { type: bType })
-}
-
-const docEle = x => document.getElementById(x)
-const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
-const loadPswd = () => (localStorage.getItem(VUX) || "")
-var pswd = loadPswd()
-const setPswd = () => localStorage.setItem(VUX, docEle("pswd").value.trim())
-const savePswd = () => setPswd() || alert(pswd = loadPswd())
-
-const imageBuffer = [], maxLen = 32, imageRepo = [], src_lst =[]
-var loading = false, stop = false, started = false
-async function get_image() {
-    if(loading || imageBuffer.length >= maxLen || stop) return
+let pswd = loadPswd(), loading = false, stop = false, started = false, curZoom = 1, hPtr = 0
+const iBuf = [], maxLen = 16, iRepo = []
+async function loadImage() {
+    if(loading || iBuf.length >= maxLen || stop) return
     loading = true
-
-    const mask = b64StrToBytes(pswd)
-    const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
-    const ref = get_rand_image_ref(src_lst)
-    if( !ref ) return (loading = false) || console.log("fail to find a ref")
-    try {
-        const res = await fetch(baseUrl + ref)
-        const buf = await res.arrayBuffer()
-        const blob = xef_decrypt(buf, mask)
-        const rotation = get_rotation(ref) + (docEle("er").checked ? 90 : 0)
-        const url = await get_image_url(blob, rotation)
-        imageBuffer.push([url, ref])
-        if(imageBuffer.length == 1 && imageRepo.length == 0) showImage()
-        console.log("get " + ref, imageBuffer.length)
-    }
-    catch (error) {console.error("Error fetching binary data:", error)}
-    loading = false
+    const mask = b64StrToBytes(pswd), ref = get_rand_image_ref(src_lst)
+    if( ref ) try { console.log("~~~" + ref)
+        const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
+        const buf = await (await fetch(baseUrl + ref)).arrayBuffer()
+        const rotation = get_rotation(ref) + (de("er").checked ? 90 : 0)
+        iBuf.unshift([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
+    } catch (err) {console.error("Error fetching binary data:", err)}
+    if(iBuf.length == 1 && iRepo.length == 0) showImage()   // show 1st image after loaded.
+    const [p1, tmp] = de("info").innerHTML.split('('), p3 = tmp.split('R')[1]
+    if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} R${p3}`
+    setTimeout(() => loading = false, 100)          // give a little time to re-entry
 }
 
-function showImage(ignoreStop = false) {
-    if( ! ignoreStop && stop ) return
-    
-    var url_ref = imageBuffer.shift(), i = -1
-    if( ! url_ref ) {
-        if( imageRepo.length == 0 ) return    // no image in Repo to be backup
-        i = Math.floor(Math.random() * imageRepo.length)
-        url_ref = imageRepo[i]              // randomly select 1 image from Repo
-    } else imageRepo.push(url_ref);
-
-    docEle("zoom-container").style.backgroundImage = `url(${url_ref[0]})`
-    const tt = url_ref[1].split("/x")
-    const name = Object.keys(src_info).indexOf(tt[0] + '/') + '~' + tt[1].split(".")[0]
-    const pos = i < 0 ? 'B' + imageBuffer.length + ' R' + imageRepo.length: 
-                        'R' + i + '/' + imageRepo.length
-    docEle("info").innerHTML = name + " (" + pos + ")"
+function showImage() {
+    if( de("pause").checked ) return
+    let url_ref = iBuf.pop(), i = -1
+    if( url_ref ) hPtr = iRepo.unshift(url_ref) && 0
+    else if( iRepo.length == 0 ) return                     // no image in Repo to be backup
+    else url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)]  // random select 1
+    const pos = i < 0 ? `B${iBuf.length} R${iRepo.length}` : `R${i}/${iRepo.length}`
+    setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
 
-function showTimedAlert(message, duration) {
-    const alertBox = docEle('customAlert')
-    alertBox.innerHTML = message
-    alertBox.style.display = 'block'     // Show the alert box
-    // Use setTimeout to hide the alert after the specified duration (in milliseconds)
-    setTimeout(() => { alertBox.style.display = 'none' }, duration)
+function setImgInfo(url, info) {
+    (zoomTgt || document.body).style.backgroundImage = `url(${url})`;
+    (de("info").innerHTML = info) && zoomTgt && (zoomTgt.style.transform = `scale(${curZoom = 1})`)
 }
 
-var timerId
+function browseHist(delta) {
+    hPtr = delta && ((hPtr + delta + iRepo.length) % iRepo.length)        // use circular history
+    setImgInfo(iRepo[hPtr][0], `${get_name(iRepo[hPtr][1])} (H${hPtr}/${iRepo.length-1})`)
+}
+
+let timerId
 function startX() {
-    docEle('ctrl').style.display = 'none'
-    docEle('back').style.display = 'inline'
-    timerId = setInterval(() => showImage(), parseFloat(docEle("delay").value.trim()) * 1000)
+    de('ctrl').style.display = 'none'
+    de('back').style.display = de('pause').style.display = 'inline'
+    timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
     if( ! get_image_source_list() || started ) return
-
-    setInterval(() => get_image(), 1000)
-    document.addEventListener('contextmenu', e => { 
-        e.preventDefault()
-        stop = ! stop
-        showTimedAlert((stop ? "stop": "resume") + " loading new images.", 1000)
-    })
+    started = de("er").disabled = true       // can't change rotation anymore
+    setInterval(loadImage, 1000)
+    document.addEventListener('contextmenu', e => { e.preventDefault();
+        showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
     document.addEventListener('click', e => {
-        if (docEle('back').contains(e.target)) {
-            clearTimeout(timerId)
-            docEle('ctrl').style.display = 'block'
-            docEle('back').style.display = 'none'
-        } else console.log("next") || showImage(true)
-    })
-    started = true
-    docEle("er").disabled = true       // can't change rotation anymore
+        if( de('back').contains(e.target) ) { 
+            de('back').style.display = 'none';    de('ctrl').style.display = 'block';
+            return clearInterval(timerId) } 
+        const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
+        if( de("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
+        if( de('ctrl').style.display == 'none' ) showImage()    })
 }
 
-async function get_image_url(blob, deg) {
-    if(deg % 360 == 0) return URL.createObjectURL(blob)
+Object.keys(src_info).forEach( x => {
+    const chkbox = document.createElement("input")  // Create the checkbox input element
+    chkbox.type = "checkbox"; chkbox.id = chkbox.value = x; chkbox.checked = src_info[x][2]
+    const label = document.createElement("label")       // Create the label element
+    label.htmlFor = x                       // Associate the label with the checkbox ID
+    label.appendChild(document.createTextNode(x))
+    de("checkboxContainer").append(chkbox, label, document.createElement("br"))
+})                // create checkboxes
 
-    const ibm = await createImageBitmap(blob)
-    const rot = (deg + 90) % 180 == 0
-    const cvs = document.createElement("canvas")
-    cvs.height = rot ? ibm.width : ibm.height
-    cvs.width = docEle("hw").checked ? cvs.height / 2 : (rot ? ibm.height : ibm.width)
-
-    const ctx = cvs.getContext("2d")
-    ctx.translate(cvs.width / 2, cvs.height / 2); ctx.rotate((deg * Math.PI) / 180)
-    ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
-
-    const blob2 = await new Promise(resolve => cvs.toBlob(b => resolve(b), blob.type))
-    return URL.createObjectURL(blob2)
-}
-
-(() => Object.keys(src_info).forEach( x => {
-        // Create the checkbox input element
-        const chkbox = document.createElement("input")
-        chkbox.type = "checkbox"; chkbox.id = chkbox.value = x
-        chkbox.checked = [0, 1, 4].map(i => Object.keys(src_info)[i]).includes(x)
-
-        // Create the label element
-        const label = document.createElement("label")
-        label.htmlFor = x            // Associate the label with the checkbox ID
-        label.appendChild(document.createTextNode(x))
-
-        // Append the checkbox, label to the container with a line break for better display
-        docEle("checkboxContainer").append(chkbox, label, document.createElement("br"))
-    }))()                // createCheckboxes
-
-function get_image_source_list() {
-    src_lst.length = 0
-    Object.keys(src_info).forEach( x => { if(docEle(x).checked) src_lst.push(x) })
-    return src_lst.length > 0 || showTimedAlert("No image source is selected!", 1000) 
-}
-
-const handle_er = () => docEle("hw").disabled = docEle("er").checked
-const handle_hw = () => docEle("er").disabled = started || docEle("hw").checked
-
-const zoomTarget = docEle('zoom-container')
-let currentZoom = 1
-const zoomSpeed = 0.2, maxZoom = 4, minZoom = 1
-
-function handle_zoom() {
-    if( ! docEle("zoom").checked ) 
-        zoomTarget.removeEventListener('wheel', preventScroll);
-    else
-    // Add event listener for the mouse wheel
-    zoomTarget.addEventListener('wheel', e => {
-        if( ! docEle('zoom').checked ) return
-        e.preventDefault(); // Prevent default page scroll
-
-        // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
-        const delta = e.deltaY > 0 ? -1 : 1
-        const newZoom = currentZoom + delta * zoomSpeed
-
-        // Constrain zoom level
-        if (newZoom >= minZoom && newZoom <= maxZoom) {
-            currentZoom = newZoom
-
-            // Get mouse position relative to the element
-            const mouseX = e.offsetX, mouseY = e.offsetY
-
-            // Set the transform origin to the mouse position (in percentages)
-            const xPercent = (mouseX / zoomTarget.offsetWidth) * 100
-            const yPercent = (mouseY / zoomTarget.offsetHeight) * 100
-            zoomTarget.style.transformOrigin = `${xPercent}% ${yPercent}%`
-
-            // Apply the new scale
-            zoomTarget.style.transform = `scale(${currentZoom})`
-        }
-    })
-}
+const zoomTgt = de('zoom-container'), zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
+zoomTgt && zoomTgt.addEventListener('wheel', e => { e.preventDefault()
+    // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
+    const delta = e.deltaY > 0 ? -1 : 1, newZoom = curZoom + delta * zoomSpeed
+    if (newZoom < minZoom || newZoom > maxZoom) return
+    // Set the transform origin to the mouse position (in percentages)
+    const xP = e.offsetX / zoomTgt.offsetWidth, yP = e.offsetY / zoomTgt.offsetHeight
+    zoomTgt.style.transformOrigin = `${xP * 100}% ${yP * 100}%`       
+    zoomTgt.style.transform = `scale(${curZoom = newZoom})`   // Apply the new scale
+})
