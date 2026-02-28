@@ -1,22 +1,24 @@
 "use strict"
 
-const docEle = x => document.getElementById(x)
+window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})
+
+const de = x => document.getElementById(x)
 const get_rotation = ref => src_info[ref.split("/x")[0] + '/'][1]
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const loadPswd = () => (localStorage.getItem(VUX) || "")
-const setPswd = () => localStorage.setItem(VUX, docEle("pswd").value.trim())
+const setPswd = () => localStorage.setItem(VUX, de("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
-const showTimedAlert = (msg, time) => { const alertBox = docEle('customAlert')
+const showTimedAlert = (msg, time) => { const alertBox = de('customAlert')
     alertBox.innerHTML = msg; alertBox.style.display = 'block'     // Show the alert box
     setTimeout(() => { alertBox.style.display = 'none' }, time) }
 
-const src_info = {      // numbers and rotations
-    '1/B-sel/': [6811, 0],
-    '1/B-sel-x/': [2026, 0],
-    '2/MA-p1/': [4198, 270],
-    '3/MA-p2/': [4158, 270],
-    '4/MA-x/': [7561, 270]
+const src_info = {      // numbers, rotations, default
+    '1/B-sel/': [6811, 0, true],
+    '1/B-sel-x/': [2026, 0, true],
+    '2/MA-p1/': [4198, 270, false],
+    '3/MA-p2/': [4158, 270, false],
+    '4/MA-x/': [7561, 270, true]
 }, r_s = [], src_lst =[]
 
 function get_rand_image_ref(src_lst) {
@@ -37,29 +39,24 @@ function get_rand_image_ref(src_lst) {
 }
 
 function bytesToStr(byteArray) {
-    let result = ''
-    for (let i = 0; i < byteArray.length; i++)
-        result += String.fromCharCode(byteArray[i])
+    let result = '', i = 0
+    for(; i < byteArray.length; i++) result += String.fromCharCode(byteArray[i])
     return result
 }
 
 function xor_crypt(src, mask) {
-    const result = [], l = mask.length
-    for (let i = 0; i < src.length; i++)
-        result.push(src[i] ^ mask[i % l])
+    let result = [], l = mask.length, i = 0
+    for(; i < src.length; i++) result.push(src[i] ^ mask[i % l])
     return result
 }
 
 function xef_decrypt(buffer, mask, bType = 'image/jpg') {
-    const buf = new Uint8Array(buffer)
-    const linfo = buf[0] * 256 + buf[1]
-    var cp = 2 + linfo                  // current position in bytes
-    const bytes = buf.slice(2, cp)
+    const buf = new Uint8Array(buffer), linfo = buf[0] * 256 + buf[1]
+    const cp = 2 + linfo, bytes = buf.slice(2, cp)
     const info = bytesToStr(xor_crypt(bytes, mask)).split('|')
     const min_len = parseInt(info[0])
 
-    const size = parseInt(info[2])
-    const xLen = Math.min(min_len, size)
+    const size = parseInt(info[2]), xLen = Math.min(min_len, size)
     const aBuf = buf.slice(cp, cp + xLen)
     const xU8A = new Uint8Array(xor_crypt(aBuf, mask))
     const rU8A = buf.slice(cp + xLen, cp + size)
@@ -68,12 +65,10 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
 
 async function get_image_url(blob, deg) {
     if(deg % 360 == 0) return URL.createObjectURL(blob)
-
-    const ibm = await createImageBitmap(blob)
     const rot = (deg + 90) % 180 == 0
-    const cvs = document.createElement("canvas")
+    const ibm = await createImageBitmap(blob), cvs = document.createElement("canvas")
     cvs.height = rot ? ibm.width : ibm.height
-    cvs.width = docEle("hw").checked ? cvs.height / 2 : (rot ? ibm.height : ibm.width)
+    cvs.width = de("hw").checked ? cvs.height / 2 : (rot ? ibm.height : ibm.width)
 
     const ctx = cvs.getContext("2d")
     ctx.translate(cvs.width / 2, cvs.height / 2); ctx.rotate((deg * Math.PI) / 180)
@@ -85,6 +80,6 @@ async function get_image_url(blob, deg) {
 
 function get_image_source_list() {
     src_lst.length = 0
-    Object.keys(src_info).forEach( x => { if(docEle(x).checked) src_lst.push(x) })
+    Object.keys(src_info).forEach( x => { if(de(x).checked) src_lst.push(x) })
     return src_lst.length > 0 || showTimedAlert("No image source is selected!", 1000) 
 }
