@@ -19,16 +19,15 @@ const src_info = {      // numbers, rotations, default
     '2/MA-p1/': [4198, 270, false],
     '3/MA-p2/': [4158, 270, false],
     '4/MA-x/': [7561, 270, true]
-}, r_s = [], src_lst =[]
+}, r_s = []
 
-function get_rand_image_ref(src_lst) { if( nsi <= 0 ) return null
-    for(let k = 0; k < 10; k ++) {            // only try 10 times
-        let i = Math.floor(Math.random() * nsi) + 1, j
-        for(j = 0; j < src_lst.length; j ++) {
-            if(i <= src_info[src_lst[j]][0]) break
-            i -= src_info[src_lst[j]][0]
-        }
-        const ref = src_lst[j] + 'x' + String(i).padStart(4, '0') + '.xef'
+function get_rand_image_ref() { 
+    for(let m = 0; m < 10; m ++) {            // only try 10 times
+        let i = Math.floor(Math.random() * nsi) + 1
+        for(var [k, v] of Object.entries(src_info)) if( ! de(k).checked ) continue
+            else if(i < v[0]) break
+            else i -= v[0]
+        const ref = `${k}x${String(i).padStart(4, '0')}.xef`
         if( ! r_s.includes(ref) ) return r_s.push(ref) && ref
     }
 }
@@ -68,13 +67,11 @@ async function get_image_url(blob, deg) {
     const ctx = cvs.getContext("2d")
     ctx.translate(cvs.width / 2, cvs.height / 2); ctx.rotate((deg * Math.PI) / 180)
     ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
-
     const blob2 = await new Promise(resolve => cvs.toBlob(b => resolve(b), blob.type))
     return URL.createObjectURL(blob2)
 }
 
-let nsi = 0       // number of source images
-function get_image_source() { src_lst.length = nsi = 0;
-    for(let [k, v] of Object.entries(src_info)) de(k).checked && src_lst.push(k) && (nsi += v[0])
+let nsi; function get_image_count() { nsi = 0;
+    for(let [k, v] of Object.entries(src_info)) de(k).checked && (nsi += v[0])
     return nsi > 0 || showTimedAlert("No image source is selected!", 1000) 
 }

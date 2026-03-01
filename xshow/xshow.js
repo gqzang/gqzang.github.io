@@ -15,7 +15,7 @@ let pswd = loadPswd(), loading = false, stop = false, curZoom = 1, hPtr = 0
 const iBuf = [], maxLen = 16, iRepo = []
 async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return
     loading = true
-    const mask = b64StrToBytes(pswd), ref = get_rand_image_ref(src_lst)
+    const mask = b64StrToBytes(pswd), ref = get_rand_image_ref()
     if( ref ) try { console.log("~~~" + ref)
         const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
         const buf = await (await fetch(baseUrl + ref)).arrayBuffer()
@@ -42,7 +42,7 @@ function startX() {
     de('ctrl').style.display = 'none'
     de('back').style.display = de('pause').style.display = 'inline'
     timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
-    if( ! get_image_source() || started ) return
+    if( ! get_image_count() || started ) return
     started = de("er").disabled = true       // can't change rotation anymore
     setInterval(loadImage, 1000)
     document.addEventListener('contextmenu', e => { e.preventDefault();
