@@ -42,7 +42,7 @@ function startX() {
     de('ctrl').style.display = 'none'
     de('back').style.display = de('pause').style.display = 'inline'
     timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
-    if( ! get_image_source_list() || started ) return
+    if( ! get_image_source() || started ) return
     started = de("er").disabled = true       // can't change rotation anymore
     setInterval(loadImage, 1000)
     document.addEventListener('contextmenu', e => { e.preventDefault();

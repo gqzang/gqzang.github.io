@@ -21,21 +21,16 @@ const src_info = {      // numbers, rotations, default
     '4/MA-x/': [7561, 270, true]
 }, r_s = [], src_lst =[]
 
-function get_rand_image_ref(src_lst) {
-    var n = 0; for(const x of src_lst) n += src_info[x][0]
-    if( n > 0 )
-        for(let k = 0; k < 10; k ++) {            // only try 10 times
-            var i = Math.floor(Math.random() * n) + 1, j
-            for(j = 0; j < src_lst.length; j ++) {
-                if(i <= src_info[src_lst[j]][0]) break
-                i -= src_info[src_lst[j]][0]
-            }
-            const ref = src_lst[j] + 'x' + String(i).padStart(4, '0') + '.xef'   
-            if(r_s.includes(ref)) continue
-            r_s.push(ref)
-            return ref
+function get_rand_image_ref(src_lst) { if( nsi <= 0 ) return null
+    for(let k = 0; k < 10; k ++) {            // only try 10 times
+        let i = Math.floor(Math.random() * nsi) + 1, j
+        for(j = 0; j < src_lst.length; j ++) {
+            if(i <= src_info[src_lst[j]][0]) break
+            i -= src_info[src_lst[j]][0]
         }
-    return null
+        const ref = src_lst[j] + 'x' + String(i).padStart(4, '0') + '.xef'
+        if( ! r_s.includes(ref) ) return r_s.push(ref) && ref
+    }
 }
 
 function bytesToStr(byteArray) {
@@ -78,8 +73,8 @@ async function get_image_url(blob, deg) {
     return URL.createObjectURL(blob2)
 }
 
-function get_image_source_list() {
-    src_lst.length = 0
-    Object.keys(src_info).forEach( x => { if(de(x).checked) src_lst.push(x) })
-    return src_lst.length > 0 || showTimedAlert("No image source is selected!", 1000) 
+let nsi = 0       // number of source images
+function get_image_source() { src_lst.length = nsi = 0;
+    for(let [k, v] of Object.entries(src_info)) de(k).checked && src_lst.push(k) && (nsi += v[0])
+    return nsi > 0 || showTimedAlert("No image source is selected!", 1000) 
 }
