@@ -6,11 +6,14 @@ const handle_pause = () => { de("pause").checked && browseHist(0);
     showTimedAlert((de("pause").checked ? "stop": "resume") + " auto-slide", 1000) }
 const get_name = ref => Object.keys(src_info).indexOf(ref.split("/x")[0] + '/') 
                             + '~' + ref.split("/x")[1].split(".")[0]
+const setImgInfo = (url, info) => { (zoomTgt || document.body).style.backgroundImage = `url(${url})`;
+    (de("info").innerHTML = info) && zoomTgt && (zoomTgt.style.transform = `scale(${curZoom = 1})`) }
+const browseHist = delta => { hPtr = delta && ((hPtr + delta + iRepo.length) % iRepo.length);
+    setImgInfo(iRepo[hPtr][0], `${get_name(iRepo[hPtr][1])} (B${iBuf.length} H${hPtr}/${iRepo.length-1})`) }
 
-let pswd = loadPswd(), loading = false, stop = false, started = false, curZoom = 1, hPtr = 0
+let pswd = loadPswd(), loading = false, stop = false, curZoom = 1, hPtr = 0
 const iBuf = [], maxLen = 16, iRepo = []
-async function loadImage() {
-    if(loading || iBuf.length >= maxLen || stop) return
+async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return
     loading = true
     const mask = b64StrToBytes(pswd), ref = get_rand_image_ref(src_lst)
     if( ref ) try { console.log("~~~" + ref)
@@ -20,13 +23,12 @@ async function loadImage() {
         iBuf.unshift([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
     } catch (err) {console.error("Error fetching binary data:", err)}
     if(iBuf.length == 1 && iRepo.length == 0) showImage()   // show 1st image after loaded.
-    const [p1, tmp] = de("info").innerHTML.split('('), p3 = tmp.split('R')[1]
-    if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} R${p3}`
+    const [p1, tmp] = de("info").innerHTML.split('('), p3 = tmp.split(' ')[1]
+    if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} ${p3}`
     setTimeout(() => loading = false, 100)          // give a little time to re-entry
 }
 
-function showImage() {
-    if( de("pause").checked ) return
+function showImage() { if( de("pause").checked ) return
     let url_ref = iBuf.pop(), i = -1
     if( url_ref ) hPtr = iRepo.unshift(url_ref) && 0
     else if( iRepo.length == 0 ) return                     // no image in Repo to be backup
@@ -35,17 +37,7 @@ function showImage() {
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
 
-function setImgInfo(url, info) {
-    (zoomTgt || document.body).style.backgroundImage = `url(${url})`;
-    (de("info").innerHTML = info) && zoomTgt && (zoomTgt.style.transform = `scale(${curZoom = 1})`)
-}
-
-function browseHist(delta) {
-    hPtr = delta && ((hPtr + delta + iRepo.length) % iRepo.length)        // use circular history
-    setImgInfo(iRepo[hPtr][0], `${get_name(iRepo[hPtr][1])} (H${hPtr}/${iRepo.length-1})`)
-}
-
-let timerId
+let timerId, started = false
 function startX() {
     de('ctrl').style.display = 'none'
     de('back').style.display = de('pause').style.display = 'inline'
