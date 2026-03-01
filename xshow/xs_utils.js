@@ -5,6 +5,11 @@ window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue 
 const de = x => document.getElementById(x)
 const get_rotation = ref => src_info[ref.split("/x")[0] + '/'][1]
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
+const bytesToStr = bArr => { let result = '', i = 0
+    for(; i < bArr.length; i++) result += String.fromCharCode(bArr[i]); return result } 
+const xor_crypt = (src, mask) => { let result = [], i = 0
+    for(; i < src.length; i++) result.push(src[i] ^ mask[i % (mask.length)]); return result }
+
 const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const loadPswd = () => (localStorage.getItem(VUX) || "")
 const setPswd = () => localStorage.setItem(VUX, de("pswd").value.trim())
@@ -21,27 +26,16 @@ const src_info = {      // numbers, rotations, default
     '4/MA-x/': [7561, 270, true]
 }, r_s = []
 
-function get_rand_image_ref() { 
+function get_rand_image_ref() { let nsi = 0
+    for(let [k, v] of Object.entries(src_info)) de(k).checked && (nsi += v[0])
     for(let m = 0; m < 10; m ++) {            // only try 10 times
         let i = Math.floor(Math.random() * nsi) + 1
         for(var [k, v] of Object.entries(src_info)) if( ! de(k).checked ) continue
             else if(i < v[0]) break
             else i -= v[0]
         const ref = `${k}x${String(i).padStart(4, '0')}.xef`
-        if( ! r_s.includes(ref) ) return r_s.push(ref) && ref
+        if( ! r_s.includes(ref) ) return nsi && r_s.push(ref) && ref
     }
-}
-
-function bytesToStr(byteArray) {
-    let result = '', i = 0
-    for(; i < byteArray.length; i++) result += String.fromCharCode(byteArray[i])
-    return result
-}
-
-function xor_crypt(src, mask) {
-    let result = [], l = mask.length, i = 0
-    for(; i < src.length; i++) result.push(src[i] ^ mask[i % l])
-    return result
 }
 
 function xef_decrypt(buffer, mask, bType = 'image/jpg') {
@@ -57,8 +51,7 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
     return new Blob([xU8A].concat(rU8A), { type: bType })
 }
 
-async function get_image_url(blob, deg) {
-    if(deg % 360 == 0) return URL.createObjectURL(blob)
+async function get_image_url(blob, deg) { if(deg % 360 == 0) return URL.createObjectURL(blob)
     const rot = (deg + 90) % 180 == 0
     const ibm = await createImageBitmap(blob), cvs = document.createElement("canvas")
     cvs.height = rot ? ibm.width : ibm.height
@@ -69,9 +62,4 @@ async function get_image_url(blob, deg) {
     ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
     const blob2 = await new Promise(resolve => cvs.toBlob(b => resolve(b), blob.type))
     return URL.createObjectURL(blob2)
-}
-
-let nsi; function get_image_count() { nsi = 0;
-    for(let [k, v] of Object.entries(src_info)) de(k).checked && (nsi += v[0])
-    return nsi > 0 || showTimedAlert("No image source is selected!", 1000) 
 }

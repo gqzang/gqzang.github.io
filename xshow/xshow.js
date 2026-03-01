@@ -12,20 +12,18 @@ const browseHist = delta => { hPtr = delta && ((hPtr + delta + iRepo.length) % i
     setImgInfo(iRepo[hPtr][0], `${get_name(iRepo[hPtr][1])} (B${iBuf.length} H${hPtr}/${iRepo.length-1})`) }
 
 let pswd = loadPswd(), loading = false, stop = false, curZoom = 1, hPtr = 0
-const iBuf = [], maxLen = 16, iRepo = []
+const iBuf = [], maxLen = 16, iRepo = [], reLoadIn = t => setTimeout(() => loading = false, t)
 async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return
-    loading = true
     const mask = b64StrToBytes(pswd), ref = get_rand_image_ref()
-    if( ref ) try { console.log("~~~" + ref)
+    try { loading = ! console.log("~~~" + ref)
         const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
         const buf = await (await fetch(baseUrl + ref)).arrayBuffer()
         const rotation = get_rotation(ref) + (de("er").checked ? 90 : 0)
         iBuf.unshift([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
-    } catch (err) {console.error("Error fetching binary data:", err)}
+    } catch (e) { return alert(`${e.message} -- ref: ${ref}`) || reLoadIn(5000) }
     if(iBuf.length == 1 && iRepo.length == 0) showImage()   // show 1st image after loaded.
     const [p1, tmp] = de("info").innerHTML.split('('), p3 = tmp.split(' ')[1]
-    if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} ${p3}`
-    setTimeout(() => loading = false, 100)          // give a little time to re-entry
+    reLoadIn(100); if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} ${p3}`
 }
 
 function showImage() { if( de("pause").checked ) return
@@ -42,7 +40,7 @@ function startX() {
     de('ctrl').style.display = 'none'
     de('back').style.display = de('pause').style.display = 'inline'
     timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
-    if( ! get_image_count() || started ) return
+    if( started ) return
     started = de("er").disabled = true       // can't change rotation anymore
     setInterval(loadImage, 1000)
     document.addEventListener('contextmenu', e => { e.preventDefault();
