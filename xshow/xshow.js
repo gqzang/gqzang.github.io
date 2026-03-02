@@ -36,18 +36,18 @@ function showImage() { if( de("pause").checked ) return
 }
 
 function startX() {
-    de('ctrl').style.display = 'none'; de('back').style.display = de('pause').style.display = 'inline'
+    de('ctrl').style.display = 'none'; de('pause').style.display = 'inline'
     timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
     if( started ) return
     started = de("er").disabled = true       // can't change rotation anymore
-    setInterval(loadImage, 1000)
+    de("start").innerText = "Back"; setInterval(loadImage, 1000)
     document.addEventListener('contextmenu', e => { e.preventDefault();
         showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
     document.addEventListener('click', e => { if( ! de('back').contains(e.target) ) { 
         const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
         if( de("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
         return ( de('ctrl').style.display == 'none' ) && showImage()  } 
-        de('back').style.display = 'none'; de('ctrl').style.display = 'block'; clearInterval(timerId) 
+        de('ctrl').style.display = 'block'; clearInterval(timerId) 
     })
 }
 
