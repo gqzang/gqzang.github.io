@@ -35,12 +35,12 @@ function showImage() { if( de("pause").checked ) return
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
 
-function startX() {
+function startX() { de("start").innerText = "Back"
     de('ctrl').style.display = 'none'; de('pause').style.display = 'inline'
     timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
     if( started ) return
     started = de("er").disabled = true       // can't change rotation anymore
-    de("start").innerText = "Back"; setInterval(loadImage, 1000)
+    setInterval(loadImage, 1000)
     document.addEventListener('contextmenu', e => { e.preventDefault();
         showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
     document.addEventListener('click', e => { if( ! de('back').contains(e.target) ) { 
