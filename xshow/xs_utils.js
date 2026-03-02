@@ -28,8 +28,7 @@ const src_info = {      // numbers, rotations, default
 
 function get_rand_image_ref() { let nsi = 0
     for(let [k, v] of Object.entries(src_info)) de(k).checked && (nsi += v[0])
-    for(let m = 0; m < 10; m ++) {            // only try 10 times
-        let i = Math.floor(Math.random() * nsi) + 1
+    for(let m = 0; m < 10; m ++) { let i = Math.floor(Math.random() * nsi) + 1
         for(var [k, v] of Object.entries(src_info)) if( ! de(k).checked ) continue
             else if(i < v[0]) break
             else i -= v[0]
@@ -42,13 +41,9 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
     const buf = new Uint8Array(buffer), linfo = buf[0] * 256 + buf[1]
     const cp = 2 + linfo, bytes = buf.slice(2, cp)
     const info = bytesToStr(xor_crypt(bytes, mask)).split('|')
-    const min_len = parseInt(info[0])
-
-    const size = parseInt(info[2]), xLen = Math.min(min_len, size)
-    const aBuf = buf.slice(cp, cp + xLen)
-    const xU8A = new Uint8Array(xor_crypt(aBuf, mask))
-    const rU8A = buf.slice(cp + xLen, cp + size)
-    return new Blob([xU8A].concat(rU8A), { type: bType })
+    const min_len = parseInt(info[0]), size = parseInt(info[2]), xLen = Math.min(min_len, size)
+    const xU8A = new Uint8Array(xor_crypt(buf.slice(cp, cp + xLen), mask))
+    return new Blob([xU8A].concat(buf.slice(cp + xLen, cp + size)), { type: bType })
 }
 
 async function get_image_url(blob, deg) { if(deg % 360 == 0) return URL.createObjectURL(blob)
@@ -56,10 +51,16 @@ async function get_image_url(blob, deg) { if(deg % 360 == 0) return URL.createOb
     const ibm = await createImageBitmap(blob), cvs = document.createElement("canvas")
     cvs.height = rot ? ibm.width : ibm.height
     cvs.width = de("hw").checked ? cvs.height / 2 : (rot ? ibm.height : ibm.width)
-
     const ctx = cvs.getContext("2d")
     ctx.translate(cvs.width / 2, cvs.height / 2); ctx.rotate((deg * Math.PI) / 180)
     ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
     const blob2 = await new Promise(resolve => cvs.toBlob(b => resolve(b), blob.type))
     return URL.createObjectURL(blob2)
+}
+
+async function impl_temp(file, kvMap) {
+    var html = await (await fetch(file)).text()
+    for(const [k, v] of Object.entries(kvMap))
+      html = html.replaceAll('${' + k + '}', v)
+    return html
 }
