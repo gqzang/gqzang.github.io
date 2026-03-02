@@ -2,6 +2,7 @@
 <head>
   <title>${title}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})</script>
   <link rel="stylesheet" href="./xshow.css">
 </head>
 <body style="background-size: contain; background-position: center; background-repeat: no-repeat; 
@@ -13,18 +14,17 @@
   <label id="info" style="color: white; margin-left: 1%; margin-top: 2%;"></label>
   <div id="customAlert" class="alert-box"></div>
   <div id="ctrl">
-    Pswd: <input type="password" id="pswd" size="3" onchange="savePswd()">   
-    &nbsp;&nbsp;&nbsp; Delay<input type="text" id="delay" size="1" value="5">   
+    <form> Pswd: <input type="password" id="pswd" size="3" autocomplete="off" onchange="savePswd()">
+    &nbsp;&nbsp;&nbsp; Delay<input type="text" id="delay" size="1" value="5"> </form>
     <p> Extra Rotation<input type="checkbox" id="er" onchange="handle_er()"/>
-    &nbsp;&nbsp;&nbsp; <button id="plot" onclick="startX()">Start</button> 
+    &nbsp;&nbsp;&nbsp; <button id="plot" onclick="startX()">Start</button>
     <br> h=2w<input type="checkbox" id="hw" onchange="handle_hw()"/>
 
     <h3>Select image source(s):</h3>
-    <div id="checkboxContainer"> </div> <!-- Checkboxes will be inserted here by JavaScript -->
+    <div id="checkboxContainer"></div>   <!-- Checkboxes will be inserted here by JavaScript -->
   </div>
 </div>
 
 <script src="./xshow.js"></script>
-
 </body>
 </html>

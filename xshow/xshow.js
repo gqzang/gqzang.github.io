@@ -11,7 +11,7 @@ const setImgInfo = (url, info) => { (zoomTgt || document.body).style.backgroundI
 const browseHist = delta => { hPtr = delta && ((hPtr + delta + iRepo.length) % iRepo.length);
     setImgInfo(iRepo[hPtr][0], `${get_name(iRepo[hPtr][1])} (B${iBuf.length} H${hPtr}/${iRepo.length-1})`) }
 
-let pswd = loadPswd(), loading = false, stop = false, curZoom = 1, hPtr = 0
+let pswd = loadPswd(), started = false, loading = false, stop = false, curZoom = 1, hPtr = 0, timerId
 const iBuf = [], maxLen = 16, iRepo = [], reLoadIn = t => setTimeout(() => loading = false, t)
 async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return
     const mask = b64StrToBytes(pswd), ref = get_rand_image_ref()
@@ -35,7 +35,6 @@ function showImage() { if( de("pause").checked ) return
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
 
-let timerId, started = false
 function startX() {
     de('ctrl').style.display = 'none'; de('back').style.display = de('pause').style.display = 'inline'
     timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
@@ -49,7 +48,8 @@ function startX() {
         if( de("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
         return ( de('ctrl').style.display == 'none' ) && showImage()  } 
         de('back').style.display = 'none'; de('ctrl').style.display = 'block'; clearInterval(timerId) 
-    })}
+    })
+}
 
 Object.keys(src_info).forEach( x => {
     const chkbox = document.createElement("input")  // Create the checkbox input element

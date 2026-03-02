@@ -1,7 +1,5 @@
 "use strict"
 
-window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})
-
 const de = x => document.getElementById(x)
 const get_rotation = ref => src_info[ref.split("/x")[0] + '/'][1]
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
@@ -17,6 +15,9 @@ const savePswd = () => setPswd() || alert(pswd = loadPswd())
 const showTimedAlert = (msg, time) => { const alertBox = de('customAlert')
     alertBox.innerHTML = msg; alertBox.style.display = 'block'     // Show the alert box
     setTimeout(() => { alertBox.style.display = 'none' }, time) }
+const impl_temp = async (file, kvMap) => { var html = await (await fetch(file)).text()
+    for(const [k, v] of Object.entries(kvMap)) html = html.replaceAll('${' + k + '}', v)
+    return html }
 
 const src_info = {      // numbers, rotations, default
     '1/B-sel/': [6811, 0, true],
@@ -33,7 +34,7 @@ function get_rand_image_ref() { let nsi = 0
             else if(i < v[0]) break
             else i -= v[0]
         const ref = `${k}x${String(i).padStart(4, '0')}.xef`
-        if( ! r_s.includes(ref) ) return nsi && r_s.push(ref) && ref
+        if( ! r_s.includes(ref) ) return nsi && r_s.push(ref) && ref 
     }
 }
 
@@ -56,11 +57,4 @@ async function get_image_url(blob, deg) { if(deg % 360 == 0) return URL.createOb
     ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
     const blob2 = await new Promise(resolve => cvs.toBlob(b => resolve(b), blob.type))
     return URL.createObjectURL(blob2)
-}
-
-async function impl_temp(file, kvMap) {
-    var html = await (await fetch(file)).text()
-    for(const [k, v] of Object.entries(kvMap))
-      html = html.replaceAll('${' + k + '}', v)
-    return html
 }
