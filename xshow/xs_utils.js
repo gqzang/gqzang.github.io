@@ -1,6 +1,7 @@
 "use strict"
 
-const de = x => document.getElementById(x)
+const de = x => document.getElementById(x), dc = x => document.createElement(x)
+const sty = x => de(x).style, dsp = (x, y) => sty(x).display = y
 const get_rotation = ref => src_info[ref.split("/x")[0] + '/'][1]
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 const bytesToStr = bArr => { let res = '', i = 0
@@ -22,7 +23,7 @@ const r_s = [], src_info = {      // numbers, rotations, default
     '2/MA-p1/': [4198, 270, false], '3/MA-p2/':   [4158, 270, false],
     '4/MA-x/':  [7561, 270, true] }, sia = Object.entries(src_info)
 
-function get_rand_image_ref() { for(const m = 0; m < 10; m ++) { 
+function get_rand_image_ref() { for(let m = 0; m < 10; m ++) { 
     let n = sia.reduce((a, [k, v]) => de(k).checked ? a+v[0] : a, 0), i = Math.floor(Math.random()*n)
     for(var [k, v] of sia) if( de(k).checked ) if(i >= v[0]) i -= v[0]; else break
     const ref = `${k}x${String(i).padStart(4, '0')}.xef`
@@ -38,11 +39,10 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
 }
 
 async function get_image_url(blob, deg) { if(deg % 360 == 0) return URL.createObjectURL(blob)
-    const rot = (deg + 90) % 180 == 0, ibm = await createImageBitmap(blob)
-    const cvs = document.createElement("canvas"), ctx = cvs.getContext("2d")
+    const rot = (deg + 90) % 180 == 0, ibm = await createImageBitmap(blob), cvs = dc("canvas")
     cvs.height = rot ? ibm.width : ibm.height
     cvs.width = de("hw").checked ? cvs.height / 2 : (rot ? ibm.height : ibm.width)
-    ctx.translate(cvs.width / 2, cvs.height / 2); ctx.rotate((deg * Math.PI) / 180); 
-    ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
+    const ctx = cvs.getContext("2d");   ctx.translate(cvs.width / 2, cvs.height / 2); 
+    ctx.rotate((deg * Math.PI) / 180);  ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
     return URL.createObjectURL(await new Promise(res => cvs.toBlob(b => res(b), blob.type)))
 }

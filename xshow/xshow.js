@@ -25,35 +25,29 @@ async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return
     reLoadIn(60); if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} ${p3}`
 }
 
-function showImage() { if( de("pause").checked ) return
-    let url_ref = iBuf.pop(), i = -1
+function showImage() { if( de("pause").checked ) return;  let url_ref = iBuf.pop(), i = -1
     if( url_ref ) hP = iRepo.unshift(url_ref) && 0; else if( iRepo.length == 0 ) return 
     else url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)]  // random select 1
     const pos = i < 0 ? `B${iBuf.length} R${iRepo.length}` : `R${i}/${iRepo.length}`
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
 
-function start() { de("start").innerText = "Back"
-    de('ctrl').style.display = 'none'; de('pause').style.display = 'inline'
+function start() { de("start").innerText = "Back"; dsp('ctrl', 'none'); dsp('pause', 'inline')
     tId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
-    if( started ) return 
-    started = de("er").disabled = true; setInterval(loadImage, 600)
+    if( started ) return;   started = de("er").disabled = true; setInterval(loadImage, 600)
     document.addEventListener('contextmenu', e => { e.preventDefault()
         showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
-    document.addEventListener('click', e => { if( ! de('back').contains(e.target) ) { 
+    document.addEventListener('click', e => { 
+        if( de('back').contains(e.target) ) return dsp('ctrl', 'block') && clearInterval(tId);
         const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
-        if( de("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
-        return ( de('ctrl').style.display == 'none' ) && showImage()  } 
-        de('ctrl').style.display = 'block'; clearInterval(tId)  })
+        if(de("pause").checked) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
+        if(sty('ctrl').display == 'none') showImage()     })
 }
 
-Object.keys(src_info).forEach( x => {
-    const chkbox = document.createElement("input")  // Create the checkbox input element
-    chkbox.type = "checkbox"; chkbox.id = chkbox.value = x; chkbox.checked = src_info[x][2]
-    const label = document.createElement("label")       // Create the label element
-    label.htmlFor = x                       // Associate the label with the checkbox ID
-    label.appendChild(document.createTextNode(x))
-    de("checkboxContainer").append(chkbox, label, document.createElement("br"))
+Object.keys(src_info).forEach( x => { const cb = dc("input")  // Create the checkbox input element
+    cb.type = "checkbox";  cb.id = cb.value = x;  cb.checked = src_info[x][2]
+    const lbl = dc("label");   lbl.htmlFor = x       // Associate the label with the checkbox ID
+    lbl.appendChild(document.createTextNode(x));  de("checkboxContainer").append(cb, lbl, dc("br"))
 })                // create checkboxes
 
 const zoomTgt = de('zoom-cntr'), zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
