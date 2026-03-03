@@ -9,7 +9,7 @@ const xor_crypt = (src, mask) => { let result = [], i = 0
     for(; i < src.length; i++) result.push(src[i] ^ mask[i % (mask.length)]); return result }
 
 const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
-const loadPswd = () => (localStorage.getItem(VUX) || "")
+const loadPswd = () => localStorage.getItem(VUX) || ""
 const setPswd = () => localStorage.setItem(VUX, de("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
 const showTimedAlert = (msg, time) => { const alertBox = de('customAlert')
