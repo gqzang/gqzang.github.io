@@ -43,7 +43,7 @@ label {
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-#zoom-container {
+#zoom-cntr {
     width: 100%;
     height: 100vh; /* Full viewport height for demonstration */
     background-size: contain;

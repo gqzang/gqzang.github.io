@@ -8,64 +8,52 @@ const get_name = ref => Object.keys(src_info).indexOf(ref.split("/x")[0] + '/')
                             + '~' + ref.split("/x")[1].split(".")[0]
 const setImgInfo = (url, info) => { (zoomTgt || document.body).style.backgroundImage = `url(${url})`;
     (de("info").innerHTML = info) && zoomTgt && (zoomTgt.style.transform = `scale(${curZoom = 1})`) }
-const browseHist = delta => { hPtr = delta && ((hPtr + delta + iRepo.length) % iRepo.length);
-    setImgInfo(iRepo[hPtr][0], `${get_name(iRepo[hPtr][1])} (B${iBuf.length} H${hPtr}/${iRepo.length-1})`) }
+const browseHist = delta => { hP = delta && ((hP + delta + iRepo.length) % iRepo.length);
+    setImgInfo(iRepo[hP][0], `${get_name(iRepo[hP][1])} (B${iBuf.length} H${hP}/${iRepo.length-1})`) }
 
-let pswd = loadPswd(), started = false, loading = false, stop = false, curZoom = 1, hPtr = 0, timerId
-const iBuf = [], maxLen = 16, iRepo = [], reLoadIn = t => setTimeout(() => loading = false, t)
-async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return
-    const mask = b64StrToBytes(pswd), ref = get_rand_image_ref()
-    try { loading = ! console.log("~~~" + ref)
-        const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
+let pswd = loadPswd(), started = 0, loading = 0, stop = 0, curZoom = 1, hP = 0, tId
+const iBuf = [], maxLen = 16, iRepo = [], reLoadIn = t => setTimeout(() => loading = 0, t)
+async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return console.log('#')
+    let mask = b64StrToBytes(pswd), ref = get_rand_image_ref(); loading = ! console.log("~" + ref)
+    try { const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
         const buf = await (await fetch(baseUrl + ref)).arrayBuffer()
         const rotation = get_rotation(ref) + (de("er").checked ? 90 : 0)
         iBuf.unshift([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
-    } catch (e) { return alert(`${e.message} -- ref: ${ref}`) || reLoadIn(5000) }
+    } catch (e) { return alert(`${e.message} -- ref: ${ref}`) || reLoadIn(3000) }
     if(iBuf.length == 1 && iRepo.length == 0) showImage()   // show 1st image after loaded.
     const [p1, tmp] = de("info").innerHTML.split('('), p3 = tmp.split(' ')[1]
-    reLoadIn(100); if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} ${p3}`
+    reLoadIn(60); if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} ${p3}`
 }
 
-function showImage() { if( de("pause").checked ) return
-    let url_ref = iBuf.pop(), i = -1
-    if( url_ref ) hPtr = iRepo.unshift(url_ref) && 0
-    else if( iRepo.length == 0 ) return                     // no image in Repo to be backup
+function showImage() { if( de("pause").checked ) return;  let url_ref = iBuf.pop(), i = -1
+    if( url_ref ) hP = iRepo.unshift(url_ref) && 0; else if( iRepo.length == 0 ) return 
     else url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)]  // random select 1
     const pos = i < 0 ? `B${iBuf.length} R${iRepo.length}` : `R${i}/${iRepo.length}`
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
 
-function startX() { de("start").innerText = "Back"
-    de('ctrl').style.display = 'none'; de('pause').style.display = 'inline'
-    timerId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
-    if( started ) return
-    started = de("er").disabled = true       // can't change rotation anymore
-    setInterval(loadImage, 1000)
-    document.addEventListener('contextmenu', e => { e.preventDefault();
+function start() { de("start").innerText = "Back"; dsp('ctrl', 'none'); dsp('pause', 'inline')
+    tId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
+    if( started ) return;   started = de("er").disabled = true; setInterval(loadImage, 600)
+    document.addEventListener('contextmenu', e => { e.preventDefault()
         showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
-    document.addEventListener('click', e => { if( ! de('back').contains(e.target) ) { 
+    document.addEventListener('click', e => { 
+        if( de('back').contains(e.target) ) return dsp('ctrl', 'block') && clearInterval(tId);
         const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
-        if( de("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
-        return ( de('ctrl').style.display == 'none' ) && showImage()  } 
-        de('ctrl').style.display = 'block'; clearInterval(timerId) 
-    })
+        if(de("pause").checked) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
+        if(sty('ctrl').display == 'none') showImage()     })
 }
 
-Object.keys(src_info).forEach( x => {
-    const chkbox = document.createElement("input")  // Create the checkbox input element
-    chkbox.type = "checkbox"; chkbox.id = chkbox.value = x; chkbox.checked = src_info[x][2]
-    const label = document.createElement("label")       // Create the label element
-    label.htmlFor = x                       // Associate the label with the checkbox ID
-    label.appendChild(document.createTextNode(x))
-    de("checkboxContainer").append(chkbox, label, document.createElement("br"))
+Object.keys(src_info).forEach( x => { const cb = dc("input")  // Create the checkbox input element
+    cb.type = "checkbox";  cb.id = cb.value = x;  cb.checked = src_info[x][2]
+    const lbl = dc("label");   lbl.htmlFor = x       // Associate the label with the checkbox ID
+    lbl.appendChild(document.createTextNode(x));  de("checkboxContainer").append(cb, lbl, dc("br"))
 })                // create checkboxes
 
-const zoomTgt = de('zoom-container'), zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
+const zoomTgt = de('zoom-cntr'), zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
 zoomTgt && zoomTgt.addEventListener('wheel', e => { e.preventDefault()
-    // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
     const delta = e.deltaY > 0 ? -1 : 1, newZoom = curZoom + delta * zoomSpeed
     if (newZoom < minZoom || newZoom > maxZoom) return
-    // Set the transform origin to the mouse position (in percentages)
     const xP = e.offsetX / zoomTgt.offsetWidth, yP = e.offsetY / zoomTgt.offsetHeight
     zoomTgt.style.transformOrigin = `${xP * 100}% ${yP * 100}%`       
     zoomTgt.style.transform = `scale(${curZoom = newZoom})`   // Apply the new scale

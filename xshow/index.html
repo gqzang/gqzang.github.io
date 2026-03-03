@@ -1,9 +1,6 @@
-<script src="./xs_utils.js"></script>
-<script>
-(async () => { const zoom = window.location.search.substring(1)
-    const html = await impl_temp("./show_temp.html", {
-        title: zoom == 'zoom' ? 'zshow' : 'xshow',
-        container: zoom + '-container' })
+<script src="./xs_utils.js"></script> <script> 
+( async () => { 
+    const zoom = window.location.search.substring(1), html = await impl_temp(
+        "./show_temp.html", { title: zoom == 'zoom' ? 'zshow' : 'xshow', cntr: zoom + '-cntr' })
     document.open(); document.write(html); document.close()
-})()
-</script>
+})() </script>
