@@ -13,11 +13,9 @@ const browseHist = delta => { hP = delta && ((hP + delta + iRepo.length) % iRepo
 
 let pswd = loadPswd(), started = 0, loading = 0, stop = 0, curZoom = 1, hP = 0, tId
 const iBuf = [], maxLen = 16, iRepo = [], reLoadIn = t => setTimeout(() => loading = 0, t)
-async function loadImage() { 
-    if(loading || iBuf.length >= maxLen || stop) return console.log('#')
-    const mask = b64StrToBytes(pswd), ref = get_rand_image_ref()
-    try { loading = ! console.log("~" + ref)
-        const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
+async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return console.log('#')
+    let mask = b64StrToBytes(pswd), ref = get_rand_image_ref(); loading = ! console.log("~" + ref)
+    try { const baseUrl = bytesToStr(xor_crypt(b64StrToBytes(baseUrlX), mask))
         const buf = await (await fetch(baseUrl + ref)).arrayBuffer()
         const rotation = get_rotation(ref) + (de("er").checked ? 90 : 0)
         iBuf.unshift([await get_image_url(xef_decrypt(buf, mask), rotation), ref])
@@ -29,8 +27,7 @@ async function loadImage() {
 
 function showImage() { if( de("pause").checked ) return
     let url_ref = iBuf.pop(), i = -1
-    if( url_ref ) hP = iRepo.unshift(url_ref) && 0
-    else if( iRepo.length == 0 ) return                     // no image in Repo to be backup
+    if( url_ref ) hP = iRepo.unshift(url_ref) && 0; else if( iRepo.length == 0 ) return 
     else url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)]  // random select 1
     const pos = i < 0 ? `B${iBuf.length} R${iRepo.length}` : `R${i}/${iRepo.length}`
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
@@ -47,8 +44,7 @@ function start() { de("start").innerText = "Back"
         const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
         if( de("pause").checked ) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
         return ( de('ctrl').style.display == 'none' ) && showImage()  } 
-        de('ctrl').style.display = 'block'; clearInterval(tId) 
-    })
+        de('ctrl').style.display = 'block'; clearInterval(tId)  })
 }
 
 Object.keys(src_info).forEach( x => {
@@ -62,10 +58,8 @@ Object.keys(src_info).forEach( x => {
 
 const zoomTgt = de('zoom-cntr'), zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
 zoomTgt && zoomTgt.addEventListener('wheel', e => { e.preventDefault()
-    // Determine zoom direction (deltaY > 0 means scrolling down, zoom out)
     const delta = e.deltaY > 0 ? -1 : 1, newZoom = curZoom + delta * zoomSpeed
     if (newZoom < minZoom || newZoom > maxZoom) return
-    // Set the transform origin to the mouse position (in percentages)
     const xP = e.offsetX / zoomTgt.offsetWidth, yP = e.offsetY / zoomTgt.offsetHeight
     zoomTgt.style.transformOrigin = `${xP * 100}% ${yP * 100}%`       
     zoomTgt.style.transform = `scale(${curZoom = newZoom})`   // Apply the new scale

@@ -3,35 +3,30 @@
 const de = x => document.getElementById(x)
 const get_rotation = ref => src_info[ref.split("/x")[0] + '/'][1]
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
-const bytesToStr = bArr => { let result = '', i = 0
-    for(; i < bArr.length; i++) result += String.fromCharCode(bArr[i]); return result } 
-const xor_crypt = (src, mask) => { let result = [], i = 0
-    for(; i < src.length; i++) result.push(src[i] ^ mask[i % (mask.length)]); return result }
+const bytesToStr = bArr => { let res = '', i = 0
+    for(; i < bArr.length; i++) res += String.fromCharCode(bArr[i]); return res } 
+const xor_crypt = (src, mask) => { let res = [], i = 0
+    for(; i < src.length; i++) res.push(src[i] ^ mask[i % (mask.length)]); return res }
 
 const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
 const loadPswd = () => localStorage.getItem(VUX) || ""
 const setPswd = () => localStorage.setItem(VUX, de("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
-const showTimedAlert = (msg, time) => { const alertBox = de('customAlert')
-    alertBox.innerHTML = msg; alertBox.style.display = 'block'     // Show the alert box
-    setTimeout(() => { alertBox.style.display = 'none' }, time) }
-const impl_temp = async (file, kvMap) => { var html = await (await fetch(file)).text()
-    for(const [k, v] of Object.entries(kvMap)) html = html.replaceAll('${' + k + '}', v)
-    return html }
+const showTimedAlert = (msg, time) => { const aBox = de('customAlert'), aBs = aBox.style;
+    aBox.innerHTML = msg; aBs.display = 'block'; setTimeout(() => aBs.display = 'none', time) }
+const impl_temp = async (file, kvP) => { var txt = await (await fetch(file)).text()
+    for(let [k, v] of Object.entries(kvP)) txt = txt.replaceAll('${' +k+ '}', v); return txt}
 
 const r_s = [], src_info = {      // numbers, rotations, default
-    '1/B-sel/': [6811, 0, true],
-    '1/B-sel-x/': [2026, 0, true],
-    '2/MA-p1/': [4198, 270, false],
-    '3/MA-p2/': [4158, 270, false],
-    '4/MA-x/': [7561, 270, true] }, sia = Object.entries(src_info)
+    '1/B-sel/': [6811, 0, true],    '1/B-sel-x/': [2026, 0, true],
+    '2/MA-p1/': [4198, 270, false], '3/MA-p2/':   [4158, 270, false],
+    '4/MA-x/':  [7561, 270, true] }, sia = Object.entries(src_info)
 
-function get_rand_image_ref() { for(let m = 0; m < 10; m ++) { 
-    const nsi = sia.reduce((a, c) => de(c[0]).checked ? a + c[1][0] : a, 0)
-    let i = Math.floor(Math.random() * nsi)
+function get_rand_image_ref() { for(const m = 0; m < 10; m ++) { 
+    let n = sia.reduce((a, [k, v]) => de(k).checked ? a+v[0] : a, 0), i = Math.floor(Math.random()*n)
     for(var [k, v] of sia) if( de(k).checked ) if(i >= v[0]) i -= v[0]; else break
     const ref = `${k}x${String(i).padStart(4, '0')}.xef`
-    if( ! r_s.includes(ref) ) return nsi && r_s.push(ref) && ref 
+    if( ! r_s.includes(ref) ) return n && r_s.push(ref) && ref 
 }}
 
 function xef_decrypt(buffer, mask, bType = 'image/jpg') {
@@ -43,12 +38,11 @@ function xef_decrypt(buffer, mask, bType = 'image/jpg') {
 }
 
 async function get_image_url(blob, deg) { if(deg % 360 == 0) return URL.createObjectURL(blob)
-    const rot = (deg + 90) % 180 == 0
-    const ibm = await createImageBitmap(blob), cvs = document.createElement("canvas")
+    const rot = (deg + 90) % 180 == 0, ibm = await createImageBitmap(blob)
+    const cvs = document.createElement("canvas"), ctx = cvs.getContext("2d")
     cvs.height = rot ? ibm.width : ibm.height
     cvs.width = de("hw").checked ? cvs.height / 2 : (rot ? ibm.height : ibm.width)
-    const ctx = cvs.getContext("2d");  ctx.translate(cvs.width / 2, cvs.height / 2); 
-    ctx.rotate((deg * Math.PI) / 180); ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
-    const blob2 = await new Promise(resolve => cvs.toBlob(b => resolve(b), blob.type))
-    return URL.createObjectURL(blob2)
+    ctx.translate(cvs.width / 2, cvs.height / 2); ctx.rotate((deg * Math.PI) / 180); 
+    ctx.drawImage(ibm, -ibm.width / 2, -ibm.height / 2)
+    return URL.createObjectURL(await new Promise(res => cvs.toBlob(b => res(b), blob.type)))
 }
