@@ -40,8 +40,8 @@ function start() { de("start").innerText = "Back"
     de('ctrl').style.display = 'none'; de('pause').style.display = 'inline'
     tId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
     if( started ) return 
-    started = de("er").disabled = ! setInterval(loadImage, 600)
-    document.addEventListener('contextmenu', e => { e.preventDefault();
+    started = de("er").disabled = true; setInterval(loadImage, 600)
+    document.addEventListener('contextmenu', e => { e.preventDefault()
         showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
     document.addEventListener('click', e => { if( ! de('back').contains(e.target) ) { 
         const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
