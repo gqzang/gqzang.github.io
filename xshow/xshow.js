@@ -27,7 +27,7 @@ async function loadImage() { if(loading || iBuf.length >= maxLen || stop) return
 
 function showImage() { if( de("pause").checked ) return;  let url_ref = iBuf.pop(), i = -1
     if( url_ref ) hP = iRepo.unshift(url_ref) && 0; else if( iRepo.length == 0 ) return 
-    else url_ref = iRepo[i = Math.floor(Math.random() * iRepo.length)]  // random select 1
+    else url_ref = iRepo[i = floor(random() * iRepo.length)]  // random select 1
     const pos = i < 0 ? `B${iBuf.length} R${iRepo.length}` : `R${i}/${iRepo.length}`
     setImgInfo(url_ref[0], `${get_name(url_ref[1])} (${pos})`)
 }
@@ -36,11 +36,11 @@ function start() { de("start").innerText = "Back"; dsp('ctrl', 'none'); dsp('pau
     tId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
     if( started ) return;   started = de("er").disabled = true; setInterval(loadImage, 600)
     document.addEventListener('contextmenu', e => { e.preventDefault()
-        showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000)})
+        showTimedAlert(`${(stop = !stop) ? "stop" : "resume"} loading images`, 1000) })
     document.addEventListener('click', e => { 
         if( de('back').contains(e.target) ) return dsp('ctrl', 'block') && clearInterval(tId);
-        const f = Math.min(Math.ceil(3 - 3*e.clientY / window.innerHeight), iRepo.length)
-        if(de("pause").checked) return browseHist(2*e.clientX > window.innerWidth ? f : -f)
+        const f = min(ceil(3 - 3 * e.clientY / window.innerHeight), iRepo.length)
+        if(de("pause").checked) return browseHist(e.clientX > window.innerWidth/2 ? f : -f)
         if(sty('ctrl').display == 'none') showImage()     })
 }
 
@@ -53,8 +53,8 @@ Object.keys(src_info).forEach( x => { const cb = dc("input")  // Create the chec
 const zoomTgt = de('zoom-cntr'), zoomSpeed = 0.2, maxZoom = 8, minZoom = 1
 zoomTgt && zoomTgt.addEventListener('wheel', e => { e.preventDefault()
     const delta = e.deltaY > 0 ? -1 : 1, newZoom = curZoom + delta * zoomSpeed
-    if (newZoom < minZoom || newZoom > maxZoom) return
+    if( newZoom < minZoom || newZoom > maxZoom ) return
     const xP = e.offsetX / zoomTgt.offsetWidth, yP = e.offsetY / zoomTgt.offsetHeight
-    zoomTgt.style.transformOrigin = `${xP * 100}% ${yP * 100}%`       
+    zoomTgt.style.transformOrigin = `${xP * 100}% ${yP * 100}%`
     zoomTgt.style.transform = `scale(${curZoom = newZoom})`   // Apply the new scale
 })
