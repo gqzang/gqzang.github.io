@@ -8,10 +8,7 @@ button {
     cursor: pointer;
 }
 
-input {
-    padding: 1px 1px;
-    font-size: 24px;
-}
+input { padding: 1px 1px; font-size: 24px; }
 
 textarea {
     font-size: 24px;
@@ -53,8 +50,11 @@ label {
     overscroll-behavior: none; 
     color: gold;
     overflow: hidden;     /* Hide overflowing parts of the image */
-    /* transition: background-size 0.2s ease-out;  */
-    /* Smooth transition for the zoom effect */
     transition: transform 0.1s ease-out; /* Smooth transition for zoom */
     transform-origin: 50% 50%; /* Default origin */
+}
+
+.sq-image {
+    aspect-ratio: 1 / 1;   /* Sets the height equal to the width */
+    object-fit: cover;     /* Ensures the image covers the area without distortion, cropping as needed */
 }

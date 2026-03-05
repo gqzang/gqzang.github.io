@@ -45,4 +45,4 @@ function start() { de("start").innerText = "Back"; dsp('ctrl', 'none'); dsp('pau
 }
 sia.forEach( ([x, v]) => { const cb = dc("input"), lb = dc("label")
     cb.type = "checkbox";  cb.id = cb.value = lb.htmlFor = x;  cb.checked = v[2]
-    lb.appendChild(document.createTextNode(x)); de("chkboxCntr").append(cb, lb, dc("br")) })
+    lb.appendChild( document.createTextNode(x) ); de("chkboxCntr").append( cb, lb, dc("br") ) })
