@@ -7,6 +7,7 @@
   <link rel = "icon" href = "./video.png" type = "image/x-icon"> 
   <link rel="stylesheet" href="./video.css">
   <script src="./video_info.js"></script>
+  <script src="../utils.js"></script>
  </head>
 <body style="background-color:gray;">
   <div>
@@ -20,7 +21,6 @@
     <button id="load" disabled style="background-color: lightgray;" onclick="loadVideo()">Load Video</button>
     &nbsp;<label id="count">_</label> &nbsp;&nbsp;&nbsp;
     <select id="downloaded" onchange="selVd()">
-      <!-- <option value="1">test1</option> -->
     </select> &nbsp;&nbsp;&nbsp;&nbsp; P: 
     <input type="password" id="pswd" size="2" autocomplete="off" onchange="savePswd()">
   </form></div>
@@ -30,7 +30,7 @@
     <div class="scrollable-container"> <ul id="list_g"></ul> </div>  
     <div class="scrollable-container"> <ul id="list_f"></ul> </div> 
   </div>
-
+  
   <script src="video.js"></script>
 </body>
 </html>
