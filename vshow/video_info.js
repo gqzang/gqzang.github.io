@@ -1,6 +1,6 @@
 "use strict"
 
-const videoBkt = {'a': '5/VA/', 'f': '6/VF/', 'g': '6/VG/'}
+const videoBkt = {a: '5/VA/', f: '6/VF/', g: '6/VG/'}
 
 const videoLen = {
     'a17': 60698997,
