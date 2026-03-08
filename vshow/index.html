@@ -2,34 +2,29 @@
 <html>
 <head>
   <title>vshow</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>window.addEventListener('beforeunload', e => {e.preventDefault(); e.returnValue = ''})</script>
-  <link rel = "icon" href = "./video.png" type = "image/x-icon"> 
+  <link rel = "icon" href = "./video.png" type = "image/x-icon">
   <link rel="stylesheet" href="./video.css">
   <script src="./video_info.js"></script>
   <script src="../utils.js"></script>
  </head>
 <body style="background-color:gray;">
-  <div>
-    <video id="video" width="100%" height="50%" controls>
-    <!-- <video id="video" width="25%" height="25%" controls> -->
-        <source src="./ARUTW.mp4" type="video/mp4">
-    </video>     
-  </div>
-  <br>
-  <div><form>
-    <button id="load" disabled style="background-color: lightgray;" onclick="loadV()">Load Video</button>
-    &nbsp;<label id="count">_</label> &nbsp;&nbsp;&nbsp;
-    <select id="dvd" onchange="selVd()"> </select> &nbsp;&nbsp;&nbsp;&nbsp; 
+  <p> <video id="video" width="100%" height="50%" controls>
+    <source src="./ARUTW.mp4" type="video/mp4">
+  </video> <br>
+  <form>
+    <button id="load" disabled style="background-color: lightgray;" onclick="loadV()">
+      Load Video</button> &nbsp;
+    <label id="count" style="color: green;">_</label> &nbsp;&nbsp;&nbsp;
+    <select id="dvd" onchange="selVideo()"> </select> &nbsp;&nbsp;&nbsp;&nbsp; 
     P: <input type="password" id="pswd" size="2" autocomplete="off" onchange="savePswd()">
-  </form></div>
-  <br>
+  </form> <br>
   <div class="container">
-    <div class="scrollable-container"> <ul id="list_a"></ul> </div>  
-    <div class="scrollable-container"> <ul id="list_g"></ul> </div>  
-    <div class="scrollable-container"> <ul id="list_f"></ul> </div> 
+    <div class="scrollable-container"> <ul id="l_a"></ul> </div>
+    <div class="scrollable-container"> <ul id="l_g"></ul> </div>
+    <div class="scrollable-container"> <ul id="l_f"></ul> </div>
   </div>
-  
   <script src="video.js"></script>
 </body>
 </html>
