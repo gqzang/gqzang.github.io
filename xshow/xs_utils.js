@@ -28,3 +28,12 @@ async function getImgUrl(blob, deg) { if(deg % 360 == 0) return URL.createObject
     ctx.translate(cw/2, ch/2);   ctx.rotate(deg * PI / 180);  ctx.drawImage(ibm, -iw/2, -ih/2)
     return URL.createObjectURL(await new Promise(res => cvs.toBlob(b => res(b), blob.type)))
 }
+
+const handle_er = () => de("hw").disabled = de("er").checked
+const handle_hw = () => de("er").disabled = started || de("hw").checked
+const handle_pause = () => { de("pause").checked && browseHist(0)
+    showTimedAlert((de("pause").checked ? "stop": "resume") + " auto-slide", 1000) }
+const setImgInfo = (url, info) => { (zt || document.body).style.backgroundImage = `url(${url})`;
+    (de("info").innerHTML = info) && zt && (zt.style.transform = `scale(${curZoom = 1})`) }
+const browseHist = delta => { hP = delta && ((hP + delta + iRep.length) % iRep.length)
+    setImgInfo(iRep[hP][0], `${getName(iRep[hP][1])} (B${iBuf.length} H${hP}/${iRep.length-1})`) }

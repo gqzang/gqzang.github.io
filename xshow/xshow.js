@@ -1,14 +1,5 @@
 "use strict"
 
-const handle_er = () => de("hw").disabled = de("er").checked
-const handle_hw = () => de("er").disabled = started || de("hw").checked
-const handle_pause = () => { de("pause").checked && browseHist(0)
-    showTimedAlert((de("pause").checked ? "stop": "resume") + " auto-slide", 1000) }
-const setImgInfo = (url, info) => { (zt || document.body).style.backgroundImage = `url(${url})`;
-    (de("info").innerHTML = info) && zt && (zt.style.transform = `scale(${curZoom = 1})`) }
-const browseHist = delta => { hP = delta && ((hP + delta + iRep.length) % iRep.length)
-    setImgInfo(iRep[hP][0], `${getName(iRep[hP][1])} (B${iBuf.length} H${hP}/${iRep.length-1})`) }
-
 let pswd = loadPswd(), started = 0, loading = 0, stop = 0, curZoom = 1, hP = 0, tId, zt
 const iBuf = [], maxLB = 16, iRep = [], reLoadIn = t => setTimeout(() => loading = 0, t)
 async function loadImage() { if( loading || iBuf.length >= maxLB || stop ) return console.log('#')
@@ -22,12 +13,14 @@ async function loadImage() { if( loading || iBuf.length >= maxLB || stop ) retur
     const [p1, tmp] = de("info").innerHTML.split('('), p3 = tmp.split(' ')[1]
     reLoadIn(60); if(p3) de("info").innerHTML = `${p1}(B${iBuf.length} ${p3}`
 }
+
 function showImage() { if( de("pause").checked ) return;  let url_ref = iBuf.pop(), i = -1
     if( url_ref ) hP = iRep.unshift(url_ref) && 0; else if( iRep.length == 0 ) return 
     else url_ref = iRep[i = floor(random() * iRep.length)]                      // random select 1
     const pos = i < 0 ? `B${iBuf.length} R${iRep.length}` : `R${i}/${iRep.length}`
     setImgInfo(url_ref[0], `${getName(url_ref[1])} (${pos})`)
 }
+
 function start() { de("start").innerText = "Back"; dsp('ctrl', 'none'); dsp('pause', 'inline')
     tId = setInterval(showImage, parseFloat(de("delay").value.trim()) * 1000)
     if( started ) return;   started = de("er").disabled = true; setInterval(loadImage, 600)
@@ -43,6 +36,7 @@ function start() { de("start").innerText = "Back"; dsp('ctrl', 'none'); dsp('pau
         if( zm >= 1 && zm < 9 ) { let xP = e.offsetX/zt.offsetWidth, yP = e.offsetY/zt.offsetHeight
         zts.transformOrigin = `${xP*100}% ${yP*100}%`; zts.transform = `scale(${curZoom = zm})` }})
 }
+
 sia.forEach( ([x, v]) => { const cb = dc("input"), lb = dc("label")
     cb.type = "checkbox";  cb.id = cb.value = lb.htmlFor = x;  cb.checked = v[2]
     lb.appendChild( document.createTextNode(x) ); de("chkboxCntr").append( cb, lb, dc("br") ) })
