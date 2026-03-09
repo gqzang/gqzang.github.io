@@ -14,8 +14,8 @@ const xefDecrypt = (buffer, mask, bType = 'image/jpg') => {
     const size = parseInt(info[2]), xLen = Math.min(parseInt(info[0]), size)
     const xU8A = new Uint8Array(xor_crypt(buf.slice(cp, cp + xLen), mask))
     return new Blob([xU8A].concat(buf.slice(cp + xLen, cp + size)), { type: bType }) }
-const getBlob = async (pswd, ref) => { const mask = b64StrToBytes(pswd)
-    const url = bytesToStr( xor_crypt( b64StrToBytes(baseUrlX), mask ) ) + ref
+const getBlob = async (pswd, ref, bUrlX = baseUrlX) => { const mask = b64StrToBytes(pswd)
+    const url = bytesToStr( xor_crypt( b64StrToBytes(bUrlX), mask ) ) + ref
     return xefDecrypt(await (await fetch(url)).arrayBuffer(), mask) }
 
 const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='

@@ -1,9 +1,9 @@
 "use strict"
 
-let pswd = loadPswd(), started = 0, loading = 0, stop = 0, curZoom = 1, hP = 0, tId, zt
+let started = 0, loading = 0, stop = 0, curZoom = 1, hP = 0, tId, zt
 const iBuf = [], maxLB = 16, iRep = [], reLoadIn = t => setTimeout(() => loading = 0, t)
-async function loadImage() { if( loading || iBuf.length >= maxLB || stop ) return console.log('#')
-    try { loading = true; const ref = getRandImgRef(), blob = await getBlob(pswd, ref)
+async function loadImage() { if( loading || iBuf.length >= maxLB || stop ) return
+    try { loading = true; const ref = getRandImgRef(), blob = await getBlob(loadPswd(), ref)
         iBuf.unshift([ await getImgUrl(blob, getRotation(ref) + (de("er").checked ? 90 : 0)), ref ])
     } catch (e) { return alert(`${e.message} -- ref: ${ref}`) || reLoadIn(3000) }
     if( iBuf.length == 1 && iRep.length == 0 ) showImage()          // show 1st image after loaded.
