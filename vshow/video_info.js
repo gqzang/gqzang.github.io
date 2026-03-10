@@ -1,6 +1,6 @@
 "use strict"
 
-const videoBkt = {a: '5/VA/', f: '6/VF/', g: '6/VG/'}, vCat = Object.keys(videoBkt)
+const vdBkt = {a: '5/VA/', f: '6/VF/', g: '6/VG/'}, vCat = Object.keys(vdBkt)
 
 const vdInfo0 = {
     a01: 31.03,  a02: 79.37,  a03: 10.82,  a04: 27.90,  a05: 70.50,  a06: 69.12,  a07: 32.41,  a08: 21.19,
@@ -27,4 +27,4 @@ const vdInfo0 = {
     g49: 6.58,   g50: 2.93,   g51: 7.66,   g52: 11.55,  g53: 6.63,   g54: 7.06,   g55: 2.86,   g56: 4.32,
     g57: 7.21,   g58: 23.02,  g59: 19.59,  g60: 21.94,  g61: 6.81,   g62: 2.29
 }
-const vdInfo = Object.fromEntries(Object.entries(vdInfo0).map(([k, v]) => [k, `${k}: ${v}`]))
+const vdInfo = Object.fromEntries( Object.entries(vdInfo0).map( ([k, v]) => [k, `${k}: ${v}`] ) )
