@@ -6,22 +6,19 @@ const clearTimer = () => cId.textContent = localStorage.setItem(LST, getEpoch())
 setInterval(() => { if( ! localStorage.getItem(LST) ) clearTimer()
                     if( lId.disabled && (lId.innerText != "Load Video") ) updateTimer() }, 1000)
 const selVideo = () => vId.src = vObjs[sId.options[sId.selectedIndex].value]
-const setLoadBtn = x => { const btn = de('load')
-                btn.disabled = x; btn.style.background = x ? "lightgray" : "lightgoldenrodyellow"}
+const setLoadStat = x => { loading = x; clearTimer(); const btn = de('load'); btn.disabled = x; 
+                            btn.style.background = x ? "lightgray" : "lightgoldenrodyellow" }
 let id = '', vObjs = {}, loading = false
-async function loadV() { loading = true; setLoadBtn(true); localStorage.setItem(LST, getEpoch()) 
-    try { const ref = videoBkt[id.charAt(0)] + id + '.xef'
-        vId.src = vObjs[id] = URL.createObjectURL( await getBlob(loadPswd(), ref) )
+const loadV = async () => { setLoadStat(true); const ref = vdBkt[id.charAt(0)] + id + '.xef'
+    try { vId.src = vObjs[id] = URL.createObjectURL( await getBlob(loadPswd(), ref) )
         const newOpt = dc('option'); newOpt.value = id; newOpt.text = vdInfo[id]
         sId.add(newOpt); sId.value = id; lId.innerText = "Load Video"
         delete vdInfo[id]; loadList(); new Audio("./win.wav").play()
-    } catch(err) { console.log(err); new Audio("./error.wav").play() }
-    loading = false 
-}
-const loadList = () => { vCat.forEach(x => de(x).innerHTML = '')    // clear list
-    Object.entries(vdInfo).forEach( ([k, v]) => { const x = dc('li'), k_ = k.charAt(0)
-        x.textContent = v; x.setAttribute('tabindex', 1); de(k_).appendChild(x) })
-    vCat.forEach( x => de(x).onclick = e => { if(loading) return; setLoadBtn(false); clearTimer()
-        id = e.target.innerHTML.substring(0, 3); lId.innerText = "Load Video " + id })
-}
+    } catch(err) { console.log(err); new Audio("./error.wav").play() }    loading = false }
+
+const loadList = () => vCat.forEach( x => de(x).innerHTML = '' )    // clear list
+    || Object.entries(vdInfo).forEach( ([k, v]) => { const x = dc('li'), k_ = k.charAt(0)
+        x.textContent = v; x.setAttribute('tabindex', 1); de(k_).appendChild(x) } ) 
 loadList()   // loadList for the first time
+vCat.forEach( x => de(x).onclick = e => { if(loading) return; setLoadStat(false)
+    id = e.target.innerHTML.substring(0, 3); lId.innerText = "Load Video " + id } )
