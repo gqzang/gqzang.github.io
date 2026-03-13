@@ -1,7 +1,7 @@
 "use strict"
 
 const de = x => document.getElementById(x), dc = x => document.createElement(x)
-const getMS = () => (new Date()).getTime()
+const getSec = () => (new Date()).getTime() / 1000.
 
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 const bytesToStr = bArr => { let res = '', i = 0
@@ -19,6 +19,6 @@ const getBlob = async (pswd, ref, bUrlX = baseUrlX) => { const mask = b64StrToBy
     return xefDecrypt(await (await fetch(url)).arrayBuffer(), mask) }
 
 const VUX = "VideoUrlXor", baseUrlX = 'vzmJhwkVVjCNjzJEtiqY2R1AFniSnjxGvj7TlBVCVmebnXA='
-const loadPswd = () => localStorage.getItem(VUX) || ""
-const setPswd = () => localStorage.setItem(VUX, de("pswd").value.trim())
+const getLS = k => localStorage.getItem(k), setLS = (k, v) => localStorage.setItem(k, v)
+const loadPswd = () => getLS(VUX) || "", setPswd = () => setLS(VUX, de("pswd").value.trim())
 const savePswd = () => setPswd() || alert(pswd = loadPswd())
