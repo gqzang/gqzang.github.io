@@ -1,7 +1,7 @@
 "use strict"
 
 const de = x => document.getElementById(x), dc = x => document.createElement(x)
-const getEpoch = () => Math.round((new Date()).getTime() / 1000)
+const getMS = () => (new Date()).getTime()
 
 const b64StrToBytes = str => Array.from(atob(str), char => char.charCodeAt(0))
 const bytesToStr = bArr => { let res = '', i = 0

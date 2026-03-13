@@ -1,24 +1,24 @@
 "use strict"
 
-const cId = de("count"), lId = de('load'), sId = de('dvd'), vId = de('video'), LST = "LoadStartTime"
-const updateTimer = () => cId.textContent = getEpoch() - parseInt(localStorage.getItem(LST))
-const clearTimer = () => cId.textContent = localStorage.setItem(LST, getEpoch()) | 0
-setInterval(() => { if( ! localStorage.getItem(LST) ) clearTimer()
-                    if( lId.disabled && (lId.innerText != "Load Video") ) updateTimer() }, 1000)
-const selVideo = () => vId.src = vObjs[sId.options[sId.selectedIndex].value]
-const setLoadStat = x => { loading = x; clearTimer(); const btn = de('load'); btn.disabled = x; 
-                            btn.style.background = x ? "lightgray" : "lightgoldenrodyellow" }
-let id = '', vObjs = {}, loading = false
-const loadV = async () => { setLoadStat(true); const ref = vdBkt[id.charAt(0)] + id + '.xef'
-    try { vId.src = vObjs[id] = URL.createObjectURL( await getBlob(loadPswd(), ref) )
-        const newOpt = dc('option'); newOpt.value = id; newOpt.text = vdInfo[id]
-        sId.add(newOpt); sId.value = id; lId.innerText = "Load Video"
-        delete vdInfo[id]; loadList(); new Audio("./win.wav").play()
-    } catch(err) { console.log(err); new Audio("./error.wav").play() }    loading = false }
+let sId = de('dvd'), lBtn = de('load'), LV = "Load Video ", loading = false, id = '', vObjs = {}
+const updateTime = () => de("cnt").textContent = ((getMS() - localStorage.getItem(LV))/1000).toFixed(1)
+const clearTimer = () => de("cnt").textContent = localStorage.setItem(LV, getMS()) || 0
+const selVideo = () => clearTimer() || (de('vid').src = vObjs[sId.options[sId.selectedIndex].value])
+const setLoadStat = x => { loading = lBtn.disabled = x; clearTimer()
+                            lBtn.style.background = x ? "lightgray" : "lightgoldenrodyellow" }
 
-const loadList = () => vCat.forEach( x => de(x).innerHTML = '' )    // clear list
-    || Object.entries(vdInfo).forEach( ([k, v]) => { const x = dc('li'), k_ = k.charAt(0)
-        x.textContent = v; x.setAttribute('tabindex', 1); de(k_).appendChild(x) } ) 
-loadList()   // loadList for the first time
+const loadV = async () => { setLoadStat(true); let ref = vdBkt[id.charAt(0)] + id + '.xef', af
+    try { de('vid').src = vObjs[id] = URL.createObjectURL( await getBlob(loadPswd(), ref) )
+        const nOpt = dc('option'); nOpt.value = id; nOpt.text = vdInfo[id]; delete vdInfo[id]
+        sId.add(nOpt); sId.value = id; af = "./win.wav"
+    } catch(err) { console.log(err); af = "./error.wav" }
+    lBtn.innerText = LV; loadList(); loading = false; new Audio(af).play()
+}
+
+const loadList = () => vCat.forEach( x => de(x).innerHTML = '' ) || Object.entries(vdInfo).forEach(
+    z => { const x = dc('li'), c = z[0].charAt(0); x.textContent = z[1]; x.setAttribute('tabindex', 1)
+           de(c).appendChild(x) } )
+
+setInterval( () => loading && updateTime(), 100 ); loadList() // loadList for the first time
 vCat.forEach( x => de(x).onclick = e => { if(loading) return; setLoadStat(false)
-    id = e.target.innerHTML.substring(0, 3); lId.innerText = "Load Video " + id } )
+    id = e.target.innerHTML.substring(0, 3); lBtn.innerText = LV + id } )
