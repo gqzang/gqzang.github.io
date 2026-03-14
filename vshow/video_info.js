@@ -2,7 +2,7 @@
 
 const vdBkt = {a: '5/VA/', f: '6/VF/', g: '6/VG/'}, vCat = Object.keys(vdBkt)
 
-const vdInfo0 = {
+const vdi0 = {
     a01: 31.03,  a02: 79.37,  a03: 10.82,  a04: 27.90,  a05: 70.50,  a06: 69.12,  a07: 32.41,  a08: 21.19,
     a09: 66.03,  a10: 28.78,  a11: 119.26, a12: 22.45,  a13: 16.16,  a14: 136.24, a15: 6.18,   a16: 18.81,
     a17: 57.89,  a18: 191.99, a19: 21.54,  a20: 77.19,  a21: 19.54,  a22: 27.33,  a23: 68.24,  a24: 43.28,
@@ -27,4 +27,4 @@ const vdInfo0 = {
     g49: 6.58,   g50: 2.93,   g51: 7.66,   g52: 11.55,  g53: 6.63,   g54: 7.06,   g55: 2.86,   g56: 4.32,
     g57: 7.21,   g58: 23.02,  g59: 19.59,  g60: 21.94,  g61: 6.81,   g62: 2.29
 }
-const vdInfo = Object.fromEntries( Object.entries(vdInfo0).map( ([k, v]) => [k, `${k}: ${v}`] ) )
+const vdInfo = Object.fromEntries( Object.entries(vdi0).map( ([k, v]) => [`${k}: ${v}`, `${k}: ${v}`] ) )
