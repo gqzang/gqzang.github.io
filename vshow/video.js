@@ -14,8 +14,8 @@ const loadV = async () => { setLoadStat(true); let ref = vdBkt[id.charAt(0)] + i
     lBtn.innerText = LV; loadList(); loading = false; new Audio(af).play()
 }
 const loadList = () => vCat.forEach( x => de(x).innerHTML = '' ) || Object.entries(vdInfo).forEach(
-    z => {let x = dc('li'); x.textContent = z[1]; x.tabindex = 1; de(z[0].charAt(0)).appendChild(x) })
-loadList() // loadList for the first time
+    z => {let x = dc('li'), c = z[0].charAt(0); x.textContent = z[1]; x.setAttribute('tabindex', 1)
+            de(c).appendChild(x) });                loadList() // loadList for the first time
 vCat.forEach( x => de(x).onclick = e => { if(loading) return
     setLoadStat(false); id = e.target.innerHTML.substring(0, 3); lBtn.innerText = LV + id } )
 setInterval( () => { if(loading) de("cnt").textContent = ( getSec() - getLS(LV) ).toFixed(1) }, 100 )
