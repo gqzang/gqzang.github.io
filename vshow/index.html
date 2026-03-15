@@ -17,7 +17,7 @@
     <button id="load" disabled style="background-color: lightgray;" 
       onclick="loadV()"> Load Video</button> &nbsp;
     <label id="cnt" style="color: green;">_</label> &nbsp;&nbsp;&nbsp;
-    <select id="dvd" onchange="de('cnt').textContent = '_'; selVideo()"> </select> &nbsp;&nbsp;&nbsp;
+    <select id="dvd" onchange="de('cnt').innerText = '_'; selVideo()"> </select> &nbsp;&nbsp;&nbsp;
     P: <input type="password" id="pswd" size="2" autocomplete="off" onchange="savePswd()">
   </form> <br>
   <div class="container">
