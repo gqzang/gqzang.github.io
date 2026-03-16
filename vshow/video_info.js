@@ -1,7 +1,7 @@
 "use strict"
 
-const vdBkt = {a: '5/VA/', f: '6/VF/', g: '6/VG/'}, vCat = Object.keys(vdBkt)
-
+const vdBkt = {a: '5/VA/', f: '6/VF/', g: '6/VG/'}, vC = Object.keys(vdBkt)
+const bg = ["lightgoldenrodyellow", "lightgray"]
 const vi0 = {
     a01: 31.03,  a02: 79.37,  a03: 10.82,  a04: 27.90,  a05: 70.50,  a06: 69.12,  a07: 32.41,  a08: 21.19,
     a09: 66.03,  a10: 28.78,  a11: 119.26, a12: 22.45,  a13: 16.16,  a14: 136.24, a15: 6.18,   a16: 18.81,
