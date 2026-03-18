@@ -9,9 +9,9 @@ const loadV = async () => { try { setStat(1); let bb = await getBlob(loadPswd(),
     de('vid').src = vObjs[id] = URL.createObjectURL(bb); new Audio("./win.wav").play()
 } catch(err) { console.log(err); new Audio("./error.wav").play() }                  loadList() }
 
-const loadList = () => vC.forEach( x => sit(x, '') ) || Object.keys(vdInfo).forEach(
-    k => { const x = dc('li'), c = k.charAt(0); x.innerText = k; x.setAttribute('tabindex', 1)
-           de(c).appendChild(x); ldg = 0; sit('load', LV) })
+const loadList = () => { ldg = 0; sit('load', LV); vC.forEach( x => sit(x, '') );
+    Object.keys(vdInfo).forEach( k => { const x = dc('li'), c = k.charAt(0);
+        x.innerText = k; x.setAttribute('tabindex', 1); de(c).appendChild(x) })}
 
 loadList()              // 1st time loading
 vC.forEach(x => de(x).onclick = e => ldg || setStat(0) || sit('load', LV + (id = e.target.innerText)))
