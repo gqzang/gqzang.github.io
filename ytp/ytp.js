@@ -136,10 +136,12 @@ $(document).ready(function() {
     });
 }); 
 
-function getVids(PageToken=null){
-    pid = $("#pid").val().trim();
-    console.log(pid)
-    if( pid == '' ) pid = 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
+const PID = 'ytp-pid'
+
+function getVids(PageToken=null) {
+    const pid_ = localStorage.getItem(PID) || 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
+    pid = $("#pid").val().trim() || pid_
+    localStorage.setItem(PID, pid);
     $("#pid").val(pid)
 
     let apiKey = "AIzaSyBeU6QR1y884A_GwIjjBx9zAmR4FF_EGFE";				// ytplr-srv-1
