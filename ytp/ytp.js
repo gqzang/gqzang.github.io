@@ -119,7 +119,8 @@ $(document).ready(function() {
 
     $("#reset").click(function() { 
         localStorage.removeItem(PID)
-        localStorage.removeItem(FVL)        
+        localStorage.removeItem(FVL)
+        alert("PID and FVL are cleared.")   
     }); 
 
     $("#prev").click(function() { 
@@ -135,6 +136,13 @@ $(document).ready(function() {
         playCurVid();
     });
     
+    $("#list2").click(function() { 
+        idx = parseInt( $(this).val(), 10 )
+        vids2.splice(idx, 1)
+        setFinishedVideoList()
+        updateVideoList()
+    }); 
+
     $('#videoSizeSel').on('change', function() {
         if( loaded ) {
             var h = $(this).val();
