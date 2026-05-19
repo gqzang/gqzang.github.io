@@ -1,8 +1,7 @@
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <html> 
 <head> 
 	<title> 
-		YouTube Player
+		YouTube List Player (No-Ad)
 	</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,16 +12,6 @@
 		window.jQuery || document.write('<script src="./jquery-3.3.1.min.js"><\/script>');
 	</script>
     <script src="./ytp.js"></script> 
-
-    <script>
-        $(document).ready( function() {
-            ytp_main();
-        });
-    </script>    
-
-<style type="text/css">
-    #info { max-width: 550px; }
-    </style>
 </head> 
 
 <body background="../background.jpg"> 
@@ -31,13 +20,37 @@
 	<div> 
 		Video Height:
 		<select id="videoSizeSel"> 
+			<option value="144">144</option> 
+			<option value="240">240</option> 
 			<option value="360" selected>360</option> 
 			<option value="480">480</option> 
 			<option value="720">720</option> 
 			<option value="1080">1080</option> 
 		</select> 
+		
+		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+		<button id="prev">Prev</button> 
 		&nbsp;&nbsp;
-		Video ID: <input type="text" id="vid" name="vid" size="10">
-	</div>
+		<button id="next">Next</button> 
+		&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+
+		<span id="status"></span>
+		<br><br> 
+
+		Playlist ID:
+		<input type="text" id="pid" name="pid" size="40">
+		&nbsp;&nbsp;
+		<button id="shuffle">Play</button> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<br><br>
+
+		<span id="all"></span>
+		&nbsp;&nbsp; 
+		<span id="curv"></span>		
+		<br> 
+		
+		<select name="video list" id="list" size=10>
+		</select>
+	</div> 
 </body> 
-</html>
+</html> 
