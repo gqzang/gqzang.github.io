@@ -102,9 +102,12 @@ let curIdx = -1;
 let curPid = null;
 let statStr = '';
         
+const PID = 'ytp-pid'
+const FVL = 'ytp-finished'
+
 $(document).ready(function() {
     $('#list').hide();
-    $('#list2').hide();    
+    $('#list2d').hide();    
     $("#prev").prop('disabled',true).css('opacity',0.5);
     $("#next").prop('disabled',true).css('opacity',0.5);
     
@@ -112,6 +115,11 @@ $(document).ready(function() {
         vids = []; 
         statStr = '';
         getVids();				
+    }); 
+
+    $("#reset").click(function() { 
+        localStorage.removeItem(PID)
+        localStorage.removeItem(FVL)        
     }); 
 
     $("#prev").click(function() { 
@@ -135,8 +143,6 @@ $(document).ready(function() {
         }
     });
 }); 
-
-const PID = 'ytp-pid'
 
 function getVids(PageToken=null) {
     const pid_ = localStorage.getItem(PID) || 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
@@ -203,8 +209,6 @@ function updateVideoList() {
     document.getElementById('list').size = vids1.length > 10 ? 10 : vids1.length;
 }
 
-const FVL = 'ytp-finished'
-
 function getFinishedVideoList() {
     vids2 = []
     const vidsf = JSON.parse( localStorage.getItem(FVL) ) || [];
@@ -239,7 +243,7 @@ function playVids() {
     curIdx = 0;
     
     $('#list').show();
-    $('#list2').show();
+    $('#list2d').show();
 
     // *** Can only load video after all video id are loaded ***
     loadYTVideoFrame();
