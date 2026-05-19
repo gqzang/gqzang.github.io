@@ -3,7 +3,7 @@ var player = null;
 // This code loads the IFrame Player API code asynchronously.
 function loadYTVideoFrame() {
     if( player ) {
-        player.loadVideoById(vids[0].id);
+        player.loadVideoById(vids1[0].id);
         return;
     }
     
@@ -19,7 +19,7 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('video-placeholder', {
         width: w,
         height: h,
-        videoId: vids[0].id,
+        videoId: vids1[0],
         playerVars: {
             'autoplay': 1,
             'controls': 1,
@@ -49,6 +49,9 @@ function onPlayerStateChange(event) {
     console.log(state);
     
     if( state == YT.PlayerState.ENDED ) {
+        vids2.push(vids1[curIdx])
+        setFinishedVideoList()
+        updateVideoList()
         playNext();
     }
     
@@ -75,30 +78,33 @@ function onError(event) {
 }
 
 function playCurVid() {
-    player.loadVideoById( vids[curIdx].id );
+    player.loadVideoById( vids1[curIdx] );
     $('#curv').html( pad(curIdx+1, 3) );
     $('#list').val("" + curIdx)
 }
 
 function playNext() {
-    curIdx = ( curIdx + 1 ) % vids.length;
+    curIdx = ( curIdx + 1 ) % vids1.length;
     playCurVid();
 }
 
 function playPrev() {
-    curIdx = ( curIdx <= 0 ? vids.length : curIdx ) - 1;
+    curIdx = ( curIdx <= 0 ? vids1.length : curIdx ) - 1;
     playCurVid();
 }
 
 // prepare video list
 
 let vids = [];
+let vids1 = []                      // un-finished videos ids
+let vids2 = []                      // finished videos ids
 let curIdx = -1;
 let curPid = null;
 let statStr = '';
         
 $(document).ready(function() {
     $('#list').hide();
+    $('#list2').hide();    
     $("#prev").prop('disabled',true).css('opacity',0.5);
     $("#next").prop('disabled',true).css('opacity',0.5);
     
@@ -134,6 +140,7 @@ function getVids(PageToken=null){
     pid = $("#pid").val().trim();
     console.log(pid)
     if( pid == '' ) pid = 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
+    $("#pid").val(pid)
 
     let apiKey = "AIzaSyBeU6QR1y884A_GwIjjBx9zAmR4FF_EGFE";				// ytplr-srv-1
     $.get(
@@ -167,9 +174,7 @@ function myPlan(data){
         vids.push(video)
     }
     if( typeof nextPageToken == 'undefined' ) {
-        total = data.pageInfo.totalResults;
-        $('#all').html(vids.length + '/' + total + ' videos');
-        
+        total = data.pageInfo.totalResults;      
         console.log("Playlist loaded");
         playVids();
     } else {
@@ -177,20 +182,63 @@ function myPlan(data){
     }
 }
 
-function playVids() {
+function updateVideoList() {
     $('#list').empty();
+    vids1 = []
     select = document.getElementById('list');
-    for( i = 0; i < vids.length; i ++ ) {
+    for( i = 0, j = 0; i < vids.length; i ++ ) {
+        if(vids2.includes(vids[i].id))
+            continue
         var opt = document.createElement('option');
-        opt.value = "" + i;
-        opt.innerHTML = pad(i+1, 3) + " ~~ " + vids[i].title;
+        opt.value = "" + j
+        opt.innerHTML = pad(j+1, 3) + " ~~ " + vids[i].title;
         select.appendChild(opt);
+        j ++
+        vids1.push(vids[i].id)
     }
+    $('#list').val("0");
+    $('#all').html(vids1.length + ' videos');
+    document.getElementById('list').size = vids1.length > 10 ? 10 : vids1.length;
+}
+
+const FVL = 'ytp-finished'
+
+function getFinishedVideoList() {
+    vids2 = []
+    const vidsf = JSON.parse( localStorage.getItem(FVL) ) || [];
+    for(const v of vids) {
+        if(vidsf.includes(v.id))
+            vids2.push(v.id)
+    }
+    setFinishedVideoList()
+}
+
+function setFinishedVideoList() {
+    localStorage.setItem(FVL, JSON.stringify(vids2));
+
+    $('#list2').empty();
+    select = document.getElementById('list2');
+    for( i = 0, j = 0; i < vids.length; i ++ ) {
+        if(! vids2.includes(vids[i].id))
+            continue
+        var opt = document.createElement('option');
+        opt.value = "" + j
+        opt.innerHTML = pad(j+1, 3) + " ~~ " + vids[i].title;
+        select.appendChild(opt);
+        j ++
+    }
+    $('#list2').val("0");  
+    document.getElementById('list2').size = vids2.length > 10 ? 10 : vids2.length;  
+}
+
+function playVids() {
+    getFinishedVideoList()
+    updateVideoList()
     curIdx = 0;
     
     $('#list').show();
-    document.getElementById('list').size = vids.length > 10 ? 10 : vids.length;
-    
+    $('#list2').show();
+
     // *** Can only load video after all video id are loaded ***
     loadYTVideoFrame();
 
@@ -198,7 +246,6 @@ function playVids() {
     $("#next").prop('disabled',false).css('opacity', 1);
     $('#curv').html( pad(curIdx+1, 3) );
     
-    $('#list').val("0");
     $('#list').css("background-color","Lavender");
 }
 
