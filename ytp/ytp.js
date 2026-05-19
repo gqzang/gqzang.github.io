@@ -118,9 +118,12 @@ $(document).ready(function() {
     }); 
 
     $("#reset").click(function() { 
-        localStorage.removeItem(PID)
-        localStorage.removeItem(FVL)
-        alert("PID and FVL are cleared.")   
+        const userConfirmed = confirm("Do you want to reset?")
+        if (userConfirmed) {
+            localStorage.removeItem(PID)
+            localStorage.removeItem(FVL)
+            alert("PID and FVL are cleared.")   
+        }        
     }); 
 
     $("#prev").click(function() { 
