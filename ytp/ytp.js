@@ -46,13 +46,12 @@ let started = false;			// Player is started.
 
 function onPlayerStateChange(event) {
     var state = event.data;
-    console.log(state);
     
     if( state == YT.PlayerState.ENDED ) {
         vids2.push(vids1[curIdx])
         setFinishedVideoList()
         updateVideoList()
-        playNext();
+        playCurVid();
     }
     
     if( state == YT.PlayerState.PLAYING ) {
@@ -93,14 +92,11 @@ function playPrev() {
     playCurVid();
 }
 
-// prepare video list
-
-let vids = [];
+let vids = []
 let vids1 = []                      // un-finished videos ids
 let vids2 = []                      // finished videos ids
-let curIdx = -1;
-let curPid = null;
-let statStr = '';
+let curIdx = -1
+let statStr = ''
         
 const PID = 'ytp-pid'
 const FVL = 'ytp-finished'
@@ -126,13 +122,8 @@ $(document).ready(function() {
         }        
     }); 
 
-    $("#prev").click(function() { 
-        playPrev();
-    }); 
-    
-    $("#next").click(function() { 
-        playNext();
-    }); 
+    $("#prev").click(function() { playPrev() }) 
+    $("#next").click(function() { playNext() }) 
     
     $('#list').on('change', function() {
         curIdx = parseInt( $(this).val(), 10 );
@@ -193,8 +184,6 @@ function myPlan(data){
         vids.push(video)
     }
     if( typeof nextPageToken == 'undefined' ) {
-        total = data.pageInfo.totalResults;      
-        console.log("Playlist loaded");
         playVids();
     } else {
         getVids(nextPageToken);
@@ -223,10 +212,8 @@ function updateVideoList() {
 function getFinishedVideoList() {
     vids2 = []
     const vidsf = JSON.parse( localStorage.getItem(FVL) ) || [];
-    for(const v of vids) {
-        if(vidsf.includes(v.id))
-            vids2.push(v.id)
-    }
+    for(const v of vids) 
+        if(vidsf.includes(v.id)) vids2.push(v.id)
     setFinishedVideoList()
 }
 
