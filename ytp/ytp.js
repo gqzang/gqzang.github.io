@@ -5,7 +5,7 @@ var player = null;
 // This code loads the IFrame Player API code asynchronously.
 function loadYTVideoFrame() {
     if( player ) {
-        player.loadVideoById(vids1[0].id);
+        player.loadVideoById(vids1[0] || VID0);
         return;
     }
     
@@ -21,7 +21,7 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('video-placeholder', {
         width: w,
         height: h,
-        videoId: vids1[0],
+        videoId: vids1[0] || VID0,
         playerVars: {
             'autoplay': 1,
             'controls': 1,
@@ -79,7 +79,7 @@ function onError(event) {
 }
 
 function playCurVid() {
-    player.loadVideoById( vids1[curIdx] );
+    player.loadVideoById( vids1[curIdx] || VID0 );
     $('#curv').html( pad(curIdx+1, 3) );
     $('#list').val("" + curIdx)
 }
@@ -102,6 +102,7 @@ let statStr = ''
         
 const PID = 'ytp-pid'
 const PID0 = 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
+const VID0 = 'eUZhgWZV2JQ'
 let pid = ''
 let title = ''
 let pSet = {}
@@ -169,7 +170,7 @@ $(document).ready(function() {
         if( loaded ) {
             var h = $(this).val();
             var w = '' + (parseInt(h, 10) * 4 / 3);
-            player.setSize(width=w, height=h);
+            player.setSize(w, h);
         }
     });
 })
