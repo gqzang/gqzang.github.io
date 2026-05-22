@@ -103,6 +103,7 @@ let statStr = ''
 const PID = 'ytp-pid'
 const PID0 = 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
 let pid = ''
+let title = ''
 let pSet = {}
 const FVL = 'ytp-finished'
 
@@ -159,6 +160,16 @@ function getVids(PageToken=null) {
 
     let apiKey = "AIzaSyBeU6QR1y884A_GwIjjBx9zAmR4FF_EGFE";				// ytplr-srv-1
     $.get(
+        "https://www.googleapis.com/youtube/v3/playlists",{
+            part: 'snippet',
+            id: pid,
+            key: apiKey
+        },
+        function(data){
+            title = data.items[0].snippet.title
+        }        
+    ).fail(() => {title = ''})
+    $.get(
         "https://www.googleapis.com/youtube/v3/playlistItems",{
             part: 'snippet', 
             maxResults: 50,
@@ -170,7 +181,7 @@ function getVids(PageToken=null) {
             myPlan(data);
         }        
     )
-    .fail(function() {
+    .fail(() => {
         alert("Can't load playlist: wrong key or quota exceeded.")
         localStorage.setItem(PID, '');
         $("#pid").val('')
@@ -212,6 +223,7 @@ function updateVideoList() {
         vids1.push(vids[i].id)
     }
     $('#list').val("0");
+    $("#title").html('[' + title + ']: ')
     $('#all').html(vids1.length + ' videos');
     document.getElementById('list').size = vids1.length > 10 ? 10 : vids1.length;
 }
@@ -261,7 +273,7 @@ function playVids() {
     $('#list').css("background-color","Lavender")
 
     const pSet = JSON.parse( localStorage.getItem(PID + 'set') ) || {}
-    pSet[pid] = ""
+    pSet[pid] = title
     console.log(pSet)
     localStorage.setItem(PID + 'set', JSON.stringify(pSet));
 }
