@@ -135,7 +135,7 @@ $(document).ready(function() {
     
     $("#list2").click(function() { 
         let idx = parseInt( $(this).val(), 10 )
-        vids2.splice(idx, 1)
+        vids2.splice(vids2.length - 1 - idx, 1)
         setFinishedVideoList()
         updateVideoList()
     }); 
@@ -226,11 +226,12 @@ function setFinishedVideoList() {
     $('#list2').empty();
     let select = document.getElementById('list2');
     for(let i = 0, j = 0; i < vids.length; i ++) {
-        if(! vids2.includes(vids[i].id))
+        let vid = vids[vids.length - i - 1]
+        if(! vids2.includes(vid.id))
             continue
         var opt = document.createElement('option');
         opt.value = "" + j
-        opt.innerHTML = pad(j+1, 3) + " ~~ " + vids[i].title;
+        opt.innerHTML = pad(j+1, 3) + " ~~ " + vid.title;
         select.appendChild(opt);
         j ++
     }
