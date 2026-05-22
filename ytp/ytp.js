@@ -101,6 +101,7 @@ let curIdx = -1
 let statStr = ''
         
 const PID = 'ytp-pid'
+let pid = ''
 const FVL = 'ytp-finished'
 
 $(document).ready(function() {
@@ -119,8 +120,8 @@ $(document).ready(function() {
         const userConfirmed = confirm("Do you want to reset?")
         if (userConfirmed) {
             localStorage.removeItem(PID)
-            localStorage.removeItem(FVL)
-            alert("PID and FVL are cleared.")   
+            localStorage.removeItem(FVL+pid)
+            alert("PID and FVL+pid are cleared.")   
         }        
     }); 
 
@@ -133,7 +134,7 @@ $(document).ready(function() {
     });
     
     $("#list2").click(function() { 
-        idx = parseInt( $(this).val(), 10 )
+        let idx = parseInt( $(this).val(), 10 )
         vids2.splice(idx, 1)
         setFinishedVideoList()
         updateVideoList()
@@ -146,7 +147,7 @@ $(document).ready(function() {
             player.setSize(width=w, height=h);
         }
     });
-}); 
+})
 
 function getVids(PageToken=null) {
     const pid_ = localStorage.getItem(PID) || 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
@@ -213,14 +214,14 @@ function updateVideoList() {
 
 function getFinishedVideoList() {
     vids2 = []
-    const vidsf = JSON.parse( localStorage.getItem(FVL) ) || [];
+    const vidsf = JSON.parse( localStorage.getItem(FVL+pid) ) || [];
     for(const v of vids) 
         if(vidsf.includes(v.id)) vids2.push(v.id)
     setFinishedVideoList()
 }
 
 function setFinishedVideoList() {
-    localStorage.setItem(FVL, JSON.stringify(vids2));
+    localStorage.setItem(FVL+pid, JSON.stringify(vids2));
 
     $('#list2').empty();
     let select = document.getElementById('list2');
