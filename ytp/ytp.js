@@ -297,6 +297,7 @@ function playVids() {
 
     const pSet = JSON.parse( localStorage.getItem(PID + 'set') ) || {}
     pSet[pid] = title
+    delete pSet['WL']
     localStorage.setItem(PID + 'set', JSON.stringify(pSet));
 }
 
