@@ -101,7 +101,9 @@ let curIdx = -1
 let statStr = ''
         
 const PID = 'ytp-pid'
+const PID0 = 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
 let pid = ''
+let pSet = {}
 const FVL = 'ytp-finished'
 
 $(document).ready(function() {
@@ -150,7 +152,7 @@ $(document).ready(function() {
 })
 
 function getVids(PageToken=null) {
-    const pid_ = localStorage.getItem(PID) || 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
+    const pid_ = localStorage.getItem(PID) || PID0
     pid = $("#pid").val().trim() || pid_
     localStorage.setItem(PID, pid);
     $("#pid").val(pid)
@@ -170,7 +172,9 @@ function getVids(PageToken=null) {
     )
     .fail(function() {
         alert("Can't load playlist: wrong key or quota exceeded.")
-    });  
+        localStorage.setItem(PID, '');
+        $("#pid").val('')
+    })
 }	
 
 function myPlan(data){
@@ -254,7 +258,12 @@ function playVids() {
     $("#next").prop('disabled',false).css('opacity', 1);
     $('#curv').html( pad(curIdx+1, 3) );
     
-    $('#list').css("background-color","Lavender");
+    $('#list').css("background-color","Lavender")
+
+    const pSet = JSON.parse( localStorage.getItem(PID + 'set') ) || {}
+    pSet[pid] = ""
+    console.log(pSet)
+    localStorage.setItem(PID + 'set', JSON.stringify(pSet));
 }
 
 function pad(number, length) {
