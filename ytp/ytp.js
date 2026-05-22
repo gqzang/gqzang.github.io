@@ -1,3 +1,5 @@
+"use strict"
+
 var player = null;
 
 // This code loads the IFrame Player API code asynchronously.
@@ -174,13 +176,13 @@ function myPlan(data){
     statStr = statStr + '.';
     $('#status').html(statStr);
 
-    nextPageToken = data.nextPageToken;
-    pageLen = data.items.length;
-    for( i=0; i < pageLen; i ++ ) {
-        snippet = data.items[i].snippet;
-        title = snippet.title;
+    let nextPageToken = data.nextPageToken;
+    let pageLen = data.items.length;
+    for(let i = 0; i < pageLen; i ++) {
+        let snippet = data.items[i].snippet;
+        let title = snippet.title;
         title = title.length > 80 ? title.substr(0, 79) : title;
-        video = {"id": snippet.resourceId.videoId, "title": title};
+        let video = {"id": snippet.resourceId.videoId, "title": title};
         vids.push(video)
     }
     if( typeof nextPageToken == 'undefined' ) {
@@ -193,11 +195,11 @@ function myPlan(data){
 function updateVideoList() {
     $('#list').empty();
     vids1 = []
-    select = document.getElementById('list');
-    for( i = 0, j = 0; i < vids.length; i ++ ) {
+    let select = document.getElementById('list');
+    for(let i = 0, j = 0; i < vids.length; i ++) {
         if(vids2.includes(vids[i].id))
             continue
-        var opt = document.createElement('option');
+        let opt = document.createElement('option');
         opt.value = "" + j
         opt.innerHTML = pad(j+1, 3) + " ~~ " + vids[i].title;
         select.appendChild(opt);
@@ -221,8 +223,8 @@ function setFinishedVideoList() {
     localStorage.setItem(FVL, JSON.stringify(vids2));
 
     $('#list2').empty();
-    select = document.getElementById('list2');
-    for( i = 0, j = 0; i < vids.length; i ++ ) {
+    let select = document.getElementById('list2');
+    for(let i = 0, j = 0; i < vids.length; i ++) {
         if(! vids2.includes(vids[i].id))
             continue
         var opt = document.createElement('option');
@@ -254,7 +256,7 @@ function playVids() {
 }
 
 function pad(number, length) {
-    var str = '' + number;
+    let str = '' + number;
     while( str.length < length ) { str = '0' + str; }
     return str;
 }
