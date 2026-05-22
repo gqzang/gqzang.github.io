@@ -105,27 +105,44 @@ const PID0 = 'PLd-qt_xzUXS7oNqHCn4OHy9mmQiakRaZ7'
 let pid = ''
 let title = ''
 let pSet = {}
+let pHist = {}
 const FVL = 'ytp-finished'
 
+function showPLhistory() {
+    const pSet = JSON.parse( localStorage.getItem(PID + 'set') ) || {}
+    $('#plhis').empty();
+    let select = document.getElementById('plhis'), j = 0
+    for (const [pid_, title_] of Object.entries(pSet)) {
+        var opt = document.createElement('option');
+        opt.value = "" + j
+        opt.innerHTML = title_ + " ~~ " + pid_
+        pHist[j] = pid_
+        select.appendChild(opt)
+        j ++
+    }
+    $('#plhis').val("0");  
+    document.getElementById('plhis').size = j > 10 ? 10 : j;  
+}
+
 $(document).ready(function() {
+    $('#pan_pl').hide();
     $('#list').hide();
     $('#list2d').hide();    
     $("#prev").prop('disabled',true).css('opacity',0.5);
     $("#next").prop('disabled',true).css('opacity',0.5);
+
+    showPLhistory()
     
-    $("#shuffle").click(function() { 
-        vids = []; 
-        statStr = '';
-        getVids();				
+    $("#btn_pl").click(function() { 
+        $('#pan_pl').toggle();
     }); 
 
-    $("#reset").click(function() { 
-        const userConfirmed = confirm("Do you want to reset?")
-        if (userConfirmed) {
-            localStorage.removeItem(PID)
-            localStorage.removeItem(FVL+pid)
-            alert("PID and FVL+pid are cleared.")   
-        }        
+    $("#shuffle").click(function() { 
+        vids = []
+        statStr = ''
+        getVids()
+        $('#pan_pl').hide()
+        $("#btn_pl").hide()
     }); 
 
     $("#prev").click(function() { playPrev() }) 
@@ -136,6 +153,11 @@ $(document).ready(function() {
         playCurVid();
     });
     
+    $("#plhis").click(function() { 
+        let idx = parseInt( $(this).val(), 10 )
+        $("#pid").val(pHist[idx])
+    }); 
+
     $("#list2").click(function() { 
         let idx = parseInt( $(this).val(), 10 )
         vids2.splice(vids2.length - 1 - idx, 1)
@@ -274,7 +296,6 @@ function playVids() {
 
     const pSet = JSON.parse( localStorage.getItem(PID + 'set') ) || {}
     pSet[pid] = title
-    console.log(pSet)
     localStorage.setItem(PID + 'set', JSON.stringify(pSet));
 }
 
