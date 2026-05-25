@@ -282,7 +282,8 @@ function setFinishedVideoList() {
         j ++
     }
     $('#list2').val("0");  
-    document.getElementById('list2').size = vids2.length > 10 ? 10 : vids2.length;  
+    document.getElementById('list2').size = vids2.length > 10 ? 10 : vids2.length
+    $('#nfv').html(vids2.length)
 }
 
 function playVids() {
