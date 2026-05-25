@@ -107,6 +107,7 @@ let pid = ''
 let title = ''
 let pSet = {}
 let pHist = {}
+let newFirst = true
 const FVL = 'ytp-finished'
 
 function showPLhistory() {
@@ -133,6 +134,11 @@ $(document).ready(function() {
     $("#next").prop('disabled',true).css('opacity',0.5);
 
     showPLhistory()
+
+    $("#order").click(function() { 
+        newFirst = ! newFirst
+        $("#order").html((newFirst ? 'New' : 'old') + ' First')
+    }); 
     
     $("#btn_pl").click(function() { 
         $('#pan_pl').toggle();
@@ -142,6 +148,7 @@ $(document).ready(function() {
         vids = []
         statStr = ''
         getVids()
+        $('#order').hide()
         $('#pan_pl').hide()
         $("#btn_pl").hide()
     }); 
@@ -279,6 +286,7 @@ function setFinishedVideoList() {
 }
 
 function playVids() {
+    if(newFirst) vids.reverse()
     getFinishedVideoList()
     updateVideoList()
     curIdx = 0;
