@@ -188,7 +188,8 @@ function getVids(PageToken=null) {
     localStorage.setItem(PID, pid);
     $("#pid").val(pid)
 
-    let apiKey = "AIzaSyBeU6QR1y884A_GwIjjBx9zAmR4FF_EGFE";				// ytplr-srv-1
+    // let apiKey = "AIzaSyBeU6QR1y884A_GwIjjBx9zAmR4FF_EGFE";				// ytplr-srv-1
+    let apiKey = "AIzaSyCZ2Tbynge8XFLghYlOPXif6u9vGnjaZ7U";				// gq_yt
     $.get(
         "https://www.googleapis.com/youtube/v3/playlists",{
             part: 'snippet',
