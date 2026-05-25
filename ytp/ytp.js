@@ -63,11 +63,7 @@ function onPlayerStateChange(event) {
     // if player can't start and tried to buffer a video before => video is not good.
     if( started && state == -1 && prev_state == YT.PlayerState.BUFFERING ) {
         console.log( "Ad" );
-        setTimeout( playCurVid, 1000);
-        // var allowAd = $('#allowAd').is(":checked");
-        // if( ! allowAd ) {				
-        //     setTimeout( playNext, 1000);
-        // }
+        setTimeout( playNext, 1000);
     }
     
     prev_state = state;
