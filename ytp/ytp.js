@@ -94,6 +94,7 @@ function playPrev() {
 let vids = []
 let vids1 = []                      // un-finished videos ids
 let vids2 = []                      // finished videos ids
+let vids2_ = []                      // finished videos (id: title)
 let curIdx = -1
 let statStr = ''
         
@@ -165,10 +166,7 @@ $(document).ready(function() {
     }) 
 
     $("#list2").click(function() { 
-        let idx = parseInt( $(this).val(), 10 )
-        vids2.splice(vids2.length - 1 - idx, 1)
-        setFinishedVideoList()
-        updateVideoList()
+        restoreVideo($(this).val())
     })
 
     $('#videoSizeSel').on('change', function() {
@@ -181,6 +179,13 @@ $(document).ready(function() {
 
     search_main()
 })
+
+function restoreVideo(sel) {
+    let idx = parseInt(sel, 10)
+    vids2.splice(vids2.length - 1 - idx, 1)
+    setFinishedVideoList()
+    updateVideoList()
+}
 
 function getVids(PageToken=null) {
     const pid_ = localStorage.getItem(PID) || PID0
@@ -273,6 +278,7 @@ function setFinishedVideoList() {
 
     $('#list2').empty();
     let select = document.getElementById('list2');
+    vids2_ = []
     for(let i = 0, j = 0; i < vids.length; i ++) {
         let vid = vids[vids.length - i - 1]
         if(! vids2.includes(vid.id))
@@ -282,6 +288,7 @@ function setFinishedVideoList() {
         opt.innerHTML = pad(j+1, 3) + " ~~ " + vid.title;
         select.appendChild(opt);
         j ++
+        vids2_.push(vid)
     }
     $('#list2').val("0");  
     document.getElementById('list2').size = vids2.length > 10 ? 10 : vids2.length
