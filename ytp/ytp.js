@@ -120,12 +120,11 @@ function showPLhistory() {
         j ++
     }
     $('#plhis').val("0");  
-    document.getElementById('plhis').size = j > 10 ? 10 : j;  
+    document.getElementById('plhis').size = j > 10 ? 10 : j
 }
 
 $(document).ready(function() {
     $('#search').hide()
-    $('#search_pan').hide();
     $('#pan_pl').hide()
     $('#list').hide()
     $('#list2d').hide() 
@@ -143,10 +142,6 @@ $(document).ready(function() {
         $('#pan_pl').toggle();
     }); 
 
-    $("#search").click(function() { 
-        $('#search_pan').toggle();
-    }); 
-
     $("#play").click(function() { 
         vids = []
         statStr = ''
@@ -154,35 +149,37 @@ $(document).ready(function() {
         $('#order').hide()
         $('#pan_pl').hide()
         $("#btn_pl").hide()
-    }); 
+    });
 
     $("#prev").click(function() { playPrev() }) 
     $("#next").click(function() { playNext() }) 
     
     $('#list').on('change', function() {
-        curIdx = parseInt( $(this).val(), 10 );
+        curIdx = parseInt( $(this).val(), 10 )
         playCurVid();
-    });
+    })
     
     $("#plhis").click(function() { 
         let idx = parseInt( $(this).val(), 10 )
         $("#pid").val(pHist[idx])
-    }); 
+    }) 
 
     $("#list2").click(function() { 
         let idx = parseInt( $(this).val(), 10 )
         vids2.splice(vids2.length - 1 - idx, 1)
         setFinishedVideoList()
         updateVideoList()
-    }); 
+    })
 
     $('#videoSizeSel').on('change', function() {
         if( loaded ) {
             var h = $(this).val();
-            var w = '' + (parseInt(h, 10) * 4 / 3);
+            var w = '' + (parseInt(h, 10) * 4 / 3)
             player.setSize(w, h);
         }
-    });
+    })
+
+    search_main()
 })
 
 function getVids(PageToken=null) {
@@ -192,7 +189,7 @@ function getVids(PageToken=null) {
     $("#pid").val(pid)
 
     // let apiKey = "AIzaSyBeU6QR1y884A_GwIjjBx9zAmR4FF_EGFE";				// ytplr-srv-1
-    let apiKey = "AIzaSyCZ2Tbynge8XFLghYlOPXif6u9vGnjaZ7U";				// gq_yt
+    let apiKey = "AIzaSyCZ2Tbynge8XFLghYlOPXif6u9vGnjaZ7U"				// gq_yt
     $.get(
         "https://www.googleapis.com/youtube/v3/playlists",{
             part: 'snippet',
@@ -217,7 +214,7 @@ function getVids(PageToken=null) {
     )
     .fail(() => {
         alert("Can't load playlist: wrong key or quota exceeded.")
-        localStorage.setItem(PID, '');
+        localStorage.setItem(PID, '')
         $("#pid").val('')
     })
 }	
