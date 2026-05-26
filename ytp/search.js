@@ -6,7 +6,6 @@ function search_main() {
     $("#search").click(function() { 
         $('#search_pan').toggle(); search_on = ! search_on
         if( ! search_on ) return
-        console.log("indexing")
 
         const search = elasticlunr( function() {
             this.addField('title');
@@ -38,10 +37,11 @@ function search_main() {
             $('#search-results').toggle( size > 0 );
         })
 
-        $('#search-results').on('click', function() {
-            console.log($(this).val())            
-        })
-    }); 
+    })
+
+    $('#search-results').on('click', function() {
+        console.log($(this).val())            
+    })
 
 /*
     $("#search_pan").hide();
