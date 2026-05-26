@@ -1,14 +1,14 @@
-let indexed = false
-let search = null
+let search_on = false
 
 function search_main() {	
     $('#search_pan').hide()
 
     $("#search").click(function() { 
-        $('#search_pan').toggle()
-        if( indexed ) return
+        $('#search_pan').toggle(); search_on = ! search_on
+        if( ! search_on ) return
+        console.log("indexing")
 
-        search = elasticlunr( function() {
+        const search = elasticlunr( function() {
             this.addField('title');
             this.setRef('id');
         });
@@ -36,9 +36,11 @@ function search_main() {
             const size = Math.min( 10, searchResult.length );
             $('#search-results').attr('size', size);
             $('#search-results').toggle( size > 0 );
-        });
+        })
 
-        indexed = true
+        $('#search-results').on('click', function() {
+            console.log($(this).val())            
+        })
     }); 
 
 /*
