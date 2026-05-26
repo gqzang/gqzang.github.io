@@ -124,11 +124,13 @@ function showPLhistory() {
 }
 
 $(document).ready(function() {
-    $('#pan_pl').hide();
-    $('#list').hide();
-    $('#list2d').hide();    
-    $("#prev").prop('disabled',true).css('opacity',0.5);
-    $("#next").prop('disabled',true).css('opacity',0.5);
+    $('#search').hide()
+    $('#search_pan').hide();
+    $('#pan_pl').hide()
+    $('#list').hide()
+    $('#list2d').hide() 
+    $("#prev").prop('disabled',true).css('opacity',0.5)
+    $("#next").prop('disabled',true).css('opacity',0.5)
 
     showPLhistory()
 
@@ -141,7 +143,11 @@ $(document).ready(function() {
         $('#pan_pl').toggle();
     }); 
 
-    $("#shuffle").click(function() { 
+    $("#search").click(function() { 
+        $('#search_pan').toggle();
+    }); 
+
+    $("#play").click(function() { 
         vids = []
         statStr = ''
         getVids()
@@ -231,6 +237,7 @@ function myPlan(data){
     }
     if( typeof nextPageToken == 'undefined' ) {
         playVids();
+        if(vids.length > 1) $('#search').show()
     } else {
         getVids(nextPageToken);
     }

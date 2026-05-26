@@ -41,7 +41,8 @@
 		Playlist ID:
 		<input type="text" id="pid" name="pid" size="30">
 		&nbsp;&nbsp;
-		<button id="shuffle">Play</button> 
+		<button id="play">Play</button> 
+		<button id="search">Search</button> 
 		<button id="order">New First</button> 
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<button id="btn_pl">Playlists</button> 
@@ -53,8 +54,18 @@
 			<hr width="600" align="left">	
 			<br>
 		</div>
-
-		<br><br>
+		<br>
+		<div id="search_pan">
+            <br>
+            <hr width="600" align="left">
+            <strong>Input at least 3 chars from the title to search: &nbsp;</strong> 
+            <input type="search" id="search-input"> &nbsp; <span id="count"></span><br>
+            <select id="search-results" size=10></select>
+            <br>
+            <strong>Click a search result to jump to the video</strong>&nbsp;
+            <hr width="600" align="left">
+        </div>
+		<br>
 		<span id="title"></span>
 		<span id="all"></span>
 		&nbsp;&nbsp; 
