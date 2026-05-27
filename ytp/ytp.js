@@ -105,7 +105,6 @@ let pid = ''
 let title = ''
 let pSet = {}
 let pHist = {}
-let newFirst = true
 const FVL = 'ytp-finished'
 
 function showPLhistory() {
@@ -133,12 +132,7 @@ $(document).ready(function() {
     $("#next").prop('disabled',true).css('opacity',0.5)
 
     showPLhistory()
-
-    $("#order").click(function() { 
-        newFirst = ! newFirst
-        $("#order").html((newFirst ? 'New' : 'old') + ' First')
-    }); 
-    
+   
     $("#btn_pl").click(function() { 
         $('#pan_pl').toggle();
     }); 
@@ -147,7 +141,8 @@ $(document).ready(function() {
         vids = []
         statStr = ''
         getVids()
-        $('#order').hide()
+        $('#rorder').hide()
+        $('#lorder').hide()
         $('#pan_pl').hide()
         $("#btn_pl").hide()
     });
@@ -182,7 +177,7 @@ $(document).ready(function() {
 
 function restoreVideo(sel) {
     let idx = parseInt(sel, 10)
-    vids2.splice(vids2.length - 1 - idx, 1)
+    vids2.splice(idx, 1)
     setFinishedVideoList()
     updateVideoList()
 }
@@ -250,14 +245,15 @@ function updateVideoList() {
     vids1 = []
     let select = document.getElementById('list');
     for(let i = 0, j = 0; i < vids.length; i ++) {
-        if(vids2.includes(vids[i].id))
+        let vid = vids[i]
+        if(vids2.includes(vid.id))
             continue
         let opt = document.createElement('option');
         opt.value = "" + j
-        opt.innerHTML = pad(j+1, 3) + " ~~ " + vids[i].title;
+        opt.innerHTML = pad(j, 3) + " ~~ " + vid.title;
         select.appendChild(opt);
         j ++
-        vids1.push(vids[i].id)
+        vids1.push(vid.id)
     }
     $('#list').val("0");
     $("#title").html('[' + title + ']: ')
@@ -280,23 +276,24 @@ function setFinishedVideoList() {
     let select = document.getElementById('list2');
     vids2_ = []
     for(let i = 0, j = 0; i < vids.length; i ++) {
-        let vid = vids[vids.length - i - 1]
+        let vid = vids[i]
         if(! vids2.includes(vid.id))
             continue
-        var opt = document.createElement('option');
+        let opt = document.createElement('option');
         opt.value = "" + j
-        opt.innerHTML = pad(j+1, 3) + " ~~ " + vid.title;
+        opt.innerHTML = pad(j, 3) + " ~~ " + vid.title;
         select.appendChild(opt);
         j ++
         vids2_.push(vid)
     }
+    vids2 = []; vids2_.forEach(v => vids2.push(v.id))           // update vids2 according to sequence in vids
     $('#list2').val("0");  
     document.getElementById('list2').size = vids2.length > 10 ? 10 : vids2.length
     $('#nfv').html(vids2.length)
 }
 
 function playVids() {
-    if(newFirst) vids.reverse()
+    if ($('#rorder').is(':checked')) vids.reverse()
     getFinishedVideoList()
     updateVideoList()
     curIdx = 0;
