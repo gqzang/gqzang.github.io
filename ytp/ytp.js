@@ -266,15 +266,13 @@ function updateVideoList() {
     $('#all').html(vids1.length + ' videos');
 }
 
-function getFinishedVideoList() {
-    vids2 = []
-    const vidsf = JSON.parse( localStorage.getItem(FVL+pid) ) || [];
-    for(const v of vids) 
-        if(vidsf.includes(v.id)) vids2.push(v.id)
-    setFinishedVideoList()
+function setFinishedVideoList() {
+    localStorage.setItem(FVL+pid, JSON.stringify(vids2))
+    vids2 = setupVideoList('list2', vids2, true)
+    $('#nfv').html(vids2.length)
 }
 
-function setFinishedVideoList() {
+function setFinishedVideoList_() {
     localStorage.setItem(FVL+pid, JSON.stringify(vids2));
 
     $('#list2').empty();
@@ -299,7 +297,10 @@ function setFinishedVideoList() {
 
 function playVids() {
     if ($('#rorder').is(':checked')) vids.reverse()
-    getFinishedVideoList()
+
+    const vidsf = JSON.parse( localStorage.getItem(FVL+pid) ) || [];
+    vids2 = vids.map(x => x.id).filter(x => vidsf.includes(x))
+    setFinishedVideoList()
     updateVideoList()
     curIdx = 0;
     
