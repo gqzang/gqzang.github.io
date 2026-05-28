@@ -51,8 +51,7 @@ function onPlayerStateChange(event) {
     
     if( state == YT.PlayerState.ENDED ) {
         vids2.push(vids1[curIdx])
-        setFinishedVideoList()
-        updateVideoList()
+        setupBothVideoLists()
         playCurVid();
     }
     
@@ -175,13 +174,6 @@ $(document).ready(function() {
     search_main()
 })
 
-function restoreVideo(sel) {
-    let idx = parseInt(sel, 10)
-    vids2.splice(idx, 1)
-    setFinishedVideoList()
-    updateVideoList()
-}
-
 function getVids(PageToken=null) {
     const pid_ = localStorage.getItem(PID) || PID0
     pid = $("#pid").val().trim() || pid_
@@ -254,45 +246,28 @@ function setupVideoList(lstName, vlst2, rev=false) {
         select.appendChild(opt)
         j ++
         vlst.push(vid.id)
+        if(rev) vids2_.push(vid)            // for finished, populate this for search
     }
     $(`#${lstName}`).val('0')
     document.getElementById(lstName).size = vlst.length > 10 ? 10 : vlst.length
     return vlst
 }
 
-function updateVideoList() {
+function setupBothVideoLists() {
+    localStorage.setItem(FVL+pid, JSON.stringify(vids2))
+    vids2_ = []
+    vids2 = setupVideoList('list2', vids2, true)
+    $('#nfv').html(vids2.length)
+
     vids1 = setupVideoList('list', vids2)
     $("#title").html('[' + title + ']: ')
     $('#all').html(vids1.length + ' videos');
 }
 
-function setFinishedVideoList() {
-    localStorage.setItem(FVL+pid, JSON.stringify(vids2))
-    vids2 = setupVideoList('list2', vids2, true)
-    $('#nfv').html(vids2.length)
-}
-
-function setFinishedVideoList_() {
-    localStorage.setItem(FVL+pid, JSON.stringify(vids2));
-
-    $('#list2').empty();
-    let select = document.getElementById('list2');
-    vids2_ = []
-    for(let i = 0, j = 0; i < vids.length; i ++) {
-        let vid = vids[i]
-        if(! vids2.includes(vid.id))
-            continue
-        let opt = document.createElement('option');
-        opt.value = "" + j
-        opt.innerHTML = pad(j, 3) + " ~~ " + vid.title;
-        select.appendChild(opt);
-        j ++
-        vids2_.push(vid)
-    }
-    vids2 = []; vids2_.forEach(v => vids2.push(v.id))           // update vids2 according to sequence in vids
-    $('#list2').val("0");  
-    document.getElementById('list2').size = vids2.length > 10 ? 10 : vids2.length
-    $('#nfv').html(vids2.length)
+function restoreVideo(sel) {
+    let idx = parseInt(sel, 10)
+    vids2.splice(idx, 1)
+    setupBothVideoLists()
 }
 
 function playVids() {
@@ -300,8 +275,7 @@ function playVids() {
 
     const vidsf = JSON.parse( localStorage.getItem(FVL+pid) ) || [];
     vids2 = vids.map(x => x.id).filter(x => vidsf.includes(x))
-    setFinishedVideoList()
-    updateVideoList()
+    setupBothVideoLists()
     curIdx = 0;
     
     $('#list').show();
