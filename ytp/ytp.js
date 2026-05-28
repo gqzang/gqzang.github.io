@@ -153,6 +153,13 @@ $(document).ready(function() {
         curIdx = parseInt( $(this).val(), 10 )
         playCurVid();
     })
+
+    $("#list").click(function() {
+        if(vids1.length == 1) {
+            curIdx = 0
+            playCurVid()
+        } 
+    })
     
     $("#plhis").click(function() { 
         let idx = parseInt( $(this).val(), 10 )
