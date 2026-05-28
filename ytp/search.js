@@ -8,13 +8,10 @@ function search_main() {
         if( ! search_on ) return
 
         const search = elasticlunr( function() {
-            this.addField('title');
-            this.setRef('id');
+            this.setRef('id')
+            this.addField('title')
         });
-
-        items = [];
-        vids2_.forEach( (v, idx) => items.push({ id: idx, title: v.title.substring(0, 60) }))
-        items.forEach( i => search.addDoc(i) );
+        vids2_.forEach( (v, idx) => search.addDoc({ id: idx, title: v.title.substring(0, 60) }))
 
         $('#search-results').hide();
         $('#count').html("");
