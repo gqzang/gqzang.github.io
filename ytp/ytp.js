@@ -153,6 +153,13 @@ $(document).ready(function() {
         curIdx = parseInt( $(this).val(), 10 )
         playCurVid();
     })
+
+    $("#list").click(function() {
+        if(vids1.length == 1) {
+            curIdx = 0
+            playCurVid()
+        } 
+    })
     
     $("#plhis").click(function() { 
         let idx = parseInt( $(this).val(), 10 )
@@ -255,7 +262,7 @@ function setupVideoList(lstName, vlst2, rev=false) {
 
 function setupBothVideoLists() {
     localStorage.setItem(FVL+pid, JSON.stringify(vids2))
-    vids2_ = []
+    vids2_ = []                                         // info used for search
     vids2 = setupVideoList('list2', vids2, true)
     $('#nfv').html(vids2.length)
 
@@ -265,8 +272,7 @@ function setupBothVideoLists() {
 }
 
 function restoreVideo(sel) {
-    let idx = parseInt(sel, 10)
-    vids2.splice(idx, 1)
+    vids2.splice(parseInt(sel, 10), 1)
     setupBothVideoLists()
 }
 
