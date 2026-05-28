@@ -240,25 +240,30 @@ function myPlan(data){
     }
 }
 
-function updateVideoList() {
-    $('#list').empty();
-    vids1 = []
-    let select = document.getElementById('list');
+function setupVideoList(lstName, vlst2, rev=false) {
+    $(`#${lstName}`).empty()
+    let vlst = []
+    let select = document.getElementById(lstName)
     for(let i = 0, j = 0; i < vids.length; i ++) {
         let vid = vids[i]
-        if(vids2.includes(vid.id))
+        if(rev ^ vlst2.includes(vid.id))
             continue
-        let opt = document.createElement('option');
+        let opt = document.createElement('option')
         opt.value = "" + j
         opt.innerHTML = pad(j, 3) + " ~~ " + vid.title;
-        select.appendChild(opt);
+        select.appendChild(opt)
         j ++
-        vids1.push(vid.id)
+        vlst.push(vid.id)
     }
-    $('#list').val("0");
+    $(`#${lstName}`).val('0')
+    document.getElementById(lstName).size = vlst.length > 10 ? 10 : vlst.length
+    return vlst
+}
+
+function updateVideoList() {
+    vids1 = setupVideoList('list', vids2)
     $("#title").html('[' + title + ']: ')
     $('#all').html(vids1.length + ' videos');
-    document.getElementById('list').size = vids1.length > 10 ? 10 : vids1.length;
 }
 
 function getFinishedVideoList() {
