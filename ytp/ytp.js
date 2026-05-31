@@ -244,7 +244,7 @@ function setupVideoList(lstName, vlst2, rev=false) {
     let vlst = []
     let select = document.getElementById(lstName)
     for(let i = 0, j = 0; i < vids.length; i ++) {
-        let vid = vids[i]
+        let vid = vids[rev ? i: vids.length - 1 - i]
         if((rev ^ vlst2.includes(vid.id)) | (vid.title.trim() == 'Private video'))
             continue
         let opt = document.createElement('option')
