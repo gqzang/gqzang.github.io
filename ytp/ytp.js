@@ -129,6 +129,23 @@ $(document).ready(function() {
     $('#list2d').hide() 
     $("#prev").prop('disabled',true).css('opacity',0.5)
     $("#next").prop('disabled',true).css('opacity',0.5)
+    $("#cmd").hide()
+
+    $('#cmd').on('change', function() {
+        if($(this).val() == 'reset') {
+            if(confirm("Are you sure to clear history list")) {
+                localStorage.setItem(FVL+pid, JSON.stringify([]))
+                playVids()
+            }
+        }
+        if($(this).val() == 'done') {
+            if(confirm("Are you sure to move all videos to finished list")) {
+                localStorage.setItem(FVL+pid, JSON.stringify(vids.map(x => x.id)))
+                playVids()
+            }
+        }
+        $('#cmd').val('')
+    })
 
     showPLhistory()
    
@@ -278,6 +295,7 @@ function restoreVideo(sel) {
 
 function playVids() {
     if ($('#rorder').is(':checked')) vids.reverse()
+    $("#cmd").show()
 
     const vidsf = JSON.parse( localStorage.getItem(FVL+pid) ) || [];
     vids2 = vids.map(x => x.id).filter(x => vidsf.includes(x))
